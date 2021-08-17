@@ -17,9 +17,13 @@
 		--container-width: 660px;
 	}
 	:global(a) {
-		color: var(--color-blue);
+		color: var(--color-green);
 		text-decoration: underline;
 		cursor: pointer;
+	}
+	:global(html) {
+		background-color: #010101;
+		color: #fff;
 	}
 </style>
 

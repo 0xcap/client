@@ -1,5 +1,6 @@
 export const DEFAULT_CHAIN_ID = 31337;
 export const PRICE_DECIMALS = 8;
+export const LEVERAGE_DECIMALS = 6;
 const INFURA_KEY = '8cccc478d2e54cb3bc3ec5524793f636';
 
 // Supported networks
@@ -11,33 +12,31 @@ export const NETWORK_URLS = {
 	31337: `http://localhost:8545` // hardhat local node
 };
 
-export const PRODUCTS = {
-	'BTC-USD': '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c', // chainlink feed
-	'ETH-USD': '0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419'
-};
-
 // ABIS
 const TRADING_ABI = [
-	"function balances(address, address) view returns(uint256)",
-	"function locked(address, address) view returns(uint256)",
-	"function getLatestPrice(address feed) view returns(uint256)",
-	"function deposit(address base, uint256 amount)",
-	"function withdraw(address base, uint256 amount)",
-	"function submitOrder(address base, bytes32 _product, bool isLong, uint256 amount)",
-	"function getUserPositions(address user, address base) view returns(tuple(bytes32 product, address base, uint256 amount, uint256 price, uint256 createdAt, uint256 updatedAt, uint256 realizedInterest, bool isLong, bool isSettling)[] _positions)",
-	"function getUPL(address user, address base) view returns(int256)",
+	"function getLatestPrice(address feed) pure returns(uint256)",
+	"function getBase(uint8 baseId) view returns(address)",
+	"function getProduct(uint16 productId) view returns(tuple(uint256 leverage, uint256 fee, uint256 interest, address feed, bool isActive) product)",
+	"function getPosition(uint256 positionId) view returns(tuple(uint8 baseId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationprice) position)",
+	"function getCap(uint8 baseId) view returns(uint256)",
+	"function getBalance(uint8 baseId) view returns(uint256)",
+	"function getTotalStaked(uint8 baseId) view returns(uint256)",
+	"function getUserStaked(address user, uint8 baseId) view returns(uint256)",
+	"function getUserPositions(address user, uint8 baseId) view returns(tuple(uint8 baseId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationprice)[] _positions)",
 
-	"event Deposit(address indexed from, address indexed base, uint256 amount)",
-	"event Withdrawal(address indexed to, address indexed base, uint256 amount)",
+	"function stake(uint8 base, uint256 amount)",
+	"function unstake(uint8 base, uint256 _stake)",
 
-	"event NewPosition(uint256 id, address indexed user, address indexed base, bytes32 indexed product, bool isLong, uint256 priceWithFee, uint256 amount)",
-	"event AddMargin(uint256 id, address indexed user, uint256 priceWithFee, uint256 amount)",
-	"event ClosePosition(uint256 id, address indexed user, uint256 priceWithFee, uint256 amount, int256 pnl)",
+	"function submitOrder(uint8 baseId, uint16 productId, bool isLong, uint256 existingPositionid, uint256 margin, uint256 leverage, bool releaseMargin)",
 
+	"event Staked(address indexed from, uint8 indexed baseId, uint256 amount)",
+	"event Unstaked(address indexed to, uint8 indexed baseId, uint256 amount)",
+
+	"event NewPosition(uint256 id, address indexed user, uint8 indexed baseId, uint16 indexed productId, bool isLong, uint256 priceWithFee, uint256 margin, uint256 leverage)",
+	"event AddMargin(uint256 id, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage, uint256 newLiquidationPrice)",
+	"event ClosePosition(uint256 id, address indexed user, uint256 priceWithFee, uint256 margin, int256 pnl)",
 	"event NewPositionSettled(uint256 id, address indexed user, uint256 price)",
-	"event AddMarginSettled(uint256 id, address indexed user, uint256 price, uint256 amount)",
-
-	"event UserLiquidated(address indexed user, address indexed by)"
+	"event LiquidatedPosition(uint256 indexed positionId, address indexed by, uint256 vaultReward, uint256 liquidatorReward)"
 ];
 
 const ERC20_ABI = [
@@ -52,13 +51,32 @@ const ERC20_ABI = [
 export const CONTRACTS = {
 	31337: { // Hardhat local node
 		TRADING: {
-			address: '0x89ec9355b1Bcc964e576211c8B011BD709083f8d',
+			address: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
 			abi: TRADING_ABI
-		},
-		USDC: {
-			address: '0x4653251486a57f90Ee89F9f34E098b9218659b83',
+		}
+	}
+};
+
+export const BASES = {
+	31337: { // Hardhat local node
+		1: {
+			symbol: 'USDC',
+			address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
 			decimals: 6,
 			abi: ERC20_ABI
+		}
+	}
+};
+
+export const PRODUCTS = {
+	31337: { // Hardhat local node
+		1: {
+			name: 'BTC-USD',
+			feed: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c'
+		},
+		2: {
+			name: 'ETH-USD',
+			feed: '0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419'
 		}
 	}
 };
