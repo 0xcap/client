@@ -9,17 +9,17 @@
 	import { provider, signer, address, chainId } from '../stores/provider'
 	import { events } from '../stores/events'
 
-	import { listBases, deposit, getUserBalance, getUserLocked, getLatestPrice, getUserAllowance, approveAllowance, submitOrder, withdraw, getUserPositions, getUPL } from '../lib/methods'
+	import { listBases, getLatestPrice, getUserAllowance, approveAllowance, submitOrder, getUserPositions } from '../lib/methods'
 
 	// examples
 	async function log(provider, address) {
+		console.log('called log', provider, address);
 		if (!provider) return;
-		console.log('called log');
 
 		// Non signed in
 		console.log('bases', await listBases());
 
-		console.log('getLatestPrice', await getLatestPrice('BTC-USD'));
+		console.log('getLatestPrice', await getLatestPrice(1));
 
 		if (!address) return;
 

@@ -22,6 +22,8 @@ function handleChainSwitch(_chainId, _provider) {
 
 export async function initWallet() {
 
+	console.log('Init wallet');
+
 	// Metamask
 
 	if (!window.ethereum) return showToast('Metamask not installed.');

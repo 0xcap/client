@@ -71,11 +71,11 @@ export const BASES = {
 export const PRODUCTS = {
 	31337: { // Hardhat local node
 		1: {
-			name: 'BTC-USD',
+			symbol: 'BTC-USD',
 			feed: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c'
 		},
 		2: {
-			name: 'ETH-USD',
+			symbol: 'ETH-USD',
 			feed: '0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419'
 		}
 	}

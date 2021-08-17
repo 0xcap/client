@@ -12,7 +12,7 @@ const formatPositions = function(positions, baseId) {
 	for (const p of positions) {
 		formattedPositions.push({
 			base: base.symbol,
-			product: getProduct(p.productId)['name'],
+			product: getProduct(p.productId).symbol,
 			timestamp: p.timestamp.toNumber(),
 			isLong: p.isLong,
 			isSettling: p.isSettling,
@@ -40,8 +40,11 @@ export async function listBases() {
 	return list;
 }
 
-export async function getLatestPrice(product) {
-	const p = await contract().getLatestPrice(PRODUCTS[product]);
+export async function getLatestPrice(productId) {
+	console.log('getLatestPrice', productId);
+	const product = getProduct(productId);
+	if (!product) return;
+	const p = await contract().getLatestPrice(product.feed);
 	return formatUnits(p, 8);
 }
 
