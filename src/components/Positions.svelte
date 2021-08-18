@@ -1,6 +1,7 @@
 <script>
 	import { positions } from '../stores/positions'
 	import { prices } from '../stores/prices'
+	import { showModal } from '../stores/modals'
 
 	import { getProductInfo } from '../lib/methods'
 
@@ -10,12 +11,13 @@ Todo
 - position settlement script
 -- live prices
 -- calculate UPL per position and total UPL including interest
-- add margin
-- close partial & full
+-- add margin
+-- close partial & full
 - historical positions (from events)
 - vault info: cap, balance, etc.
 - pending tx check on page load to check if they're complete
 - unstake
+- error handling
 - ui design
 - data dashboard, liquidations
 */
@@ -67,7 +69,7 @@ Todo
 	Positions. Total UPL {totalUPL}
 	<ul>
 		{#each $positions as position}
-			<li>{position.product} {position.base} {position.id} {position.margin}x{position.leverage} @{position.price} [{position.isSettling}] ({position.isLong}) || UPL: {upls[position.id] || 0}</li>
+			<li>{position.product} {position.base} {position.id} {position.margin}x{position.leverage} @{position.price} [{position.isSettling}] ({position.isLong}) || UPL: {upls[position.id] || 0} <a on:click={() => {showModal('AddMargin', position)}}>Add margin</a> | <a on:click={() => {showModal('ClosePosition', position)}}>Close</a></li>
 		{/each}
 	</ul>
 </div>

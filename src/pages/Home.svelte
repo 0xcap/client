@@ -2,62 +2,27 @@
 	import { onMount } from 'svelte'
 	import { initProvider } from '../lib/provider'
 	import { initWallet } from '../lib/wallet'
-	import { initEventListeners, fetchEvents } from '../lib/events'
+	import { initEventListeners } from '../lib/events'
 
 	import Wallet from '../components/Wallet.svelte'
 	import NewOrder from '../components/NewOrder.svelte'
 	import Positions from '../components/Positions.svelte'
+	import History from '../components/History.svelte'
 	import Transactions from '../components/Transactions.svelte'
 	import Vault from '../components/Vault.svelte'
 
+	import AddMargin from '../components/AddMargin.svelte'
+	import ClosePosition from '../components/ClosePosition.svelte'
+
 	import { provider, signer, address, chainId } from '../stores/provider'
-	import { events } from '../stores/events'
-
-	import { listBases, getLatestPrice, submitOrder, getUserPositions } from '../lib/methods'
-
-	// examples
-	async function log(provider, address) {
-		//console.log('called log', provider, address);
-		if (!provider) return;
-
-		// Non signed in
-		//console.log('bases', await listBases());
-
-		//console.log('getLatestPrice', await getLatestPrice(1));
-
-		if (!address) return;
-
-		// Signed in	
-		//console.log('signer', $signer);
-		//console.log('address', address);
-		//console.log('positions', await getUserPositions('USDC'));
-		//console.log('upl', await getUPL('USDC'));
-		//console.log('locked', await getUserLocked('USDC'));
-		//console.log('block', await provider.getBlockNumber());
-
-		//await fetchEvents();
-		
-		//await deposit('USDC', 200);
-		//console.log('balance', await getUserBalance('USDC'));
-		//console.log('getUserAllowance', await getUserAllowance('USDC'));
-		//console.log('approveAllowance', await approveAllowance('USDC'));
-		//await submitOrder('USDC', 'BTC/USD', true, 2000);
-		//await mintUSDC($address, 1000);
-		//await withdraw('USDC', 200);
-		//await addProduct();
-
-	}
+	import { activeModal } from '../stores/modals'
 
 	onMount(async () => {
 		initProvider();
 		initWallet();
 	});
 
-	$: log($provider, $address);
-
 	$: initEventListeners($address, $chainId);
-
-	//$: console.log('events', $events);
 
 </script>
 
@@ -83,6 +48,14 @@
 		<NewOrder />
 		<hr/>
 		<Positions />
+		{#if $activeModal && $activeModal.name == 'AddMargin'}
+			<AddMargin data={$activeModal.data} />
+		{/if}
+		{#if $activeModal && $activeModal.name == 'ClosePosition'}
+			<ClosePosition data={$activeModal.data} />
+		{/if}
+		<hr/>
+		<History />
 		<hr/>
 		<Vault />
 		<hr/>

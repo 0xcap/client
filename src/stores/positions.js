@@ -10,5 +10,7 @@ export const positions = derived([baseId, address, refreshUserPositions], async 
 		set([]);
 		return;
 	}
-	set(await getUserPositions($baseId, $address));
+	const pos = await getUserPositions($baseId, $address);
+	console.log('got user positions', pos);
+	set(pos);
 },[]);

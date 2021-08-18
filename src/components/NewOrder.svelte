@@ -3,8 +3,6 @@
 
 	import { productId, baseInfo, productInfo, userBaseBalance, userBaseAllowance } from '../stores/order'
 
-	import { prices } from '../stores/prices'
-
 	import { setBaseId, setProductId, listProducts, approveUserBaseAllowance, submitOrder } from '../lib/methods'
 
 	let isLong = true;
@@ -40,8 +38,6 @@
 		setBaseId(1);
 		setProductId(1);
 	});
-
-	$: console.log('prices', $prices);
 
 </script>
 

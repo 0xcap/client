@@ -4,6 +4,7 @@ import { getProductInfo, getUserBaseBalance, getUserBaseAllowance, getUserStaked
 
 import { address } from './provider'
 
+export const refreshUserBaseBalance = writable(0);
 export const refreshUserBaseAllowance = writable(0);
 
 export const baseId = writable(1);
@@ -17,7 +18,7 @@ export const productInfo = derived(productId, async ($productId, set) => {
 	set(await getProductInfo($productId));
 }, {});
 
-export const userBaseBalance = derived([baseId, address], async ([$baseId, $address], set) => {
+export const userBaseBalance = derived([baseId, address, refreshUserBaseBalance], async ([$baseId, $address, $refreshUserBaseBalance], set) => {
 	if (!$baseId || !$address) {
 		set(0);
 		return;

@@ -150,14 +150,27 @@ export async function getLatestPrice(_productId) {
 
 
 
-export async function submitOrder(_baseId, _productId, isLong, existingPositionId, margin, leverage, releaseMargin) {
+export async function submitOrder(_baseId, _productId, isLong, existingPositionId, margin, leverage, releaseMargin, isClose) {
 	_baseId = _baseId || get(baseId);
 	_productId = _productId || get(productId);
 	const base = getBaseInfo(_baseId);
 	if (!base) return;
 	const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, existingPositionId || 0, parseUnits(margin, base.decimals), parseUnits(leverage, LEVERAGE_DECIMALS), releaseMargin);
+	let description;
+	const _productInfo = await getProductInfo(_productId);
+	if (isClose) {
+		description = `Close position ${margin} ${base.symbol} on ${_productInfo.symbol}`;
+	} else if (releaseMargin) {
+		description = `Close position (RM) ${margin} ${base.symbol} on ${_productInfo.symbol}`;
+	} else if (existingPositionId) {
+		// add margin
+		description = `Add margin ${margin} ${base.symbol} on ${_productInfo.symbol}`;
+	} else {
+		description = `New position ${margin}x${leverage} ${base.symbol} on ${_productInfo.symbol}`;
+	}
+
 	addPendingTransaction({
 		hash: tx.hash,
-		description: `Submit order ${margin}x${leverage} ${base.symbol} on ${get(productInfo).symbol}`
+		description
 	});
 }

@@ -34,9 +34,9 @@ const TRADING_ABI = [
 
 	"event NewPosition(uint256 id, address indexed user, uint8 indexed baseId, uint16 indexed productId, bool isLong, uint256 priceWithFee, uint256 margin, uint256 leverage)",
 	"event AddMargin(uint256 id, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage, uint256 newLiquidationPrice)",
-	"event ClosePosition(uint256 id, address indexed user, uint256 priceWithFee, uint256 margin, int256 pnl)",
+	"event ClosePosition(uint256 id, address indexed user, uint8 indexed baseId, uint16 indexed productId, uint256 priceWithFee, uint256 margin, uint256 leverage, int256 pnl, bool wasLiquidated)",
 	"event NewPositionSettled(uint256 id, address indexed user, uint256 price)",
-	"event LiquidatedPosition(uint256 indexed positionId, address indexed by, uint256 vaultReward, uint256 liquidatorReward)"
+	"event PositionLiquidated(uint256 id, address indexed by, uint256 vaultReward, uint256 liquidatorReward)"
 ];
 
 export const ERC20_ABI = [
@@ -54,7 +54,7 @@ export const ERC20_ABI = [
 export const CONTRACTS = {
 	31337: { // Hardhat local node
 		TRADING: {
-			address: '0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9',
+			address: '0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3',
 			abi: TRADING_ABI
 		}
 	}
@@ -64,7 +64,7 @@ export const BASES = {
 	31337: { // Hardhat local node
 		1: {
 			symbol: 'USDC',
-			address: '0x9E545E3C0baAB3E08CdfD552C960A1050f373042',
+			address: '0x82e01223d51Eb87e16A03E24687EDF0F294da6f1',
 			decimals: 6
 		}
 	}
