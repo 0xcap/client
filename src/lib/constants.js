@@ -46,13 +46,15 @@ export const ERC20_ABI = [
 	"function balanceOf(address account) view returns(uint256)",
 	"function allowance(address owner, address spender) view returns(uint256)",
 	"function approve(address spender, uint256 amount) returns(bool)",
-	"function mint(address to, uint256 amount)"
+	"function mint(address to, uint256 amount)",
+
+	"event Approval(address indexed owner, address indexed spender, uint256 value)"
 ];
 
 export const CONTRACTS = {
 	31337: { // Hardhat local node
 		TRADING: {
-			address: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
+			address: '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f',
 			abi: TRADING_ABI
 		}
 	}
@@ -62,7 +64,7 @@ export const BASES = {
 	31337: { // Hardhat local node
 		1: {
 			symbol: 'USDC',
-			address: '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',
+			address: '0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44',
 			decimals: 6
 		}
 	}

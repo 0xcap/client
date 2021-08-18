@@ -1,19 +1,5 @@
 <script>
-	import { onMount } from 'svelte'
-	import { signer, address } from '../stores/provider'
-	import { getUserPositions } from '../lib/methods'
-
-	let baseId = 1;
-	let positions = [];
-
-	async function _getUserPositions(address) {
-		if (!address) return;
-		positions = await getUserPositions(baseId);
-		console.log('positions', positions);
-	}
-
-	$: _getUserPositions($address);
-
+	import { positions } from '../stores/positions'
 </script>
 
 <style>
@@ -22,8 +8,8 @@
 <div class='container'>
 	Positions
 	<ul>
-		{#each positions as position}
-			<li>{position.product} {position.base} </li>
+		{#each $positions as position}
+			<li>{position.product} {position.base} {position.id} {position.margin}x{position.leverage} @{position.price} [{position.isSettling}] ({position.isLong})</li>
 		{/each}
 	</ul>
 </div>

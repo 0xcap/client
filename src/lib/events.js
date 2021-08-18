@@ -6,6 +6,8 @@ import { events } from '../stores/events'
 import { provider, signer, chainId, address } from '../stores/provider'
 
 import { refreshUserStaked } from '../stores/vault'
+import { refreshUserPositions } from '../stores/positions'
+import { refreshUserBaseAllowance } from '../stores/order'
 
 import { completeTransaction } from '../stores/transactions'
 
@@ -20,6 +22,7 @@ const formatEvent = function(ev) {
 	console.log('Got event', ev);
 
 	if (ev.event == 'NewPosition') {
+		/*
 		const { id, user, baseId, productId, isLong, priceWithFee, margin, leverage } = ev.args;
 		const base = getBaseInfo(baseId);
 		const product = PRODUCTS[productId];
@@ -34,11 +37,19 @@ const formatEvent = function(ev) {
 			txHash: ev.transactionHash,
 			block: ev.blockNumber
 		};
+		*/
+		completeTransaction(ev.transactionHash);
+		refreshUserPositions.update(n => n + 1);
 	}
 
 	if (ev.event == 'Staked') {
 		completeTransaction(ev.transactionHash);
 		refreshUserStaked.update(n => n + 1);
+	}
+
+	if (ev.event == 'Approval') { // ERC20
+		completeTransaction(ev.transactionHash);
+		refreshUserBaseAllowance.update(n => n + 1);
 	}
 
 }
@@ -68,9 +79,15 @@ export function initEventListeners(address, chainId) {
 	if (!tradingContract) return;
 	tradingContract.removeAllListeners();
 	if (!address || !chainId) return;
+	
 	tradingContract.on(tradingContract.filters.Staked(address), handleEvent);
 	tradingContract.on(tradingContract.filters.NewPosition(null, address), handleEvent);
 	// todo: other event listeners
+
+	const USDCContract = contract('USDC');
+	if (!USDCContract) return;
+	USDCContract.removeAllListeners();
+	USDCContract.on(USDCContract.filters.Approval(address, tradingContract.address), handleEvent);
 }
 
 export async function fetchEvents() {

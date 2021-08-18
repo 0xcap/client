@@ -4,16 +4,16 @@ import { getProductInfo, getUserBaseBalance, getUserBaseAllowance, getUserStaked
 
 import { address } from './provider'
 
+export const refreshUserBaseAllowance = writable(0);
+
 export const baseId = writable(1);
 export const productId = writable(1);
 
 export const baseInfo = derived(baseId, ($baseId) => {
-	console.log('getBaseInfo($baseId)', getBaseInfo($baseId));
 	return getBaseInfo($baseId);
 });
 
 export const productInfo = derived(productId, async ($productId, set) => {
-	console.log('getProductInfo($productId)', await getProductInfo($productId));
 	set(await getProductInfo($productId));
 }, {});
 
@@ -25,7 +25,7 @@ export const userBaseBalance = derived([baseId, address], async ([$baseId, $addr
 	set(await getUserBaseBalance($baseId, $address));
 }, 0);
 
-export const userBaseAllowance = derived([baseId, address], async ([$baseId, $address], set) => {
+export const userBaseAllowance = derived([baseId, address, refreshUserBaseAllowance], async ([$baseId, $address, $refreshUserBaseAllowance], set) => {
 	if (!$baseId || !$address) {
 		set(0);
 		return;

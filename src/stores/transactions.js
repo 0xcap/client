@@ -27,7 +27,7 @@ export function completeTransaction(txHash) {
 	});
 }
 
-export function clearPendingTransactions() {
+export function clearTransactions() {
 	transactions.set([]);
 	localStorage.removeItem('transactions');
 }

@@ -1,23 +1,28 @@
 <script>
 	import { onMount } from 'svelte'
 
-	import { baseId, productId, baseInfo, productInfo, userBaseBalance, userBaseAllowance } from '../stores/order'
+	import { baseInfo, productInfo, userBaseBalance, userBaseAllowance } from '../stores/order'
 
 	import { setBaseId, setProductId, approveUserBaseAllowance, submitOrder } from '../lib/methods'
 
 	let isLong = true;
 	let margin;
 	let leverage = 1;
+	$: leverage = $productInfo.leverage;
 
 	function selectDirection(_isLong) {
 		isLong = _isLong;
 	}
 
+	async function _approveUserBaseAllowance() {
+		await approveUserBaseAllowance();
+	}
+
 	async function _submitOrder() {
 		// todo: checks
 		await submitOrder(
-			$baseId,
-			$productId,
+			null,
+			null,
 			isLong,
 			0,
 			margin,
@@ -54,7 +59,7 @@
 	
 	{#if $productInfo.leverage}
 	<div>
-		Product Selected || fee: {$productInfo.fee}%, leverage: {$productInfo.leverage}, interest: {$productInfo.interest}%
+		Product Selected || {$productInfo.symbol} fee: {$productInfo.fee}%, leverage: {$productInfo.leverage}, interest: {$productInfo.interest}%
 	</div>
 	{/if}
 
@@ -67,12 +72,12 @@
 	</div>
 
 	<div>
-		Leverage: <input type=range bind:value={leverage} min=1 max={productInfo.leverage || 100}> {leverage}
+		Leverage: <input type=range bind:value={leverage} min=1 max={$productInfo.leverage * 1 || 100}> {leverage}
 	</div>
 
 	<div>
-		{#if userBaseAllowance * 1 == 0 || margin * 1 > userBaseAllowance * 1}
-			<a on:click={approveUserBaseAllowance}>Approve</a>
+		{#if $userBaseAllowance * 1 == 0 || margin * 1 > $userBaseAllowance * 1}
+			<a on:click={_approveUserBaseAllowance}>Approve</a>
 		{:else}
 			<a on:click={_submitOrder}>Submit</a>
 		{/if}

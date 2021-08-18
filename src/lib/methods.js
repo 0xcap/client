@@ -3,19 +3,17 @@ import { get } from 'svelte/store'
 import { contract, getBases, getBaseInfo, getContractAddress } from './contracts'
 import { address } from '../stores/provider'
 import { addPendingTransaction } from '../stores/transactions'
-import { baseId, productId } from '../stores/order'
+import { baseId, productId, productInfo } from '../stores/order'
 
 
 import { CONTRACTS, BASES, PRODUCTS, PRICE_DECIMALS, LEVERAGE_DECIMALS, ERC20_ABI } from './constants'
 import { toBytes32, fromBytes32, formatUnits, parseUnits } from './utils'
 
-const formatPositions = function(positions, baseId) {
-	const base = getBaseInfo(baseId);
+const formatPositions = function(positions, _baseId) {
+	const base = getBaseInfo(_baseId);
 	if (!base) return;
 	let formattedPositions = [];
-	console.log('P', positions);
 	for (const p of positions) {
-		console.log('p---', p);
 		formattedPositions.push({
 			id: p.id.toNumber(),
 			base: base.symbol,
@@ -32,8 +30,9 @@ const formatPositions = function(positions, baseId) {
 	return formattedPositions;
 }
 
-const formatProductInfo = function(p) {
+const formatProductInfo = function(p, _productId) {
 	return {
+		symbol: PRODUCTS[_productId],
 		leverage: formatUnits(p.leverage, LEVERAGE_DECIMALS),
 		fee: formatUnits(p.fee, 2),
 		interest: formatUnits(p.interest, 2),
@@ -47,11 +46,11 @@ const formatProductInfo = function(p) {
 export async function listBases() {
 	const obj = getBases();
 	let list = [];
-	for (const baseId in obj) {
+	for (const _baseId in obj) {
 		list.push({
-			symbol: obj[baseId].symbol,
-			address: obj[baseId].address,
-			decimals: obj[baseId].decimals
+			symbol: obj[_baseId].symbol,
+			address: obj[_baseId].address,
+			decimals: obj[_baseId].decimals
 		});
 	}
 	return list;
@@ -68,17 +67,14 @@ export function setProductId(_productId) {
 }
 
 export async function getProductInfo(_productId) {
-	const productInfo = await contract().getProduct(_productId);
-	return formatProductInfo(productInfo);
+	return formatProductInfo(await contract().getProduct(_productId), _productId);
 }
 
 // User
 
 export async function getUserBaseBalance(_baseId, _address) {
 	const base = getBaseInfo(_baseId);
-	console.log('base', base, base.symbol, _address);
 	const balance = await contract(base.symbol).balanceOf(_address);
-	console.log('balance', balance);
 	return formatUnits(balance, base.decimals);
 }
 
@@ -93,11 +89,15 @@ export async function approveUserBaseAllowance(_baseId, amount, contractName) {
 	const base = getBaseInfo(_baseId || get(baseId));
 	if (!base) return;
 	const tx = await contract(base.symbol, true).approve(getContractAddress(contractName), amount);
-	console.log('tx', tx);
 	addPendingTransaction({
 		hash: tx.hash,
 		description: `Approve ${base.symbol}`
 	});
+}
+
+export async function getUserPositions(_baseId, _address) {
+	const positions = await contract().getUserPositions(_address, _baseId);
+	return formatPositions(positions, _baseId);
 }
 
 // Vault
@@ -113,7 +113,6 @@ export async function stake(_baseId, amount) {
 	const base = getBaseInfo(_baseId);
 	if (!base) return;
 	const tx = await contract('', true).stake(_baseId, parseUnits(amount, base.decimals));
-	console.log('tx', tx);
 	addPendingTransaction({
 		hash: tx.hash,
 		description: `Stake ${amount} ${base.symbol}`
@@ -128,20 +127,15 @@ export async function getLatestPrice(productId) {
 }
 
 
-export async function getUserPositions(baseId) {
-	const positions = await contract().getUserPositions(get(address), baseId);
-	return formatPositions(positions, baseId);
-}
 
-
-
-// Signer required
-
-
-
-export async function submitOrder(baseId, productId, isLong, existingPositionId, margin, leverage, releaseMargin) {
-	const base = getBaseInfo(baseId);
+export async function submitOrder(_baseId, _productId, isLong, existingPositionId, margin, leverage, releaseMargin) {
+	_baseId = _baseId || get(baseId);
+	_productId = _productId || get(productId);
+	const base = getBaseInfo(_baseId);
 	if (!base) return;
-	const tx = await contract('', true).submitOrder(baseId, productId, isLong, existingPositionId || 0, parseUnits(margin, base.decimals), parseUnits(leverage, LEVERAGE_DECIMALS), releaseMargin);
-	console.log('tx', tx);
+	const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, existingPositionId || 0, parseUnits(margin, base.decimals), parseUnits(leverage, LEVERAGE_DECIMALS), releaseMargin);
+	addPendingTransaction({
+		hash: tx.hash,
+		description: `Submit order ${margin}x${leverage} ${base.symbol} on ${get(productInfo).symbol}`
+	});
 }
