@@ -5,9 +5,12 @@ import { address } from '../stores/provider'
 import { addPendingTransaction } from '../stores/transactions'
 import { baseId, productId, productInfo } from '../stores/order'
 
+import { activateProduct } from '../stores/prices'
 
 import { CONTRACTS, BASES, PRODUCTS, PRICE_DECIMALS, LEVERAGE_DECIMALS, ERC20_ABI } from './constants'
 import { toBytes32, fromBytes32, formatUnits, parseUnits } from './utils'
+
+let productInfoCache = {};
 
 const formatPositions = function(positions, _baseId) {
 	const base = getBaseInfo(_baseId);
@@ -25,8 +28,12 @@ const formatPositions = function(positions, _baseId) {
 			leverage: formatUnits(p.leverage, LEVERAGE_DECIMALS),
 			price: formatUnits(p.price, PRICE_DECIMALS),
 			liquidationPrice: formatUnits(p.liquidationPrice, PRICE_DECIMALS),
+			productId: p.productId,
+			baseId: _baseId
 		});
+		activateProduct(p.productId);
 	}
+	formattedPositions.reverse();
 	return formattedPositions;
 }
 
@@ -62,12 +69,27 @@ export function setBaseId(_baseId) {
 
 // Products
 
+export function listProducts() {
+	let list = [];
+	for (const _productId in PRODUCTS) {
+		list.push({
+			symbol: PRODUCTS[_productId],
+			id: _productId
+		});
+	}
+	return list;
+}
+
 export function setProductId(_productId) {
 	productId.set(_productId);
+	//activateProduct(_productId);
 }
 
 export async function getProductInfo(_productId) {
-	return formatProductInfo(await contract().getProduct(_productId), _productId);
+	if (productInfoCache[_productId]) return productInfoCache[_productId];
+	const pi = formatProductInfo(await contract().getProduct(_productId), _productId);
+	productInfoCache[_productId] = pi;
+	return pi;
 }
 
 // User
@@ -119,10 +141,10 @@ export async function stake(_baseId, amount) {
 	});
 }
 
+// Price
 
-export async function getLatestPrice(productId) {
-	console.log('getLatestPrice', productId);
-	const p = await contract().getLatestPrice(productId);
+export async function getLatestPrice(_productId) {
+	const p = await contract().getLatestPrice(_productId);
 	return formatUnits(p, 8);
 }
 

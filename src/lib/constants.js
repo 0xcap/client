@@ -14,7 +14,7 @@ export const NETWORK_URLS = {
 
 // ABIS
 const TRADING_ABI = [
-	"function getLatestPrice(address feed) view returns(uint256)",
+	"function getLatestPrice(uint16 productId) view returns(uint256)",
 	"function getBase(uint8 baseId) view returns(address)",
 	"function getProduct(uint16 productId) view returns(tuple(uint256 leverage, uint256 fee, uint256 interest, address feed, bool isActive) product)",
 	"function getPosition(uint256 positionId) view returns(tuple(uint8 baseId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationPrice, uint256 id) position)",
@@ -54,7 +54,7 @@ export const ERC20_ABI = [
 export const CONTRACTS = {
 	31337: { // Hardhat local node
 		TRADING: {
-			address: '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f',
+			address: '0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9',
 			abi: TRADING_ABI
 		}
 	}
@@ -64,7 +64,7 @@ export const BASES = {
 	31337: { // Hardhat local node
 		1: {
 			symbol: 'USDC',
-			address: '0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44',
+			address: '0x9E545E3C0baAB3E08CdfD552C960A1050f373042',
 			decimals: 6
 		}
 	}

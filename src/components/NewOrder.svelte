@@ -1,9 +1,11 @@
 <script>
 	import { onMount } from 'svelte'
 
-	import { baseInfo, productInfo, userBaseBalance, userBaseAllowance } from '../stores/order'
+	import { productId, baseInfo, productInfo, userBaseBalance, userBaseAllowance } from '../stores/order'
 
-	import { setBaseId, setProductId, approveUserBaseAllowance, submitOrder } from '../lib/methods'
+	import { prices } from '../stores/prices'
+
+	import { setBaseId, setProductId, listProducts, approveUserBaseAllowance, submitOrder } from '../lib/methods'
 
 	let isLong = true;
 	let margin;
@@ -32,10 +34,14 @@
 		console.log('submitted');
 	}
 
+	let products = listProducts();
+
 	onMount(async () => {
 		setBaseId(1);
 		setProductId(1);
 	});
+
+	$: console.log('prices', $prices);
 
 </script>
 
@@ -55,6 +61,13 @@
 
 	<div>
 		Wallet balance: {$userBaseBalance}, Allowance: {$userBaseAllowance}
+	</div>
+
+	<div>
+		Products:
+		{#each products as product}
+			<a class:selected={product.id == $productId} on:click={() => {setProductId(product.id)}}>{product.symbol}</a> |
+		{/each}
 	</div>
 	
 	{#if $productInfo.leverage}
