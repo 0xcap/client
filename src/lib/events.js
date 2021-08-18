@@ -1,6 +1,7 @@
 import { get } from 'svelte/store'
 import { contract } from './contracts'
-import { PRICE_DECIMALS, LEVERAGE_DECIMALS } from './constants'
+import { PRICE_DECIMALS, LEVERAGE_DECIMALS, PRODUCTS } from './constants'
+import { getBase } from './contracts'
 import { events } from '../stores/events'
 import { provider, signer, chainId, address } from '../stores/provider'
 import { toBytes32, fromBytes32, formatUnits, parseUnits } from './utils'
@@ -14,7 +15,7 @@ const formatEvent = function(ev) {
 	if (ev.event == 'NewPosition') {
 		const { id, user, baseId, productId, isLong, priceWithFee, margin, leverage } = ev.args;
 		const base = getBase(baseId);
-		const product = getBase(productId);
+		const product = PRODUCTS[productId];
 		return {
 			type: 'NewPosition',
 			base: base.symbol,

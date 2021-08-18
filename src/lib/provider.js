@@ -10,7 +10,7 @@ let providerChainId;
 // Read only provider
 export async function initProvider(_chainId, _provider) {
 	// _provider is user wallet provider if available
-	console.log('initProvider', _chainId, providerChainId);
+	//console.log('initProvider', _chainId, providerChainId);
 	if (!_chainId) _chainId = DEFAULT_CHAIN_ID;
 	if (_chainId == providerChainId || !NETWORK_URLS[_chainId]) return;
 	providerChainId = _chainId;
