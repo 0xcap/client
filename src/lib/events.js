@@ -1,9 +1,14 @@
 import { get } from 'svelte/store'
 import { contract } from './contracts'
 import { PRICE_DECIMALS, LEVERAGE_DECIMALS, PRODUCTS } from './constants'
-import { getBase } from './contracts'
+import { getBaseInfo } from './contracts'
 import { events } from '../stores/events'
 import { provider, signer, chainId, address } from '../stores/provider'
+
+import { refreshUserStaked } from '../stores/vault'
+
+import { completeTransaction } from '../stores/transactions'
+
 import { toBytes32, fromBytes32, formatUnits, parseUnits } from './utils'
 
 const eventKey = function(ev) {
@@ -12,9 +17,11 @@ const eventKey = function(ev) {
 
 const formatEvent = function(ev) {
 
+	console.log('Got event', ev);
+
 	if (ev.event == 'NewPosition') {
 		const { id, user, baseId, productId, isLong, priceWithFee, margin, leverage } = ev.args;
-		const base = getBase(baseId);
+		const base = getBaseInfo(baseId);
 		const product = PRODUCTS[productId];
 		return {
 			type: 'NewPosition',
@@ -27,6 +34,11 @@ const formatEvent = function(ev) {
 			txHash: ev.transactionHash,
 			block: ev.blockNumber
 		};
+	}
+
+	if (ev.event == 'Staked') {
+		completeTransaction(ev.transactionHash);
+		refreshUserStaked.update(n => n + 1);
 	}
 
 }
@@ -56,6 +68,7 @@ export function initEventListeners(address, chainId) {
 	if (!tradingContract) return;
 	tradingContract.removeAllListeners();
 	if (!address || !chainId) return;
+	tradingContract.on(tradingContract.filters.Staked(address), handleEvent);
 	tradingContract.on(tradingContract.filters.NewPosition(null, address), handleEvent);
 	// todo: other event listeners
 }

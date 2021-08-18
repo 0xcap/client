@@ -26,7 +26,7 @@ export async function initContracts(chainId) {
 	console.log('contractObjects', contractObjects);
 }
 
-export function getBase(baseId) {
+export function getBaseInfo(baseId) {
 	return bases[baseId];
 }
 

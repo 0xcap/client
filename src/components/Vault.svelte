@@ -1,24 +1,14 @@
 <script>
-	import { stake, getUserStaked } from '../lib/methods'
-	import { signer, address } from '../stores/provider'
+	import { stake } from '../lib/methods'
+	import { userStaked } from '../stores/vault'
 
-	let baseId = 1;
 	let amount;
-
-	let staked;
-
-	async function _getUserStaked(address) {
-		if (!address) return;
-		staked = await getUserStaked(baseId);
-	}
 
 	async function _stake() {
 		// todo: checks
-		await stake(baseId, amount);
+		await stake(null, amount);
 		console.log('submitted stake');
 	}
-
-	$: _getUserStaked($address);
 
 </script>
 
@@ -30,7 +20,7 @@
 	vault
 
 	<div>
-		Staked: {staked}
+		Staked: {$userStaked}
 	</div>
 
 	<div>

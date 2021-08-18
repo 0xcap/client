@@ -21,5 +21,9 @@
 
 <div class='container'>
 	Positions
-
+	<ul>
+		{#each positions as position}
+			<li>{position.product} {position.base} </li>
+		{/each}
+	</ul>
 </div>

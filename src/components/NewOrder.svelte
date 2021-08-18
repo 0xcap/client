@@ -1,47 +1,13 @@
 <script>
 	import { onMount } from 'svelte'
-	import { signer, address } from '../stores/provider'
-	import { getBaseInfo, getUserBaseBalance, getProductInfo, getUserAllowance, approveUserAllowance, submitOrder } from '../lib/methods'
 
-	let baseId = 1;
-	let productId = 1;
+	import { baseId, productId, baseInfo, productInfo, userBaseBalance, userBaseAllowance } from '../stores/order'
+
+	import { setBaseId, setProductId, approveUserBaseAllowance, submitOrder } from '../lib/methods'
+
 	let isLong = true;
 	let margin;
 	let leverage = 1;
-
-	let baseInfo = {};
-	let productInfo = {
-		loading: true
-	};
-
-	let baseBalance = 0;
-	let baseAllowance = 0;
-
-	async function _getBaseBalance(address) {
-		if (!address) return;
-		baseBalance = await getUserBaseBalance(baseId);
-	}
-
-	async function _getUserAllowance(address) {
-		if (!address) return;
-		baseAllowance = await getUserAllowance(baseId);
-	}
-
-	async function _approveUserAllowance() {
-		await approveUserAllowance(baseId);
-	}
-
-	function selectBase(_baseId) {
-		baseId = _baseId;
-		baseInfo = getBaseInfo(baseId);
-	}
-
-	async function selectProduct(_productId) {
-		productId = _productId;
-		productInfo.loading = true;
-		productInfo = await getProductInfo(productId);
-		leverage = parseInt(productInfo.leverage);
-	}
 
 	function selectDirection(_isLong) {
 		isLong = _isLong;
@@ -50,8 +16,8 @@
 	async function _submitOrder() {
 		// todo: checks
 		await submitOrder(
-			baseId,
-			productId,
+			$baseId,
+			$productId,
 			isLong,
 			0,
 			margin,
@@ -62,12 +28,9 @@
 	}
 
 	onMount(async () => {
-		selectBase(baseId);
-		selectProduct(productId);
+		setBaseId(1);
+		setProductId(1);
 	});
-
-	$: _getBaseBalance($address);
-	$: _getUserAllowance($address);
 
 </script>
 
@@ -82,16 +45,16 @@
 	new order
 
 	<div>
-		Base Selected || symbol: {baseInfo.symbol}, address: {baseInfo.address}, decimals: {baseInfo.decimals}
+		Base Selected || symbol: {$baseInfo.symbol}, address: {$baseInfo.address}, decimals: {$baseInfo.decimals}
 	</div>
 
 	<div>
-		Wallet balance: {baseBalance}, Allowance: {baseAllowance}
+		Wallet balance: {$userBaseBalance}, Allowance: {$userBaseAllowance}
 	</div>
 	
-	{#if !productInfo.loading}
+	{#if $productInfo.leverage}
 	<div>
-		Product Selected || fee: {productInfo.fee}%, leverage: {productInfo.leverage}, interest: {productInfo.interest}%
+		Product Selected || fee: {$productInfo.fee}%, leverage: {$productInfo.leverage}, interest: {$productInfo.interest}%
 	</div>
 	{/if}
 
@@ -108,8 +71,8 @@
 	</div>
 
 	<div>
-		{#if baseAllowance * 1 == 0 || margin * 1 > baseAllowance * 1}
-			<a on:click={_approveUserAllowance}>Approve</a>
+		{#if userBaseAllowance * 1 == 0 || margin * 1 > userBaseAllowance * 1}
+			<a on:click={approveUserBaseAllowance}>Approve</a>
 		{:else}
 			<a on:click={_submitOrder}>Submit</a>
 		{/if}

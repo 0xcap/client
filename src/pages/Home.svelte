@@ -7,6 +7,7 @@
 	import Wallet from '../components/Wallet.svelte'
 	import NewOrder from '../components/NewOrder.svelte'
 	import Positions from '../components/Positions.svelte'
+	import Transactions from '../components/Transactions.svelte'
 	import Vault from '../components/Vault.svelte'
 
 	import { provider, signer, address, chainId } from '../stores/provider'
@@ -84,5 +85,7 @@
 		<Positions />
 		<hr/>
 		<Vault />
+		<hr/>
+		<Transactions />
 	{/if}
 </div>
