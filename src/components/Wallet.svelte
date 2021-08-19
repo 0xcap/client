@@ -9,7 +9,6 @@
 		if (!_address) return;
 		if (!localStorage.getItem('address') || _address.toLowerCase() != localStorage.getItem('address').toLowerCase()) {
 			clearTransactions();
-			localStorage.setItem('address', _address);
 		} else {
 			await checkPendingTransactions();
 		}

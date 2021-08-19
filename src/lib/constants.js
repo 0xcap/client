@@ -3,15 +3,6 @@ export const PRICE_DECIMALS = 8;
 export const LEVERAGE_DECIMALS = 6;
 const INFURA_KEY = '8cccc478d2e54cb3bc3ec5524793f636';
 
-// Supported networks
-export const NETWORK_URLS = {
-	1: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-	4: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-	10: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
-	42161: `https://arb1.arbitrum.io/rpc`,
-	31337: `http://localhost:8545` // hardhat local node
-};
-
 // ABIS
 const TRADING_ABI = [
 	"function getLatestPrice(uint16 productId) view returns(uint256)",
@@ -51,26 +42,49 @@ export const ERC20_ABI = [
 	"event Approval(address indexed owner, address indexed spender, uint256 value)"
 ];
 
-export const CONTRACTS = {
+export const CHAIN_DATA = {
 	31337: { // Hardhat local node
-		TRADING: {
-			address: '0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3',
-			abi: TRADING_ABI
-		}
+		id: 31337,
+		label: 'Localhost',
+		contracts: {
+			TRADING: {
+				address: '0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3',
+				abi: TRADING_ABI
+			}
+		},
+		bases: {
+			1: {
+				symbol: 'USDC',
+				address: '0x82e01223d51Eb87e16A03E24687EDF0F294da6f1',
+				decimals: 6
+			}
+		},
+		products: {
+			1: 'BTC-USD',
+			2: 'ETH-USD'
+		},
+		network: `http://localhost:8545`,
+		explorer: `http://localhost:8545`
+	},
+	1: { // Ethereum mainnet
+		id: 1,
+		label: 'Mainnet',
+		network: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+		explorer: 'https://etherscan.io/'
+	},
+	4: {
+		id: 4,
+		label: 'Rinkeby',
+		network: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
+	},
+	10: {
+		id: 10,
+		label: 'Optimism',
+		network: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
+	},
+	42161: {
+		id: 42161,
+		label: 'Arbitrum',
+		network: `https://arb1.arbitrum.io/rpc`,
 	}
-};
-
-export const BASES = {
-	31337: { // Hardhat local node
-		1: {
-			symbol: 'USDC',
-			address: '0x82e01223d51Eb87e16A03E24687EDF0F294da6f1',
-			decimals: 6
-		}
-	}
-};
-
-export const PRODUCTS = {
-	1: 'BTC-USD',
-	2: 'ETH-USD'
-};
+}

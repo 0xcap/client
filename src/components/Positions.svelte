@@ -18,6 +18,8 @@ Todo
 -- unstake
 -- pending tx check on page load to check if they're complete
 -- error handling and toasts
+-- products depend on chain because of chainlink
+-- chain switching in ui
 - block explorer links, tx data in transactions array
 - ui design
 - error strings

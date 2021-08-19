@@ -1,7 +1,7 @@
 import { get } from 'svelte/store'
 import { contract } from './contracts'
-import { PRICE_DECIMALS, LEVERAGE_DECIMALS, PRODUCTS } from './constants'
-import { getBaseInfo } from './contracts'
+import { PRICE_DECIMALS, LEVERAGE_DECIMALS } from './constants'
+import { getBaseInfo, getProductSymbol } from './contracts'
 import { provider, signer } from '../stores/provider'
 
 import { refreshUserStaked } from '../stores/vault'
@@ -81,7 +81,7 @@ export function initEventListeners(address, chainId) {
 
 const formatEvent = function(ev) {
 
-	console.log('Formatting event', ev);
+	//console.log('Formatting event', ev);
 
 	if (ev.event == 'ClosePosition') {
 
@@ -94,7 +94,7 @@ const formatEvent = function(ev) {
 			type: 'ClosePosition',
 			id: id.toNumber(),
 			base: base.symbol,
-			product: PRODUCTS[productId],
+			product: getProductSymbol(productId),
 			priceWithFee: formatUnits(priceWithFee, PRICE_DECIMALS),
 			margin: formatUnits(margin, base.decimals),
 			leverage: formatUnits(leverage, LEVERAGE_DECIMALS),

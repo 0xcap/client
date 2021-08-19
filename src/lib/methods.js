@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { get } from 'svelte/store'
-import { contract, getBases, getBaseInfo, getContractAddress } from './contracts'
+import { contract, getBases, getBaseInfo, getProductSymbol, getProducts, getContractAddress } from './contracts'
 import { address } from '../stores/provider'
 import { addPendingTransaction } from '../stores/transactions'
 import { baseId, productId, productInfo } from '../stores/order'
@@ -8,7 +8,7 @@ import { showToast } from '../stores/toasts'
 
 import { activateProduct } from '../stores/prices'
 
-import { CONTRACTS, BASES, PRODUCTS, PRICE_DECIMALS, LEVERAGE_DECIMALS, ERC20_ABI } from './constants'
+import { PRICE_DECIMALS, LEVERAGE_DECIMALS, ERC20_ABI } from './constants'
 import { toBytes32, fromBytes32, formatUnits, parseUnits } from './utils'
 
 let productInfoCache = {};
@@ -21,7 +21,7 @@ const formatPositions = function(positions, _baseId) {
 		formattedPositions.push({
 			id: p.id.toNumber(),
 			base: base.symbol,
-			product: PRODUCTS[p.productId],
+			product: getProductSymbol(p.productId),
 			timestamp: p.timestamp.toNumber(),
 			isLong: p.isLong,
 			isSettling: p.isSettling,
@@ -40,7 +40,7 @@ const formatPositions = function(positions, _baseId) {
 
 const formatProductInfo = function(p, _productId) {
 	return {
-		symbol: PRODUCTS[_productId],
+		symbol: getProductSymbol(_productId),
 		leverage: formatUnits(p.leverage, LEVERAGE_DECIMALS),
 		fee: formatUnits(p.fee, 2),
 		interest: formatUnits(p.interest, 2),
@@ -71,10 +71,11 @@ export function setBaseId(_baseId) {
 // Products
 
 export function listProducts() {
+	const obj = getProducts();
 	let list = [];
-	for (const _productId in PRODUCTS) {
+	for (const _productId in obj) {
 		list.push({
-			symbol: PRODUCTS[_productId],
+			symbol: obj[_productId],
 			id: _productId
 		});
 	}
@@ -83,7 +84,7 @@ export function listProducts() {
 
 export function setProductId(_productId) {
 	productId.set(_productId);
-	//activateProduct(_productId);
+	activateProduct(_productId);
 }
 
 export async function getProductInfo(_productId) {

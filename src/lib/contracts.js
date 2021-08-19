@@ -1,9 +1,10 @@
 import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 import { provider, signer, chainId } from '../stores/provider'
-import { CONTRACTS, BASES, ERC20_ABI } from './constants'
+import { CHAIN_DATA, ERC20_ABI } from './constants'
 
 let bases = {};
+let products = {};
 let contractObjects = {};
 
 export async function initContracts(chainId) {
@@ -11,16 +12,22 @@ export async function initContracts(chainId) {
 
 	const _provider = get(provider);
 
-	for (const name in CONTRACTS[chainId]) {
-		const obj = CONTRACTS[chainId][name];
+	for (const name in CHAIN_DATA[chainId]['contracts']) {
+		const obj = CHAIN_DATA[chainId]['contracts'][name];
 		contractObjects[name] = new ethers.Contract(obj.address, obj.abi, _provider);
 	}
 
 	// Base contracts
-	for (const baseId in BASES[chainId]) {
-		const obj = BASES[chainId][baseId];
+	for (const baseId in CHAIN_DATA[chainId]['bases']) {
+		const obj = CHAIN_DATA[chainId]['bases'][baseId];
 		contractObjects[obj.symbol] = new ethers.Contract(obj.address, ERC20_ABI, _provider);
 		bases[baseId] = obj;
+	}
+
+	// Products for this chain
+	for (const productId in CHAIN_DATA[chainId]['products']) {
+		const symbol = CHAIN_DATA[chainId]['products'][productId];
+		products[productId] = symbol;
 	}
 
 	console.log('contractObjects', contractObjects);
@@ -32,6 +39,14 @@ export function getBaseInfo(baseId) {
 
 export function getBases() {
 	return bases;
+}
+
+export function getProductSymbol(productId) {
+	return products[productId];
+}
+
+export function getProducts() {
+	return products;
 }
 
 export function getContractAddress(name) {

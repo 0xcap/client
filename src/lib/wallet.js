@@ -1,22 +1,28 @@
-import { ethers } from 'ethers';
-import { signer, chainId } from '../stores/provider'
+import { ethers } from 'ethers'
+import { get } from 'svelte/store'
+import { signer, chainId, setNewChain } from '../stores/provider'
 import { showToast } from '../stores/toasts'
 import { initContracts } from './contracts'
 import { initProvider } from './provider'
-import { NETWORK_URLS } from './constants'
+import { CHAIN_DATA } from './constants'
 
 // Wallet (user connected, signer)
 
 let walletProvider;
 
 function handleChainSwitch(_chainId, _provider) {
-	if (!NETWORK_URLS[_chainId]) {
+	console.log('handleChainSwitch2', _chainId, get(chainId));
+	if (!CHAIN_DATA[_chainId]) {
 		showToast('Network not supported.');
 		return false;
 	}
-	chainId.set(_chainId);
-	// init provider with connected chain id
-	initProvider(_chainId, _provider);
+	if (get(chainId) != _chainId) {
+		setNewChain(_chainId);
+	} else {
+		chainId.set(_chainId);
+		// init provider with connected chain id
+		initProvider(_chainId, _provider);
+	}
 	return true;
 }
 
@@ -60,4 +66,31 @@ export async function connectWallet() {
 	} catch(e) {
 		console.error(e);
 	}
+}
+
+export async function switchChain(_chainId) {
+
+	const chainIdHex = '0x' + _chainId.toString(16);
+	console.log('chainIdHex', chainIdHex, walletProvider);
+
+	try {
+	  await walletProvider.send('wallet_switchEthereumChain',[{ chainId: chainIdHex}]);
+	} catch (error) {
+		console.log('error', error);
+	  // This error code indicates that the chain has not been added to MetaMask.
+	  if (error.code === 4902) {
+	    try {
+	      await walletProvider.send('wallet_addEthereumChain',[{ 
+	        	chainId: chainIdHex, 
+	        	chainName: CHAIN_DATA[_chainId]['label'],
+	        	rpcUrl: CHAIN_DATA[_chainId]['network']
+	      }]);
+	    } catch (addError) {
+	      // handle "add" error
+	    }
+	  }
+	  // handle other "switch" errors
+	}
+
+
 }

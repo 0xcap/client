@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte'
 	import { initProvider } from '../lib/provider'
-	import { initWallet } from '../lib/wallet'
+	import { initWallet, switchChain } from '../lib/wallet'
 	import { initEventListeners } from '../lib/events'
 
 	import Wallet from '../components/Wallet.svelte'
@@ -16,10 +16,15 @@
 
 	import Toasts from '../components/Toasts.svelte'
 
-	import { provider, signer, address, chainId } from '../stores/provider'
+	import { provider, signer, address, chainId, setNewChain } from '../stores/provider'
 	import { activeModal } from '../stores/modals'
 
-	onMount(async () => {
+	import { CHAIN_DATA } from '../lib/constants'
+
+	// get available chains
+	let chains = Object.values(CHAIN_DATA);
+
+	onMount(async () => {	
 		initProvider();
 		initWallet();
 	});
@@ -35,11 +40,20 @@
 		padding: 0 var(--base-padding);
 		margin: 0 auto;
 	}
+	.selected {
+		font-weight: bold;
+	}
 </style>
 
 <div class='container'>
 	<Toasts />
 	<div>Home</div>
+	<div>
+		Chains:
+		{#each chains as chain}
+		<a class:selected={$chainId == chain.id} on:click={() => {switchChain(chain.id)}}>{chain.label}</a> | 
+		{/each}
+	</div>
 	{#if $provider}
 		<Wallet />
 		{#if $address}
