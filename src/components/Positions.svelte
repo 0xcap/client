@@ -13,11 +13,12 @@ Todo
 -- calculate UPL per position and total UPL including interest
 -- add margin
 -- close partial & full
-- historical positions (from events)
-- vault info: cap, balance, etc.
-- pending tx check on page load to check if they're complete
-- unstake
-- error handling
+-- historical positions (from events)
+-- vault info: cap, balance, etc.
+-- unstake
+-- pending tx check on page load to check if they're complete
+- error handling and toasts
+- block explorer links, tx data in transactions array
 - ui design
 - data dashboard, liquidations
 */

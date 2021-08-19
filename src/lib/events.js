@@ -20,7 +20,6 @@ function handleEvent() {
 	console.log('got event', ev);
 	
 	if (ev.event == 'NewPosition') {
-		
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
 	}
@@ -28,6 +27,13 @@ function handleEvent() {
 	if (ev.event == 'Staked') {
 		completeTransaction(ev.transactionHash);
 		refreshUserStaked.update(n => n + 1);
+		refreshUserBaseBalance.update(n => n + 1);
+	}
+
+	if (ev.event == 'Unstaked') {
+		completeTransaction(ev.transactionHash);
+		refreshUserStaked.update(n => n + 1);
+		refreshUserBaseBalance.update(n => n + 1);
 	}
 
 	if (ev.event == 'Approval') { // ERC20
@@ -60,6 +66,7 @@ export function initEventListeners(address, chainId) {
 	if (!address || !chainId) return;
 	
 	tradingContract.on(tradingContract.filters.Staked(address), handleEvent);
+	tradingContract.on(tradingContract.filters.Unstaked(address), handleEvent);
 	tradingContract.on(tradingContract.filters.NewPosition(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.NewPositionSettled(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.AddMargin(null, address), handleEvent);

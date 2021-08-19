@@ -130,6 +130,22 @@ export async function getUserStaked(_baseId, _address) {
 	return formatUnits(staked, base.decimals);
 }
 
+export async function getVaultCap(_baseId) {
+	const base = getBaseInfo(_baseId);
+	return formatUnits(await contract().getCap(_baseId), base.decimals);
+}
+
+export async function getVaultBalance(_baseId) {
+	const base = getBaseInfo(_baseId);
+	return formatUnits(await contract().getBalance(_baseId), base.decimals);
+}
+
+export async function getVaultTotalStaked(_baseId) {
+	const base = getBaseInfo(_baseId);
+	return formatUnits(await contract().getTotalStaked(_baseId), base.decimals);
+}
+
+
 export async function stake(_baseId, amount) {
 	_baseId = _baseId || get(baseId);
 	const base = getBaseInfo(_baseId);
@@ -138,6 +154,17 @@ export async function stake(_baseId, amount) {
 	addPendingTransaction({
 		hash: tx.hash,
 		description: `Stake ${amount} ${base.symbol}`
+	});
+}
+
+export async function unstake(_baseId, _stake) {
+	_baseId = _baseId || get(baseId);
+	const base = getBaseInfo(_baseId);
+	if (!base) return;
+	const tx = await contract('', true).unstake(_baseId, parseUnits(_stake, base.decimals));
+	addPendingTransaction({
+		hash: tx.hash,
+		description: `Unstake ${_stake} ${base.symbol}`
 	});
 }
 

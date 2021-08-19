@@ -58,7 +58,9 @@
 		<History />
 		<hr/>
 		<Vault />
+		{#if $address}
 		<hr/>
 		<Transactions />
+		{/if}
 	{/if}
 </div>

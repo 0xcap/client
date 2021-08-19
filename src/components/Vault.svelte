@@ -1,13 +1,20 @@
 <script>
-	import { stake } from '../lib/methods'
-	import { userStaked } from '../stores/vault'
+	import { stake, unstake } from '../lib/methods'
+	import { userStaked, vaultCap, vaultBalance, vaultTotalStaked } from '../stores/vault'
 
-	let amount;
+	let amountToStake;
+	let amountToUnstake;
 
 	async function _stake() {
 		// todo: checks
-		await stake(null, amount);
+		await stake(null, amountToStake);
 		console.log('submitted stake');
+	}
+
+	async function _unstake() {
+		// todo: checks
+		await unstake(null, amountToUnstake);
+		console.log('submitted unstake');
 	}
 
 </script>
@@ -20,15 +27,23 @@
 	vault
 
 	<div>
-		Staked: {$userStaked}
+		Staked: {$userStaked}, Vault Total Staked: {$vaultTotalStaked}, Vault Balance: {$vaultBalance}, Vault Cap: {$vaultCap}
 	</div>
 
 	<div>
-		Amount: <input type=number bind:value={amount} min=0 max=10000000>
+		Amount to stake: <input type=number bind:value={amountToStake} min=0 max=10000000>
 	</div>
 
 	<div>
 		<a on:click={_stake}>Stake</a>
+	</div>
+
+	<div>
+		Amount to unstake: <input type=number bind:value={amountToUnstake} min=0 max=10000000>
+	</div>
+
+	<div>
+		<a on:click={_unstake}>Unstake</a>
 	</div>
 
 </div>
