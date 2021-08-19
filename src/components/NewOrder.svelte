@@ -5,9 +5,13 @@
 	import { userBaseBalance, userBaseAllowance } from '../stores/wallet'
 	import { productId, productInfo, margin, leverage, amount, buyingPower } from '../stores/order'
 
+	import { prices } from '../stores/prices'
+
 	import { setBaseId, setProductId, listProducts, approveUserBaseAllowance, submitOrder } from '../lib/methods'
 
 	import { showModal } from '../stores/modals'
+
+	import { formatPrice } from '../lib/utils'
 
 	async function _approveUserBaseAllowance() {
 		await approveUserBaseAllowance();
@@ -25,6 +29,18 @@
 			false
 		);
 	}
+
+	let shortPrice = '';
+	let longPrice = '';
+
+	function computePrices(latestPrice, fee) {
+		console.log('latestPrice', latestPrice);
+		if (!latestPrice || !fee) return;
+		shortPrice = formatPrice(latestPrice * (1 - fee/100));
+		longPrice = formatPrice(latestPrice * (1 + fee/100));
+	}
+
+	$: computePrices($prices[$productId], $productInfo.fee);
 
 </script>
 
@@ -62,7 +78,7 @@
 			{#if $userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1}
 				<a on:click={_approveUserBaseAllowance}>Approve</a>
 			{:else}
-				<a class='button button-short' on:click={() => {_submitOrder(false)}}>Short</a> | <a class='button button-long' on:click={() => {_submitOrder(true)}}>Long</a>
+				<a class='button button-short' on:click={() => {_submitOrder(false)}}>Short {shortPrice}</a> | <a class='button button-long' on:click={() => {_submitOrder(true)}}>Long {longPrice}</a>
 			{/if}
 		</div>
 

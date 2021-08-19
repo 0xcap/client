@@ -42,6 +42,12 @@ export const ERC20_ABI = [
 	"event Approval(address indexed owner, address indexed spender, uint256 value)"
 ];
 
+// Per product id
+export const PRICE_PRECISION = {
+	1: 1,
+	2: 2
+};
+
 export const CHAIN_DATA = {
 	31337: { // Hardhat local node
 		id: 31337,
