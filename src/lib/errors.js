@@ -1,21 +1,24 @@
 
-const errors = {
-	'BAD_LEV_OR_SYMBOL': 'Leverage or product is invalid.',
-	'INVALID_AMOUNT': 'Amount is invalid.',
-	'INVALID_CURRENCY': 'Currency is not supported.',
-	'!margin': 'The minimum margin amount is 10 DAI.',
-	'!leverage': 'Leverage is invalid.',
-	'!balance': 'Insufficient funds.',
-	'INVALID_USER': 'User is invalid.',
-	'POSITION_NOT_FOUND': "The position you're trying to query is no longer available.",
-	'ALREADY_LIQUIDATING': "This position is already being liquidated."
+const DEFAULT_ERROR = "Unexpected error. Please try again later.";
+
+const ERROR_STRINGS = {
+	'!C': 'Stake exceeds vault cap.'
 }
 
-export function showReadableError(e) {
-	console.error(e);
-	if (!e || typeof(e) != 'string') return "Unexpected error. Please try again later.";
-	for (const err in errors) {
-		if (e.includes(err)) return errors[err];
+export function parseErrorToString(e) {
+	//console.error('sre', e);
+	if (!e) return DEFAULT_ERROR;
+	if (typeof(e) == 'string') return e;
+	let error_string = '';
+	if (e.data && e.data.message) {
+		error_string = e.data.message;
+	} else if (e.message) {
+		error_string = e.message;
+	} else {
+		return DEFAULT_ERROR;
 	}
-	return e;
+	for (const key in ERROR_STRINGS) {
+		if (error_string.includes(key)) return ERROR_STRINGS[key];
+	}
+	return error_string || DEFAULT_ERROR;
 }

@@ -14,6 +14,8 @@
 	import AddMargin from '../components/AddMargin.svelte'
 	import ClosePosition from '../components/ClosePosition.svelte'
 
+	import Toasts from '../components/Toasts.svelte'
+
 	import { provider, signer, address, chainId } from '../stores/provider'
 	import { activeModal } from '../stores/modals'
 
@@ -36,6 +38,7 @@
 </style>
 
 <div class='container'>
+	<Toasts />
 	<div>Home</div>
 	{#if $provider}
 		<Wallet />

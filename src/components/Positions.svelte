@@ -17,10 +17,12 @@ Todo
 -- vault info: cap, balance, etc.
 -- unstake
 -- pending tx check on page load to check if they're complete
-- error handling and toasts
+-- error handling and toasts
 - block explorer links, tx data in transactions array
 - ui design
+- error strings
 - data dashboard, liquidations
+
 */
 
 	let upls = {};

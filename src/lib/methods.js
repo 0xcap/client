@@ -4,6 +4,7 @@ import { contract, getBases, getBaseInfo, getContractAddress } from './contracts
 import { address } from '../stores/provider'
 import { addPendingTransaction } from '../stores/transactions'
 import { baseId, productId, productInfo } from '../stores/order'
+import { showToast } from '../stores/toasts'
 
 import { activateProduct } from '../stores/prices'
 
@@ -110,11 +111,15 @@ export async function approveUserBaseAllowance(_baseId, amount, contractName) {
 	if (!amount) amount = 10n**27n; // 1 billion at 10^18
 	const base = getBaseInfo(_baseId || get(baseId));
 	if (!base) return;
-	const tx = await contract(base.symbol, true).approve(getContractAddress(contractName), amount);
-	addPendingTransaction({
-		hash: tx.hash,
-		description: `Approve ${base.symbol}`
-	});
+	try {
+		const tx = await contract(base.symbol, true).approve(getContractAddress(contractName), amount);
+		addPendingTransaction({
+			hash: tx.hash,
+			description: `Approve ${base.symbol}`
+		});
+	} catch(e) {
+		showToast(e);
+	}
 }
 
 export async function getUserPositions(_baseId, _address) {
@@ -150,22 +155,30 @@ export async function stake(_baseId, amount) {
 	_baseId = _baseId || get(baseId);
 	const base = getBaseInfo(_baseId);
 	if (!base) return;
-	const tx = await contract('', true).stake(_baseId, parseUnits(amount, base.decimals));
-	addPendingTransaction({
-		hash: tx.hash,
-		description: `Stake ${amount} ${base.symbol}`
-	});
+	try {
+		const tx = await contract('', true).stake(_baseId, parseUnits(amount, base.decimals));
+		addPendingTransaction({
+			hash: tx.hash,
+			description: `Stake ${amount} ${base.symbol}`
+		});
+	} catch(e) {
+		showToast(e);
+	}	
 }
 
 export async function unstake(_baseId, _stake) {
 	_baseId = _baseId || get(baseId);
 	const base = getBaseInfo(_baseId);
 	if (!base) return;
-	const tx = await contract('', true).unstake(_baseId, parseUnits(_stake, base.decimals));
-	addPendingTransaction({
-		hash: tx.hash,
-		description: `Unstake ${_stake} ${base.symbol}`
-	});
+	try {
+		const tx = await contract('', true).unstake(_baseId, parseUnits(_stake, base.decimals));
+		addPendingTransaction({
+			hash: tx.hash,
+			description: `Unstake ${_stake} ${base.symbol}`
+		});
+	} catch(e) {
+		showToast(e);
+	}
 }
 
 // Price
@@ -175,29 +188,33 @@ export async function getLatestPrice(_productId) {
 	return formatUnits(p, 8);
 }
 
-
+// Order
 
 export async function submitOrder(_baseId, _productId, isLong, existingPositionId, margin, leverage, releaseMargin, isClose) {
 	_baseId = _baseId || get(baseId);
 	_productId = _productId || get(productId);
 	const base = getBaseInfo(_baseId);
 	if (!base) return;
-	const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, existingPositionId || 0, parseUnits(margin, base.decimals), parseUnits(leverage, LEVERAGE_DECIMALS), releaseMargin);
-	let description;
-	const _productInfo = await getProductInfo(_productId);
-	if (isClose) {
-		description = `Close position ${margin} ${base.symbol} on ${_productInfo.symbol}`;
-	} else if (releaseMargin) {
-		description = `Close position (RM) ${margin} ${base.symbol} on ${_productInfo.symbol}`;
-	} else if (existingPositionId) {
-		// add margin
-		description = `Add margin ${margin} ${base.symbol} on ${_productInfo.symbol}`;
-	} else {
-		description = `New position ${margin}x${leverage} ${base.symbol} on ${_productInfo.symbol}`;
-	}
 
-	addPendingTransaction({
-		hash: tx.hash,
-		description
-	});
+	try {
+		const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, existingPositionId || 0, parseUnits(margin, base.decimals), parseUnits(leverage, LEVERAGE_DECIMALS), releaseMargin);
+		let description;
+		const _productInfo = await getProductInfo(_productId);
+		if (isClose) {
+			description = `Close position ${margin} ${base.symbol} on ${_productInfo.symbol}`;
+		} else if (releaseMargin) {
+			description = `Close position (RM) ${margin} ${base.symbol} on ${_productInfo.symbol}`;
+		} else if (existingPositionId) {
+			// add margin
+			description = `Add margin ${margin} ${base.symbol} on ${_productInfo.symbol}`;
+		} else {
+			description = `New position ${margin}x${leverage} ${base.symbol} on ${_productInfo.symbol}`;
+		}
+		addPendingTransaction({
+			hash: tx.hash,
+			description
+		});
+	} catch(e) {
+		showToast(e);
+	}
 }

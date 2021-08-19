@@ -1,19 +1,27 @@
 import { writable } from 'svelte/store'
-import { showReadableError } from '../lib/errors'
+import { parseErrorToString } from '../lib/errors'
 
-export const toastMessage = writable(null);
-export const toastType = writable(null);
+export const toasts = writable([]);
 
-export function showToast(message, type) {
-	if (!type) {
-		type = 'error';
-		message = showReadableError(message);
-	}
-	toastMessage.set(message);
-	toastType.set(type);
+let lastToastId = 1;
+
+export function showToast(data, type) {
+	let message = parseErrorToString(data);
+	if (!type) type = 'error';
+	toasts.update((x) => {
+		x.unshift({message, type, id: lastToastId});
+		return x;
+	});
+	lastToastId++;
 }
 
-export function closeToast() {
-	toastMessage.set(null);
-	toastType.set(null);
+export function hideToast(toastId) {
+	toasts.update((x) => {
+		let new_toasts = [];
+		for (const toast of x) {
+			if (toastId == toast.id) continue;
+			new_toasts.push(toast);
+		}
+		return new_toasts;
+	});
 }
