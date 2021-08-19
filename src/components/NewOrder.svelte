@@ -30,18 +30,6 @@
 		);
 	}
 
-	let shortPrice = '';
-	let longPrice = '';
-
-	function computePrices(latestPrice, fee) {
-		console.log('latestPrice', latestPrice);
-		if (!latestPrice || !fee) return;
-		shortPrice = formatPrice(latestPrice * (1 - fee/100));
-		longPrice = formatPrice(latestPrice * (1 + fee/100));
-	}
-
-	$: computePrices($prices[$productId], $productInfo.fee);
-
 </script>
 
 <style>
@@ -62,6 +50,7 @@
 						{$productInfo.symbol} {$leverage}x
 					{/if}
 				</a>
+				<span>({formatPrice($prices[$productId]) || ''})</span>
 				<div class='buying-power'>BP ~ {$buyingPower}</div>
 			</div>
 
@@ -78,7 +67,7 @@
 			{#if $userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1}
 				<a on:click={_approveUserBaseAllowance}>Approve</a>
 			{:else}
-				<a class='button button-short' on:click={() => {_submitOrder(false)}}>Short {shortPrice}</a> | <a class='button button-long' on:click={() => {_submitOrder(true)}}>Long {longPrice}</a>
+				<a class='button button-short' on:click={() => {_submitOrder(false)}}>Short</a> | <a class='button button-long' on:click={() => {_submitOrder(true)}}>Long</a>
 			{/if}
 		</div>
 

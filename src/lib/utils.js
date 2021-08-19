@@ -22,5 +22,5 @@ export function parseUnits(number, units) {
 export function formatPrice(price, _productId) {
   if (!_productId) _productId = get(productId);
   if (!price || !_productId) return 0;
-  return price.toFixed(PRICE_PRECISION[_productId] || 2);
+  return (price * 1).toFixed(PRICE_PRECISION[_productId] || 2);
 }
