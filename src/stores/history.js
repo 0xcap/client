@@ -1,7 +1,7 @@
 import { writable, derived } from 'svelte/store'
 import { fetchHistoryEvents } from '../lib/events'
 import { address } from './provider'
-import { baseId } from './order'
+import { baseId } from './bases'
 
 export const refreshUserHistory = writable(0);
 

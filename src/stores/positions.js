@@ -1,7 +1,7 @@
 import { writable, derived } from 'svelte/store'
 import { getUserPositions } from '../lib/methods'
 import { address } from './provider'
-import { baseId } from './order'
+import { baseId } from './bases'
 
 export const refreshUserPositions = writable(0);
 

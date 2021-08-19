@@ -6,7 +6,7 @@ import { provider, signer } from '../stores/provider'
 
 import { refreshUserStaked } from '../stores/vault'
 import { refreshUserPositions } from '../stores/positions'
-import { refreshUserBaseAllowance, refreshUserBaseBalance } from '../stores/order'
+import { refreshUserBaseAllowance, refreshUserBaseBalance } from '../stores/wallet'
 import { refreshUserHistory } from '../stores/history'
 
 import { completeTransaction } from '../stores/transactions'

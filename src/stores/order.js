@@ -1,35 +1,49 @@
 import { writable, derived } from 'svelte/store'
 import { getBaseInfo } from '../lib/contracts'
-import { getProductInfo, getUserBaseBalance, getUserBaseAllowance, getUserStaked } from '../lib/methods'
+import { getProductInfo } from '../lib/methods'
 
 import { address } from './provider'
+import { userBaseBalance } from './wallet'
 
-export const refreshUserBaseBalance = writable(0);
-export const refreshUserBaseAllowance = writable(0);
+export function getCachedLeverage(_productId) {
+	let cl = localStorage.getItem('cachedLeverages');
+	if (cl) {
+		try {
+			cl = JSON.parse(cl);
+			return cl[_productId] * 1;
+		} catch(e) {}
+	}
+}
 
-export const baseId = writable(1);
+export function setCachedLeverage(_productId, _leverage) {
+	let cl = localStorage.getItem('cachedLeverages');
+	if (cl) {
+		cl = JSON.parse(cl);
+		cl[_productId] = _leverage * 1;
+		localStorage.setItem('cachedLeverages', JSON.stringify(cl));
+	} else {
+		localStorage.setItem('cachedLeverages', JSON.stringify({[_productId]: _leverage}));
+	}
+}
+
 export const productId = writable(1);
-
-export const baseInfo = derived(baseId, ($baseId) => {
-	return getBaseInfo($baseId);
-});
+export const amount = writable(0);
+export const leverage = writable(getCachedLeverage(1) || 100);
 
 export const productInfo = derived(productId, async ($productId, set) => {
-	set(await getProductInfo($productId));
+	const pi = await getProductInfo($productId);
+	if (!pi) return;
+
+	leverage.set(getCachedLeverage($productId) || pi.leverage * 1);
+	set(pi);
 }, {});
 
-export const userBaseBalance = derived([baseId, address, refreshUserBaseBalance], async ([$baseId, $address, $refreshUserBaseBalance], set) => {
-	if (!$baseId || !$address) {
-		set(0);
-		return;
-	}
-	set(await getUserBaseBalance($baseId, $address));
+export const margin = derived([amount, leverage], ([$amount, $leverage]) => {
+	if (!$amount || !$leverage) return 0;
+	return ($amount || 0) / $leverage;
 }, 0);
 
-export const userBaseAllowance = derived([baseId, address, refreshUserBaseAllowance], async ([$baseId, $address, $refreshUserBaseAllowance], set) => {
-	if (!$baseId || !$address) {
-		set(0);
-		return;
-	}
-	set(await getUserBaseAllowance($baseId, $address));
+export const buyingPower = derived([userBaseBalance, leverage], ([$userBaseBalance, $leverage]) => {
+	if (!$userBaseBalance || !$leverage) return 0;
+	return Math.floor($userBaseBalance * $leverage);
 }, 0);

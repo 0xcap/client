@@ -1,7 +1,7 @@
 import { writable, derived } from 'svelte/store'
 
 import { signer, address } from './provider'
-import { baseId } from './order'
+import { baseId } from './bases'
 
 import { getBaseInfo } from '../lib/contracts'
 import { getUserStaked, getVaultCap, getVaultBalance, getVaultTotalStaked } from '../lib/methods'

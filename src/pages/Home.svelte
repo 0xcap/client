@@ -11,6 +11,7 @@
 	import Transactions from '../components/Transactions.svelte'
 	import Vault from '../components/Vault.svelte'
 
+	import Products from '../components/Products.svelte'
 	import AddMargin from '../components/AddMargin.svelte'
 	import ClosePosition from '../components/ClosePosition.svelte'
 
@@ -63,6 +64,9 @@
 		{/if}
 		<hr/>
 		<NewOrder />
+		{#if $activeModal && $activeModal.name == 'Products'}
+			<Products />
+		{/if}
 		<hr/>
 		<Positions />
 		{#if $activeModal && $activeModal.name == 'AddMargin'}
