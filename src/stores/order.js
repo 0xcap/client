@@ -27,7 +27,7 @@ export function setCachedLeverage(_productId, _leverage) {
 }
 
 export const productId = writable(1);
-export const amount = writable(0);
+export const amount = writable();
 export const leverage = writable(getCachedLeverage(1) || 100);
 
 export const productInfo = derived(productId, async ($productId, set) => {

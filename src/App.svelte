@@ -14,7 +14,7 @@
 		--border-color: #c8c8c8;
 		--border-color-light: #ddd;
 		--bg-color: #fff;
-		--container-width: 660px;
+		--container-width: 480px;
 	}
 	:global(a) {
 		color: var(--color-green);
@@ -24,6 +24,15 @@
 	:global(html) {
 		background-color: #010101;
 		color: #fff;
+	}
+
+	:global(input::-webkit-outer-spin-button,input::-webkit-inner-spin-button) {
+	    display: none;
+	    -webkit-appearance: none;
+	    margin: 0;
+	}
+	:global(input) {
+		appearance: textfield;
 	}
 </style>
 

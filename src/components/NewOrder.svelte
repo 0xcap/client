@@ -33,6 +33,50 @@
 </script>
 
 <style>
+
+	.new-order {
+		display:  grid;
+		grid-auto-flow: row;
+		grid-gap: 24px;
+	}
+
+	.container {
+		background-color: #333;
+		padding: 8px;
+	}
+
+	.input-container {
+		border:  1px solid white;
+		display:  grid;
+		grid-auto-rows: auto;
+		row-gap: 6px;
+	}
+
+	.flex {
+		display: flex;
+	}
+
+	.product-select {
+		margin-right: 12px;
+	}
+
+	input.amount {
+		flex: 1 1 auto;
+		text-align: right;
+	}
+
+	.button-container {
+		border:  1px solid white;
+		display: grid;
+		grid-auto-flow: column;
+		grid-gap: 8px;
+	}
+
+	.button-short {
+	}
+	.button-long {
+	}
+
 	.selected {
 		font-weight: 800;
 	}
@@ -44,30 +88,35 @@
 
 		<div class='input-container'>
 
-			<div class='product-select-wrap'>
-				<a class='product-select' on:click={() => {showModal('Products', {})}}>
-					{#if $productInfo.symbol}
-						{$productInfo.symbol} {$leverage}x
-					{/if}
-				</a>
-				<span>({formatPrice($prices[$productId]) || ''})</span>
-				<div class='buying-power'>BP ~ {$buyingPower}</div>
+			<div class='top flex'>
+
+				<button class='product-select flex' on:click={() => {showModal('Products', {})}}>
+					<span>
+						{#if $productInfo.symbol}
+							{$productInfo.symbol} {$leverage}x
+						{/if}
+					</span>
+					<span>({formatPrice($prices[$productId]) || ''})</span>
+				</button>
+
+				<input type='number' class='amount' bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder="0.0" autocomplete="off" autocorrect="off" inputmode="decimal">
+
 			</div>
 
-			<div class='amount-wrap'>
-				<div class='amount'>
-					<input type=number bind:value={$amount} min=0 max=10000000>
-				</div>
+			{#if $buyingPower}
+			<div class='bottom flex'>
+				<div class='buying-power'>BP ~ {$buyingPower}</div>
 				<div class='margin'>M ~ {$margin}</div>
 			</div>
+			{/if}
 
 		</div>
 
 		<div class='button-container'>
 			{#if $userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1}
-				<a on:click={_approveUserBaseAllowance}>Approve</a>
+				<button on:click={_approveUserBaseAllowance}>Approve</button>
 			{:else}
-				<a class='button button-short' on:click={() => {_submitOrder(false)}}>Short</a> | <a class='button button-long' on:click={() => {_submitOrder(true)}}>Long</a>
+				<button class='button button-short' on:click={() => {_submitOrder(false)}}>Short</button><button class='button button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 			{/if}
 		</div>
 
