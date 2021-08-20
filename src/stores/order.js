@@ -40,7 +40,12 @@ export const productInfo = derived(productId, async ($productId, set) => {
 
 export const margin = derived([amount, leverage], ([$amount, $leverage]) => {
 	if (!$amount || !$leverage) return 0;
-	return ($amount || 0) / $leverage;
+	const m = ($amount || 0) / $leverage;
+	if (m < 100) {
+		return m.toFixed(2);
+	} else {
+		return Math.ceil(m);
+	}
 }, 0);
 
 export const buyingPower = derived([userBaseBalance, leverage], ([$userBaseBalance, $leverage]) => {

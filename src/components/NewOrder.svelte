@@ -30,19 +30,29 @@
 		);
 	}
 
+	let detailsVisible = false;
+
+	function showDetails() {
+		detailsVisible = true;
+	}
+
+	function hideDetails() {
+		if (!$amount) detailsVisible = false;
+	}
+
 </script>
 
 <style>
+
+	.container {
+		background-color: #333;
+		padding: 8px;
+	}
 
 	.new-order {
 		display:  grid;
 		grid-auto-flow: row;
 		grid-gap: 24px;
-	}
-
-	.container {
-		background-color: #333;
-		padding: 8px;
 	}
 
 	.input-container {
@@ -58,6 +68,10 @@
 
 	.product-select {
 		margin-right: 12px;
+	}
+
+	.bottom {
+		text-align: center;
 	}
 
 	input.amount {
@@ -99,16 +113,9 @@
 					<span>({formatPrice($prices[$productId]) || ''})</span>
 				</button>
 
-				<input type='number' class='amount' bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder="0.0" autocomplete="off" autocorrect="off" inputmode="decimal">
+				<input type='number' class='amount' bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0.0 ${$baseInfo.symbol}`} autocomplete="off" autocorrect="off" inputmode="decimal">
 
 			</div>
-
-			{#if $buyingPower}
-			<div class='bottom flex'>
-				<div class='buying-power'>BP ~ {$buyingPower}</div>
-				<div class='margin'>M ~ {$margin}</div>
-			</div>
-			{/if}
 
 		</div>
 
@@ -120,12 +127,12 @@
 			{/if}
 		</div>
 
+		{#if $buyingPower && $productInfo.symbol}
+		<div class='bottom'>
+			<div class='buying-power'>{$buyingPower} {$baseInfo.symbol} available to trade</div>
+		</div>
+		{/if}
+
 	</div>
-	
-	{#if $productInfo.leverage}
-	<div>
-		Product Selected || {$productInfo.symbol} fee: {$productInfo.fee}%, leverage: {$productInfo.leverage}, interest: {$productInfo.interest}%
-	</div>
-	{/if}
 
 </div>

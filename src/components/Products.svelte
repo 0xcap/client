@@ -31,4 +31,7 @@
 	<div>
 		Leverage: <input type=range bind:value={$leverage} min=1 max={$productInfo.leverage * 1 || 100}> {$leverage}
 	</div>
+	<div>
+		Fee: {$productInfo.fee}%, Interest: {$productInfo.interest}%
+	</div>
 </div>
