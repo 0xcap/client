@@ -73,7 +73,7 @@
 	    -webkit-appearance: none;
 	    margin: 0;
 	}
-	:global(input,button) {
+	:global(input[type='number'],button) {
 		appearance: textfield;
 		font-family: inherit;
 		font-size: inherit;

@@ -14,9 +14,9 @@
 	/* todo
 	-- wallet transactions modal
 	-- routing for /trade/product, /vault
-	- positions
-	- add margin modal
-	- close position modal
+	-- positions
+	-- add margin modal
+	-- close position modal
 	- position details modal
 	- history
 	- vault page

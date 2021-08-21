@@ -1,8 +1,9 @@
 <script>
 	import { onMount } from 'svelte'
-	import { hideModal } from '../stores/modals'
 	import { submitOrder } from '../lib/methods'
 	
+	import Modal from './Modal.svelte'
+
 	export let data;
 
 	let margin;
@@ -22,20 +23,38 @@
 	}
 
 	onMount(() => {
-		console.log('modal data', data);
-	})
+		document.getElementById('amount').focus();
+	});
 
 </script>
 
 <style>
+	.body{}
+
+	input {
+		padding: var(--base-padding);
+	}
+
+	.button {
+		border-top: 1px solid var(--gray-dark);
+		padding: var(--base-padding);
+	}
+
+	.button button {
+		background-color: var(--blue);
+		color: var(--gray-darkest);
+		padding: 10px;
+		border-radius: var(--base-radius);
+		font-weight: 700;
+		cursor: pointer;
+	}
 </style>
 
-<div class='container'>
-	Add margin modal here. <a on:click={hideModal}>Close</a>
-	<div>
-		Margin: <input type=number bind:value={margin} min=0 max=10000000> 
+<Modal title='Add Margin'>
+	<div class='body'>
+		<input id='amount' type=number bind:value={margin} min=0 max=10000000 placeholder="Margin to add"> 
 	</div>
-	<div>
-		<a on:click={_submitOrder}>Submit</a>
+	<div class='button'>
+		<button on:click={_submitOrder}>Add Margin</button>
 	</div>
-</div>
+</Modal>
