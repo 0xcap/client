@@ -40,34 +40,33 @@
 		display:  grid;
 		grid-auto-flow: row;
 		grid-gap: 12px;
-		background-color: #1c1c1e;
-		padding: 16px;
 		border-radius: 5px;
 		font-size: 16.5px;
+		margin: 24px 0;
 	}
 
 	.row {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border: 1px solid #2d2c2e;
+		border: 1px solid rgb(55,55,55);
 		border-radius: 5px;
 		padding: 16px;
 	}
 
 	.row:hover:not(.focused) {
-		border-color: #3a393d;
+		border-color: rgb(80,80,80);
 	}
 	.row.focused {
-		border-color: #64d2ff;
+		border-color: rgb(80,80,80);
 	}
 
 	.row .label {
-		font-weight: 500;
+		font-weight: 700;
 	}
 
 	.row .sub-label {
-		color: #8e8e93;
+		color: rgb(144,144,144);
 		font-size: 80%;
 		margin-top: 5px;
 	}
@@ -108,32 +107,30 @@
 		outline: none;
 		cursor: pointer;
 		user-select: none;
-		font-size: 18px;
+		font-size: 15.5px;
 		font-weight: 500;
 		appearance: none;
 		padding: 16px;
 		border-radius: 5px;
 		width: 100%;
-		background-color: transparent;
+		border: none;
+		color: #222;
+		font-weight: 700;
 	}
 
 	.button-short {
-		border: 1px solid #fe3b2f;
-		color: #fe3b2f;
+		background-color: rgb(255,80,0);
 		margin-right: 8px;
 	}
 	.button-short:hover {
-		background-color: #fe3b2f;
-		color: #fff;
+		background-color: rgb(235,80,0);
 	}
 	.button-long {
-		border: 1px solid #4cd863;
-		color: #4cd863;
+		background-color: rgb(0,200,5);
 		margin-left: 8px;
 	}
 	.button-long:hover {
-		background-color: #4cd863;
-		color: #fff;
+		background-color: rgb(0,180,5);
 	}
 
 </style>

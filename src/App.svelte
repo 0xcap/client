@@ -3,10 +3,8 @@
 </script>
 
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-	.test {
-		color: red;
-	}
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+
 	:global(:root) {
 		--color-main: red;
 		--base-padding: 18px;
@@ -23,9 +21,9 @@
 		cursor: pointer;
 	}
 	:global(html) {
-		background-color: #000;
+		background-color: rgb(30,30,30);
 		color: #fff;
-		font-family: 'Roboto';
+		font-family: 'Ubuntu Mono';
 	}
 
 	:global(input::-webkit-outer-spin-button,input::-webkit-inner-spin-button) {
@@ -35,7 +33,10 @@
 	}
 	:global(input,button) {
 		appearance: textfield;
-		font-family: 'Roboto';
+		font-family: inherit;
+	}
+	:global(hr) {
+		display: none;
 	}
 	/* colors
 	#1c1c1e dark bg
