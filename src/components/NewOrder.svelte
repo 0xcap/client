@@ -1,11 +1,12 @@
 <script>
 	import { onMount } from 'svelte'
 
+	import { LOGOS } from '../lib/constants'
 	import { baseInfo } from '../stores/bases'
 	import { userBaseBalance, userBaseAllowance } from '../stores/wallet'
 	import { productId, productInfo, margin, leverage, amount, buyingPower } from '../stores/order'
 
-	import { prices } from '../stores/prices'
+	import { prices, activateProduct } from '../stores/prices'
 
 	import { setBaseId, setProductId, listProducts, approveUserBaseAllowance, submitOrder } from '../lib/methods'
 
@@ -32,6 +33,10 @@
 
 	let amountFocused = false;
 
+	onMount(() => {
+		activateProduct($productId);
+	});
+
 </script>
 
 <style>
@@ -39,119 +44,108 @@
 	.new-order {
 		display:  grid;
 		grid-auto-flow: row;
-		grid-gap: 12px;
-		border-radius: 5px;
-		font-size: 16.5px;
-		margin: 24px 0;
+		grid-gap: var(--base-padding);
+		margin: var(--base-padding) 0;
 	}
 
-	.row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border: 1px solid rgb(55,55,55);
-		border-radius: 5px;
-		padding: 16px;
-	}
+		.row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border: 1px solid var(--gray-dark);
+			border-radius: var(--base-radius);
+			padding: var(--base-padding);
+			cursor: pointer;
+		}
 
-	.row:hover:not(.focused) {
-		border-color: rgb(80,80,80);
-	}
-	.row.focused {
-		border-color: rgb(80,80,80);
-	}
+		.row:hover, .row.focused {
+			border-color: var(--gray);
+		}
 
-	.row .label {
-		font-weight: 700;
-	}
+			.row .label-wrap .sub-label {
+				color: var(--gray-light);
+				font-size: 80%;
+				margin-top: 5px;
+			}
 
-	.row .sub-label {
-		color: rgb(144,144,144);
-		font-size: 80%;
-		margin-top: 5px;
-	}
+			.row .value-wrap {
+				font-size: 20px;
+				font-weight: 700;
+			}
 
-	.row.product {
-		cursor: pointer;
-	}
+			.row .input-wrap {
+				flex: 1 1 auto;
+			}
 
-	.row.buttons {
-		border: none;
-		padding: 0;
-	}
+			.row .value-wrap .product-select {
+				display: flex;
+				align-items: center;
+			}
 
-	.product-select {
-		display: flex;
-		align-items: center;
-		font-size: 20px;
-	}
+			.row .value-wrap .product-select img {
+				width: 24px;
+				height: 24px;
+				border-radius: 24px;
+			}
 
-	.product-select span {
-		margin-right: 8px;
-	}
+			.row .value-wrap .product-select span {
+				margin-left: 8px;
+			}
 
-	input.amount {
-		flex: 1 1 auto;
-		text-align: right;
-		font-size: 20px;
-		font-weight: 500;
-		color: #fff;
-		outline: none;
-		border: none;
-		background-color: transparent;
-		appearance: textfield;
-	}
+			.row .value-wrap .product-select .leverage {
+				font-weight: 400;
+			}
 
-	button.button {
-		text-align: center;
-		outline: none;
-		cursor: pointer;
-		user-select: none;
-		font-size: 15.5px;
-		font-weight: 500;
-		appearance: none;
-		padding: 16px;
-		border-radius: 5px;
-		width: 100%;
-		border: none;
-		color: #222;
-		font-weight: 700;
-	}
+			.row input {
+				text-align: right;
+			}
 
-	.button-short {
-		background-color: rgb(255,80,0);
-		margin-right: 8px;
-	}
-	.button-short:hover {
-		background-color: rgb(235,80,0);
-	}
-	.button-long {
-		background-color: rgb(0,200,5);
-		margin-left: 8px;
-	}
-	.button-long:hover {
-		background-color: rgb(0,180,5);
-	}
+		.buttons {
+			display: flex;
+			font-weight: 700;
+		}
+
+			.buttons button {
+				text-align: center;
+				cursor: pointer;
+				user-select: none;
+				appearance: none;
+				padding: var(--base-padding);
+				border-radius: var(--base-radius);
+				color: var(--gray-darkest);
+			}
+
+			.button-short {
+				background-color: var(--red);
+				margin-right: 8px;
+			}
+			.button-short:hover {
+				background-color: var(--red-dark);
+			}
+			.button-long {
+				background-color: var(--green);
+				margin-left: 8px;
+			}
+			.button-long:hover {
+				background-color: var(--green-dark);
+			}
 
 </style>
 
 <div class='new-order'>
 
-	<div class='row product' on:click={() => {showModal('Products', {})}}>
+	<div class='row' on:click={() => {showModal('Products')}}>
 		<div class='label-wrap'>
 			<div class='label'>Product</div>
 			<div class='sub-label'>Current price: {formatPrice($prices[$productId]) || ''}</div>
 		</div>
-		<div class='value'>
+		<div class='value-wrap'>
 			<div class='product-select'>
-				<span>
-					{#if $productInfo.symbol}
-						{$productInfo.symbol} {$leverage}x
-					{/if}
-				</span>
-				<svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg" class="chevron">
-					<path d="M0.97168 1L6.20532 6L11.439 1" stroke="#AEAEAE"></path>
-				</svg>
+				{#if $productInfo.symbol}
+					<img src={LOGOS[$productId]} alt={`${$productInfo.symbol} logo`}>
+					<span>{$productInfo.symbol}</span>
+					<span class='leverage'>{$leverage}x</span>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -159,18 +153,18 @@
 	<label class='row' class:focused={amountFocused} for='amount'>
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
-			<div class='sub-label'>{$buyingPower} {$baseInfo.symbol} available to trade</div>
+			<div class='sub-label'>{$buyingPower} {$baseInfo.symbol} available to trade <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
 		</div>
-		<div class='value'>
-			<input id='amount' type='number' class='amount' on:focus={() => {amountFocused = true}}  on:blur={() => {amountFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
+		<div class='value-wrap input-wrap'>
+			<input id='amount' type='number' on:focus={() => {amountFocused = true}}  on:blur={() => {amountFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
 		</div>
 	</label>
 
-	<div class='row buttons'>
+	<div class='buttons'>
 		{#if $userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1}
 			<button on:click={_approveUserBaseAllowance}>Approve</button>
 		{:else}
-			<button class='button button-short' on:click={() => {_submitOrder(false)}}>Short</button><button class='button button-long' on:click={() => {_submitOrder(true)}}>Long</button>
+			<button class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
 	</div>
 
