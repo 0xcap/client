@@ -1,16 +1,44 @@
 <script>
-	import Home from './pages/Home.svelte';
+
+	import { component, loadRoute } from './stores/router'
+
+	import { onMount } from 'svelte'
+	import { initProvider } from './lib/provider'
+	import { initEventListeners } from './lib/events'
+
+	import Header from './components/Header.svelte'
+	import Toasts from './components/Toasts.svelte'
+
+	import { provider, signer, address, chainId } from './stores/provider'
+
+	onMount(async () => {	
+		initProvider();
+		loadRoute(location.pathname);
+	});
+
+	$: initEventListeners($address, $chainId);
+
 </script>
+
+<main>
+	<Toasts />
+	{#if $provider}
+		<Header />
+		<svelte:component this={$component}/>
+	{/if}
+</main>
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Ubuntu+Mono:wght@400;700&display=swap');
 
 	:global(:root) {
+		--black-almost: rgb(15,15,15);
 		--gray-darkest: rgb(30,30,30);
 		--gray-dark: rgb(55,55,55);
 		--gray: rgb(80,80,80);
 		--gray-light: rgb(144,144,144);
 		--blue: rgb(88,201,242);
+		--blue-dark: rgb(88,201,220);
 		--red: rgb(255,80,0);
 		--red-dark: rgb(235,80,0);
 		--green: rgb(0,200,5);
@@ -58,21 +86,14 @@
 	:global(hr) {
 		display: none;
 	}
-	/* colors
-	#1c1c1e dark bg
-	#3a393d gray drak
-	#8e8e93 gray text
-	#4cd863 green line
-	#34c759 green text
-	#2d2c2e gray line
-	#63d1ff blue text
-	#64d2ff blue bg
-	#fe3b2f red line
-	#ff3b30 red text
-	#3e3f40 gray dim
-	*/
-</style>
 
-<main>
-	<Home/>
-</main>
+	main {
+		width: 100%;
+		max-width: var(--container-width);
+		padding: 0 var(--base-padding);
+		margin: var(--base-padding) auto;
+		display: grid;
+		grid-auto-flow: row;
+		grid-gap: var(--base-padding);
+	}
+</style>

@@ -16,10 +16,5 @@
 </style>
 
 <div class='container'>
-	Transactions (<a on:click={clearTransactions}>Clear</a>)
-	<ul>
-		{#each $transactions as tx}
-			<li>{tx.description} || {tx.state} | <a href={txLink(tx.hash)}>tx</a></li>
-		{/each}
-	</ul>
+	
 </div>

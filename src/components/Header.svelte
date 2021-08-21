@@ -1,13 +1,29 @@
 <script>
 
-	import Wallet from '../components/Wallet.svelte'
+	import Connect from './Connect.svelte'
 	import { switchChain } from '../lib/wallet'
 	import { chainId, setNewChain } from '../stores/provider'
+
+	import { navigateTo, currentPage } from '../stores/router'
 
 	import { CHAIN_DATA } from '../lib/constants'
 
 	// get available chains
 	let chains = Object.values(CHAIN_DATA);
+
+	/* todo
+	-- wallet transactions modal
+	- routing for /trade/product, /vault
+	- positions
+	- add margin modal
+	- close position modal
+	- position details modal
+	- history
+	- vault page
+	- toasts
+	- footer
+	- icons
+	*/
 
 </script>
 
@@ -26,6 +42,23 @@
 	.left {
 		display: flex;
 		align-items: center;
+		cursor: pointer;
+	}
+
+	nav {
+		background-color: var(--black-almost);
+		padding: 6px 4px;
+		border-radius: var(--base-radius);
+		margin-left: 12px;
+	}
+
+	nav a {
+		padding: 0 6px;
+		color: var(--gray-light);
+	}
+	nav a.selected {
+		color: #fff;
+		font-weight: 700;
 	}
 
 	img {
@@ -36,11 +69,14 @@
 
 <header>
 	<div class='left'>
-		<img src='/img/logo.svg' />
+		<span on:click={() => {navigateTo('/')}}><img src='/img/logo.svg' /></span>
+		<nav>
+			<a class:selected={$currentPage == 'trade'} on:click={() => {navigateTo('/trade')}}>Trade</a><a class:selected={$currentPage == 'vault'} on:click={() => {navigateTo('/vault')}}>Vault</a>
+		</nav>
 	</div>
 
 	<div class='right'>
-		<Wallet/>
+		<Connect/>
 	</div>
 
 	<div class='hidden'>

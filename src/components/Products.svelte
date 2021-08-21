@@ -26,7 +26,6 @@
 	.product-list {
 		overflow-y: scroll;
 		max-height: 220px;
-		border-top: 1px solid var(--gray-dark);
 	}
 
 	.product-list a {

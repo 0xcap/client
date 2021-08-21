@@ -30,6 +30,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: var(--base-padding);
+		border-bottom: 1px solid var(--gray-dark);
 	}
 
 		.modal-title {

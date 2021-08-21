@@ -8,6 +8,8 @@
 
 	import { shortAddr, formatBaseAmount } from '../lib/utils'
 
+	import { showModal } from '../stores/modals'
+
 	import { hasPending, checkPendingTransactions, clearTransactions } from '../stores/transactions'
 
 	async function checkTransactions(_address) {
@@ -41,9 +43,10 @@
 		.address {
 			display: flex;
 			align-items: center;
-			background-color: var(--gray-dark);
+			background-color: var(--black-almost);
 			padding: 6px 10px;
 			border-radius: var(--base-radius);
+			cursor: pointer;
 		}
 
 		.pending {
@@ -53,21 +56,26 @@
 	a {
 		background-color: var(--blue);
 		color: var(--gray-darkest);
-		padding: 8px;
+		padding: 6px 10px;
 		border-radius: var(--base-radius);
+		font-weight: 700;
+	}
+
+	a:hover {
+		background-color: var(--blue-dark);
 	}
 
 </style>
 
-<div class='wallet'>
+<div class='connect'>
 	{#if $address}
 		<div class='address-wrap'>
 			<div class='balance'>
 				{formatBaseAmount($userBaseBalance)} {$baseInfo.symbol}
 			</div>
-			<div class='address'>
+			<div class='address' on:click={() => {showModal('Account')}}>
 				<span>{shortAddr($address)}</span>
-				{#if true}<div class='pending'>P</div>{/if}
+				{#if $hasPending}<div class='pending'>P</div>{/if}
 			</div>
 		</div>
 	{:else}

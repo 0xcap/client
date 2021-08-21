@@ -153,7 +153,7 @@
 	<label class='row' class:focused={amountFocused} for='amount'>
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
-			<div class='sub-label'>{formatBaseAmount($buyingPower)} {$baseInfo.symbol} available to trade <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
+			<div class='sub-label'>{formatBaseAmount($buyingPower)} {$baseInfo && $baseInfo.symbol} available to trade <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
 		</div>
 		<div class='value-wrap input-wrap'>
 			<input id='amount' type='number' on:focus={() => {amountFocused = true}}  on:blur={() => {amountFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
