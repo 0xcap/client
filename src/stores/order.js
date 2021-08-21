@@ -26,7 +26,7 @@ export function setCachedLeverage(_productId, _leverage) {
 	}
 }
 
-export const productId = writable(2);
+export const productId = writable(localStorage.getItem('productId') || 2);
 export const amount = writable();
 export const leverage = writable(getCachedLeverage(1) || 100);
 

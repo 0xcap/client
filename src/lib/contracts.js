@@ -7,10 +7,10 @@ let bases = {};
 let products = {};
 let contractObjects = {};
 
-export async function initContracts(chainId) {
+export async function initContracts(chainId, _provider) {
 	console.log('init contracts _chainId', chainId);
 
-	const _provider = get(provider);
+	if (!_provider) _provider = get(provider);
 
 	for (const name in CHAIN_DATA[chainId]['contracts']) {
 		const obj = CHAIN_DATA[chainId]['contracts'][name];

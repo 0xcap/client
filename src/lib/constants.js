@@ -68,7 +68,8 @@ export const CHAIN_DATA = {
 			1: {
 				symbol: 'USDC',
 				address: '0x82e01223d51Eb87e16A03E24687EDF0F294da6f1',
-				decimals: 6
+				decimals: 6,
+				precision: 2
 			}
 		},
 		products: {

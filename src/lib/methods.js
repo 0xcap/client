@@ -85,6 +85,7 @@ export function listProducts() {
 
 export function setProductId(_productId) {
 	productId.set(_productId);
+	localStorage.setItem('productId', _productId);
 	activateProduct(_productId);
 }
 
@@ -99,12 +100,14 @@ export async function getProductInfo(_productId) {
 
 export async function getUserBaseBalance(_baseId, _address) {
 	const base = getBaseInfo(_baseId);
+	if (!base) return;
 	const balance = await contract(base.symbol).balanceOf(_address);
 	return formatUnits(balance, base.decimals);
 }
 
 export async function getUserBaseAllowance(_baseId, _address, contractName) {
 	const base = getBaseInfo(_baseId);
+	if (!base) return;
 	const allowance = await contract(base.symbol).allowance(_address, getContractAddress(contractName));
 	return formatUnits(allowance, base.decimals);
 }

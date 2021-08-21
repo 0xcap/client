@@ -1,10 +1,9 @@
 <script>
 	import { onMount } from 'svelte'
 	import { initProvider } from '../lib/provider'
-	import { initWallet, switchChain } from '../lib/wallet'
 	import { initEventListeners } from '../lib/events'
 
-	import Wallet from '../components/Wallet.svelte'
+	import Header from '../components/Header.svelte'
 	import NewOrder from '../components/NewOrder.svelte'
 	import Positions from '../components/Positions.svelte'
 	import History from '../components/History.svelte'
@@ -17,17 +16,11 @@
 
 	import Toasts from '../components/Toasts.svelte'
 
-	import { provider, signer, address, chainId, setNewChain } from '../stores/provider'
+	import { provider, signer, address, chainId } from '../stores/provider'
 	import { activeModal } from '../stores/modals'
-
-	import { CHAIN_DATA } from '../lib/constants'
-
-	// get available chains
-	let chains = Object.values(CHAIN_DATA);
 
 	onMount(async () => {	
 		initProvider();
-		initWallet();
 	});
 
 	$: initEventListeners($address, $chainId);
@@ -35,34 +28,25 @@
 </script>
 
 <style>
-	.container {
+	.home {
 		width: 100%;
 		max-width: var(--container-width);
 		padding: 0 var(--base-padding);
-		margin: 0 auto;
+		margin: var(--base-padding) auto;
+		display: grid;
+		grid-auto-flow: row;
+		grid-gap: var(--base-padding);
 	}
+
 	.selected {
 		font-weight: bold;
 	}
 </style>
 
-<div class='container'>
+<div class='home'>
 	<Toasts />
-	<div>Home</div>
-	<div>
-		Chains:
-		{#each chains as chain}
-		<a class:selected={$chainId == chain.id} on:click={() => {switchChain(chain.id)}}>{chain.label}</a> | 
-		{/each}
-	</div>
 	{#if $provider}
-		<Wallet />
-		{#if $address}
-		all contract calls can work
-		{:else}
-		read-only contract calls can work
-		{/if}
-		<hr/>
+		<Header />
 		<NewOrder />
 		{#if $activeModal && $activeModal.name == 'Products'}
 			<Products />

@@ -23,7 +23,8 @@ export async function initProvider(_chainId, _provider) {
 	if (_chainId == providerChainId || !CHAIN_DATA[_chainId]) return;
 	providerChainId = _chainId;
 	chainId.set(_chainId);
-	provider.set(_provider || new ethers.providers.JsonRpcProvider(CHAIN_DATA[_chainId]['network']));
+	const __provider = _provider || new ethers.providers.JsonRpcProvider(CHAIN_DATA[_chainId]['network'])
+	initContracts(_chainId, __provider); // init contracts on this network
+	provider.set(__provider);
 	console.log('set provider');
-	initContracts(_chainId); // init contracts on this network
 }

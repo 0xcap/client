@@ -15,6 +15,7 @@
 		--red-dark: rgb(235,80,0);
 		--green: rgb(0,200,5);
 		--green-dark: rgb(0,180,5);
+		--pink: rgb(225,80,221);
 		--base-padding: 16px;
 		--base-radius: 5px;
 		--container-width: 480px;
@@ -29,6 +30,13 @@
 		color: #fff;
 		font-family: 'Ubuntu Mono';
 		font-size: 16.5px;
+		height: 100%;
+	}
+	:global(body) {
+		position: relative;
+		height: 100%;
+		padding: 0;
+		margin: 0;
 	}
 
 	:global(input::-webkit-outer-spin-button,input::-webkit-inner-spin-button) {

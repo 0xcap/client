@@ -1,10 +1,12 @@
 <script>
 	import { onMount } from 'svelte'
 	import { signer, address } from '../stores/provider'
-	import { connectWallet } from '../lib/wallet'
+	import { initWallet, connectWallet } from '../lib/wallet'
 
 	import { baseInfo } from '../stores/bases'
-	import { userBaseBalance, userBaseAllowance } from '../stores/wallet'
+	import { userBaseBalance } from '../stores/wallet'
+
+	import { shortAddr, formatBaseAmount } from '../lib/utils'
 
 	import { hasPending, checkPendingTransactions, clearTransactions } from '../stores/transactions'
 
@@ -19,23 +21,56 @@
 
 	$: checkTransactions($address);
 
+	onMount(async () => {	
+		initWallet();
+	});
+
 </script>
 
 <style>
-	
+		
+	.address-wrap {
+		display: flex;
+		align-items: center;
+	}
+
+		.balance {
+			padding-right: 6px;
+		}
+
+		.address {
+			display: flex;
+			align-items: center;
+			background-color: var(--gray-dark);
+			padding: 6px 10px;
+			border-radius: var(--base-radius);
+		}
+
+		.pending {
+			color: var(--pink);
+		}
+
+	a {
+		background-color: var(--blue);
+		color: var(--gray-darkest);
+		padding: 8px;
+		border-radius: var(--base-radius);
+	}
+
 </style>
 
-<div class='container'>
-	<div>
-		Base Selected || symbol: {$baseInfo.symbol}, address: {$baseInfo.address}, decimals: {$baseInfo.decimals}
-	</div>
-
+<div class='wallet'>
 	{#if $address}
-		{$address} (hasPending: {$hasPending})
-		<div>
-			Wallet balance: {$userBaseBalance}, Allowance: {$userBaseAllowance}
+		<div class='address-wrap'>
+			<div class='balance'>
+				{formatBaseAmount($userBaseBalance)} {$baseInfo.symbol}
+			</div>
+			<div class='address'>
+				<span>{shortAddr($address)}</span>
+				{#if true}<div class='pending'>P</div>{/if}
+			</div>
 		</div>
 	{:else}
-		wallet <a on:click={connectWallet}>Connect Metamask</a>
+		<a on:click={connectWallet}>Connect Metamask</a>
 	{/if}
 </div>

@@ -12,7 +12,7 @@
 
 	import { showModal } from '../stores/modals'
 
-	import { formatPrice } from '../lib/utils'
+	import { formatPrice, formatBaseAmount } from '../lib/utils'
 
 	async function _approveUserBaseAllowance() {
 		await approveUserBaseAllowance();
@@ -62,50 +62,50 @@
 			border-color: var(--gray);
 		}
 
-			.row .label-wrap .sub-label {
+			.sub-label {
 				color: var(--gray-light);
 				font-size: 80%;
 				margin-top: 5px;
 			}
 
-			.row .value-wrap {
+			.value-wrap {
 				font-size: 20px;
 				font-weight: 700;
 			}
 
-			.row .input-wrap {
+				.product-select {
+					display: flex;
+					align-items: center;
+				}
+
+				.product-select img {
+					width: 24px;
+					height: 24px;
+					border-radius: 24px;
+				}
+
+				.product-select span {
+					margin-left: 8px;
+				}
+
+				.product-select .leverage {
+					font-weight: 400;
+				}
+
+			.input-wrap {
 				flex: 1 1 auto;
 			}
 
-			.row .value-wrap .product-select {
-				display: flex;
-				align-items: center;
-			}
-
-			.row .value-wrap .product-select img {
-				width: 24px;
-				height: 24px;
-				border-radius: 24px;
-			}
-
-			.row .value-wrap .product-select span {
-				margin-left: 8px;
-			}
-
-			.row .value-wrap .product-select .leverage {
-				font-weight: 400;
-			}
-
-			.row input {
-				text-align: right;
-			}
+				input {
+					text-align: right;
+				}
 
 		.buttons {
 			display: flex;
 			font-weight: 700;
 		}
 
-			.buttons button {
+			button {
 				text-align: center;
 				cursor: pointer;
 				user-select: none;
@@ -153,7 +153,7 @@
 	<label class='row' class:focused={amountFocused} for='amount'>
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
-			<div class='sub-label'>{$buyingPower} {$baseInfo.symbol} available to trade <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
+			<div class='sub-label'>{formatBaseAmount($buyingPower)} {$baseInfo.symbol} available to trade <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
 		</div>
 		<div class='value-wrap input-wrap'>
 			<input id='amount' type='number' on:focus={() => {amountFocused = true}}  on:blur={() => {amountFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
