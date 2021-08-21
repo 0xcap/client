@@ -27,8 +27,10 @@
 </script>
 
 <style>
-	.selected {
-		font-weight: bold;
+	.trade {
+		display: grid;
+		grid-auto-flow: row;
+		grid-gap: var(--base-padding);
 	}
 </style>
 

@@ -10,7 +10,7 @@ import { showToast } from '../stores/toasts'
 import { activateProduct } from '../stores/prices'
 
 import { PRICE_DECIMALS, LEVERAGE_DECIMALS, ERC20_ABI } from './constants'
-import { toBytes32, fromBytes32, formatUnits, parseUnits } from './utils'
+import { toBytes32, fromBytes32, formatUnits, parseUnits, formatBaseAmount } from './utils'
 
 let productInfoCache = {};
 
@@ -28,6 +28,7 @@ const formatPositions = function(positions, _baseId) {
 			isSettling: p.isSettling,
 			margin: formatUnits(p.margin, base.decimals),
 			leverage: formatUnits(p.leverage, LEVERAGE_DECIMALS),
+			amount: formatBaseAmount(formatUnits(p.margin, base.decimals) * formatUnits(p.leverage, LEVERAGE_DECIMALS), _baseId),
 			price: formatUnits(p.price, PRICE_DECIMALS),
 			liquidationPrice: formatUnits(p.liquidationPrice, PRICE_DECIMALS),
 			productId: p.productId,

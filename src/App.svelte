@@ -34,6 +34,7 @@
 	:global(:root) {
 		--black-almost: rgb(15,15,15);
 		--gray-darkest: rgb(30,30,30);
+		--gray-between: rgb(40,40,40);
 		--gray-dark: rgb(55,55,55);
 		--gray: rgb(80,80,80);
 		--gray-light: rgb(144,144,144);
@@ -91,9 +92,6 @@
 		width: 100%;
 		max-width: var(--container-width);
 		padding: 0 var(--base-padding);
-		margin: var(--base-padding) auto;
-		display: grid;
-		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
+		margin: 24px auto;
 	}
 </style>

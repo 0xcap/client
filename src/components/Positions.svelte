@@ -4,6 +4,7 @@
 	import { showModal } from '../stores/modals'
 
 	import { getProductInfo } from '../lib/methods'
+	import { LOGOS } from '../lib/constants'
 
 /*
 Todo
@@ -29,6 +30,8 @@ Todo
 
 	let upls = {};
 	let totalUPL = 0;
+	let count = 0;
+	$: count = $positions && $positions.length || 0;
 
 	async function calculateUPLs(_prices) {
 		totalUPL = 0;
@@ -68,13 +71,140 @@ Todo
 </script>
 
 <style>
+
+	.positions {
+		display: grid;
+		grid-auto-flow: row;
+		grid-gap: var(--base-padding);
+	}
+
+	.header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+		.title {
+			font-weight: 700;
+		}
+
+	.position {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-radius: var(--base-radius);
+		background-color: var(--gray-between);
+		overflow: hidden;
+		height: 60px;
+	}
+
+	.pos {
+		color: var(--green);
+	}
+	.neg {
+		color: var(--red);
+	}
+
+		.left {
+			display: flex;
+			align-items: center;
+		}
+
+			.direction {
+				width: 10px;
+				height: 60px;
+				margin-right: var(--base-padding);
+			}
+				.direction.long {
+					background-color: var(--green);
+				}
+				.direction.short {
+					background-color: var(--red);
+				}
+
+			.info {
+
+			}
+
+				.product {
+					display: flex;
+					align-items: center;
+					font-weight: 700;
+				}
+
+				.product img {
+					width: 20px;
+					height: 20px;
+					border-radius: 20px;
+				}
+
+				.product span {
+					margin-left: 8px;
+				}
+
+				.product .leverage {
+					font-weight: 400;
+				}
+
+				.entry {
+					color: var(--gray-light);
+					margin-top: 6px;
+					font-size: 80%;
+				}
+
+
+		.right {
+			display: flex;
+			align-items: center;
+		}
+
+			.upl {
+				margin-right: var(--base-padding);
+			}
+
+			.add-margin, .close {
+				border-left: 1px solid var(--gray-dark);
+				padding: var(--base-padding);
+			}
+
+
 </style>
 
-<div class='container'>
-	Positions. Total UPL {totalUPL}
-	<ul>
-		{#each $positions as position}
-			<li>{position.product} {position.base} {position.id} {position.margin}x{position.leverage} @{position.price} [{position.isSettling}] ({position.isLong}) || UPL: {upls[position.id] || 0} <a on:click={() => {showModal('AddMargin', position)}}>Add margin</a> | <a on:click={() => {showModal('ClosePosition', position)}}>Close</a></li>
-		{/each}
-	</ul>
+<div class='positions'>
+
+	<div class='header'>
+		<div class='title'>Positions {#if count > 0}({count}){/if}</div>
+		{#if count > 1}
+			<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{totalUPL * 1 > 0 ? '+' : ''}{totalUPL}</div>
+		{/if}
+	</div>
+
+	{#each $positions as position}
+		<div class='position'>
+			<div class='left'>
+				<div class={`direction ${position.isLong ? 'long' : 'short'}`}></div>
+				<div class='info'>
+					<div class='product'>
+						<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
+						<span>{position.product}</span>
+						<span class='leverage'>{position.leverage}x</span>
+					</div>
+					<div class='entry'>
+						{position.amount} {position.base} at {position.price}{#if position.isSettling}{/if}
+					</div>
+				</div>
+			</div>
+			<div class='right'>
+				<div class={`upl ${upls[position.id] * 1 > 0 ? 'pos' : 'neg'}`}>
+					{upls[position.id] * 1 > 0 ? '+' : ''}{upls[position.id] || 0}
+				</div>
+				<a class='add-margin' on:click={() => {showModal('AddMargin', position)}}>
+					AM
+				</a>
+				<a class='close' on:click={() => {showModal('ClosePosition', position)}}>
+					C
+				</a>
+			</div>
+		</div>
+	{/each}
 </div>
