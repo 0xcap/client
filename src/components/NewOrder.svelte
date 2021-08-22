@@ -16,6 +16,8 @@
 
 	import { formatPrice, formatBaseAmount } from '../lib/utils'
 
+	import { CHAINLINK_ICON } from '../lib/icons'
+
 	async function _approveUserBaseAllowance() {
 		await approveUserBaseAllowance();
 	}
@@ -47,7 +49,7 @@
 		display:  grid;
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
-		margin: var(--base-padding) 0;
+		margin: 24px 0;
 	}
 
 		.row {
@@ -68,6 +70,13 @@
 				color: var(--gray-light);
 				font-size: 80%;
 				margin-top: 5px;
+				margin-right: 4px;
+			}
+
+			:global(.sub-label svg) {
+				height: 12px;
+				fill: var(--gray-light);
+				margin-bottom: -2px;
 			}
 
 			.value-wrap {
@@ -144,7 +153,9 @@
 	<div class='row' on:click={() => {showModal('Products')}}>
 		<div class='label-wrap'>
 			<div class='label'>Product</div>
-			<div class='sub-label'>Current price: {formatPrice($prices[$productId]) || ''}</div>
+			<div class='sub-label'>
+				<span title='Price provided by Chainlink'>Current price: {formatPrice($prices[$productId]) || ''}</span>
+			</div>
 		</div>
 		<div class='value-wrap'>
 			<div class='product-select'>

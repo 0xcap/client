@@ -21,12 +21,15 @@
 	-- history
 	-- vault page
 	-- toasts
-	- more wallets, disconnected / to approve state
-	- footer
-	- support for more wallets
-	- icons, favicon
+	-- disconnected / to approve state
+	-- footer
+	-- icons, favicon
+	- chainlink logo next to price and in modal
 	- contract updates
 	- error messages from contract
+	- more wallets
+	- write tests for everything
+	- comment / document code
 	*/
 
 </script>
@@ -50,7 +53,6 @@
 	}
 
 	nav {
-		background-color: var(--black-almost);
 		padding: 6px 4px;
 		border-radius: var(--base-radius);
 		margin-left: 12px;

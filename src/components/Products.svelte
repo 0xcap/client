@@ -4,8 +4,12 @@
 	import { LOGOS } from '../lib/constants'
 
 	import Modal from './Modal.svelte'
+	import { prices } from '../stores/prices'
+
+	import { CHAINLINK_FULL_ICON } from '../lib/icons'
 
 	import { productId, productInfo, leverage, setCachedLeverage } from '../stores/order'
+	import { formatPrice } from '../lib/utils'
 
 	let products = listProducts();
 
@@ -31,9 +35,15 @@
 	.product-list a {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		padding: var(--base-padding);
 		font-size: 20px;
 		color: inherit;
+	}
+
+	.product-list .product {
+		display: flex;
+		align-items: center;
 	}
 
 	.product-list a.selected {
@@ -47,7 +57,7 @@
 		width: 24px;
 		height: 24px;
 		border-radius: 24px;
-		margin-right: 8px;
+		margin-right: 10px;
 	}
 
 	.product-list a .check {
@@ -72,11 +82,26 @@
 			}
 
 	.details {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		text-align: center;
 		padding: var(--base-padding);
 		padding-top: 0;
 		color: var(--gray-light);
 		font-size: 80%;
+	}
+
+	.topped {
+		border-top: 1px solid var(--gray-dark);
+		padding-top: var(--base-padding);
+	}
+
+	:global(.details svg) {
+		height: 22px;
+		fill: var(--gray-light);
+		margin-left: 6px;
+		margin-bottom: -2px;
 	}
 
 </style>
@@ -87,8 +112,11 @@
 
 		{#each products as product}
 			<a class:selected={product.id == $productId} on:click={() => {setProductId(product.id)}}>
-				<img src={LOGOS[product.id]} alt={`${$productInfo.symbol} logo`}>
-				<span>{product.symbol}</span>
+				<div class='product'>
+					<img src={LOGOS[product.id]} alt={`${$productInfo.symbol} logo`}>
+					<span>{product.symbol}</span>
+				</div>
+				<div>{formatPrice($prices[product.id]) || ''}</div>
 			</a>
 		{/each}
 	</div>
@@ -105,6 +133,10 @@
 
 	<div class='details'>
 		{$productInfo.fee}% fee | -{funding}% 8hr funding
+	</div>
+
+	<div class='details topped'>
+		Prices provided by {@html CHAINLINK_FULL_ICON}
 	</div>
 
 </Modal>

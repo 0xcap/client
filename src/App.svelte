@@ -8,6 +8,7 @@
 
 	import Header from './components/Header.svelte'
 	import Toasts from './components/Toasts.svelte'
+	import Footer from './components/Footer.svelte'
 
 	import { provider, signer, address, chainId } from './stores/provider'
 
@@ -25,6 +26,7 @@
 	{#if $provider}
 		<Header />
 		<svelte:component this={$component}/>
+		<Footer />
 	{/if}
 </main>
 
@@ -32,7 +34,7 @@
 	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Ubuntu+Mono:wght@400;700&display=swap');
 
 	:global(:root) {
-		--black-almost: rgb(15,15,15);
+		--black-almost: rgb(20,20,20);
 		--gray-darkest: rgb(30,30,30);
 		--gray-between: rgb(40,40,40);
 		--gray-dark: rgb(55,55,55);
@@ -73,7 +75,7 @@
 	    -webkit-appearance: none;
 	    margin: 0;
 	}
-	:global(input[type='number'],button) {
+	:global(input[type='number'],input[type='range'],button) {
 		appearance: textfield;
 		font-family: inherit;
 		font-size: inherit;

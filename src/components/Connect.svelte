@@ -43,8 +43,6 @@
 		.address {
 			display: flex;
 			align-items: center;
-			background-color: var(--black-almost);
-			padding: 6px 10px;
 			border-radius: var(--base-radius);
 			cursor: pointer;
 		}

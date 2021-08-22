@@ -32,7 +32,7 @@
 	.trade {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
+		grid-gap: 22px;
 	}
 </style>
 

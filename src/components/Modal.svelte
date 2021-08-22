@@ -1,6 +1,8 @@
 <script>
 	import { hideModal } from '../stores/modals'
 
+	import { CANCEL_ICON } from '../lib/icons'
+
 	export let title;
 </script>
 
@@ -41,6 +43,13 @@
 			cursor: pointer;
 		}
 
+		:global(.modal-close svg) {
+			height: 14px;
+			width:  14px;
+			margin-top: 4px;
+			fill: #fff;
+		}
+
 	.modal-body {
 
 	}
@@ -53,7 +62,7 @@
 
 		<div class='modal-header'>
 			<div class='modal-title'>{title}</div>
-			<span class='modal-close' on:click={hideModal}>Close</span>
+			<span class='modal-close' on:click={hideModal}>{@html CANCEL_ICON}</span>
 		</div>
 
 		<div class='modal-body'>

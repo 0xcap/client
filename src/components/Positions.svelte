@@ -6,6 +6,8 @@
 	import { getProductInfo } from '../lib/methods'
 	import { LOGOS } from '../lib/constants'
 
+	import { PLUS_ICON } from '../lib/icons'
+
 /*
 Todo
 -- product info should be an object, pass through cache (fetch from contract when unavailable locally), interest % and feed is needed for each one to calculate UPL per position
@@ -170,6 +172,17 @@ Todo
 				padding: var(--base-padding);
 			}
 
+			:global(.add-margin svg) {
+				height: 16px;
+				fill: var(--gray);
+			}
+
+			:global(.close svg) {
+				height: 16px;
+				fill: var(--gray);
+				transform: rotate(45deg);
+			}
+
 	.empty {
 		color: var(--gray-light);
 	}
@@ -200,7 +213,7 @@ Todo
 						<span class='leverage'>{position.leverage}x</span>
 					</div>
 					<div class='entry'>
-						{position.amount} {position.base} at {position.price}{#if position.isSettling}(s){/if}
+						{position.amount} {position.base} at {position.price}{#if position.isSettling}&#8226;{/if}
 					</div>
 				</div>
 			</div>
@@ -209,10 +222,10 @@ Todo
 					{upls[position.id] * 1 > 0 ? '+' : ''}{upls[position.id] || 0}
 				</div>
 				<a class='add-margin' on:click={() => {showModal('AddMargin', position)}}>
-					AM
+					{@html PLUS_ICON}
 				</a>
 				<a class='close' on:click={() => {showModal('ClosePosition', position)}}>
-					C
+					{@html PLUS_ICON}
 				</a>
 			</div>
 		</div>
