@@ -10,6 +10,7 @@
 	import Account from '../components/Account.svelte'
 
 	import Products from '../components/Products.svelte'
+	import PositionDetails from '../components/PositionDetails.svelte'
 	import AddMargin from '../components/AddMargin.svelte'
 	import ClosePosition from '../components/ClosePosition.svelte'
 
@@ -42,6 +43,9 @@
 		{#if $activeModal && $activeModal.name == 'Account'}
 			<Account />
 		{/if}
+	{/if}
+	{#if $activeModal && $activeModal.name == 'PositionDetails'}
+		<PositionDetails data={$activeModal.data} />
 	{/if}
 	{#if $activeModal && $activeModal.name == 'AddMargin'}
 		<AddMargin data={$activeModal.data} />

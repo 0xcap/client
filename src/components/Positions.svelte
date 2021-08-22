@@ -76,6 +76,7 @@ Todo
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
+		margin-bottom: var(--base-padding);
 	}
 
 	.header {
@@ -95,7 +96,8 @@ Todo
 		border-radius: var(--base-radius);
 		background-color: var(--gray-between);
 		overflow: hidden;
-		height: 60px;
+		height: 64px;
+		font-size: 20px;
 	}
 
 	.pos {
@@ -108,11 +110,12 @@ Todo
 		.left {
 			display: flex;
 			align-items: center;
+			cursor: pointer;
 		}
 
 			.direction {
 				width: 10px;
-				height: 60px;
+				height: 64px;
 				margin-right: var(--base-padding);
 			}
 				.direction.long {
@@ -181,7 +184,7 @@ Todo
 
 	{#each $positions as position}
 		<div class='position'>
-			<div class='left'>
+			<div class='left' on:click={() => {showModal('PositionDetails', position)}}>
 				<div class={`direction ${position.isLong ? 'long' : 'short'}`}></div>
 				<div class='info'>
 					<div class='product'>
@@ -190,7 +193,7 @@ Todo
 						<span class='leverage'>{position.leverage}x</span>
 					</div>
 					<div class='entry'>
-						{position.amount} {position.base} at {position.price}{#if position.isSettling}{/if}
+						{position.amount} {position.base} at {position.price}{#if position.isSettling}(s){/if}
 					</div>
 				</div>
 			</div>
