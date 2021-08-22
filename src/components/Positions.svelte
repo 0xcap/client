@@ -170,6 +170,9 @@ Todo
 				padding: var(--base-padding);
 			}
 
+	.empty {
+		color: var(--gray-light);
+	}
 
 </style>
 
@@ -181,6 +184,10 @@ Todo
 			<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{totalUPL * 1 > 0 ? '+' : ''}{totalUPL}</div>
 		{/if}
 	</div>
+
+	{#if count == 0}
+		<div class='empty'>No positions to show.</div>
+	{/if}
 
 	{#each $positions as position}
 		<div class='position'>

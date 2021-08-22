@@ -7,13 +7,14 @@ import { initProvider } from './provider'
 import { CHAIN_DATA } from './constants'
 
 // Wallet (user connected, signer)
-
 let walletProvider;
 
 function handleChainSwitch(_chainId, _provider) {
 	console.log('handleChainSwitch2', _chainId, get(chainId));
 	if (!CHAIN_DATA[_chainId]) {
-		showToast('Network not supported.');
+		if (get(signer)) {
+			showToast('Network not supported.');
+		}
 		return false;
 	}
 	if (get(chainId) != _chainId) {
@@ -26,20 +27,20 @@ function handleChainSwitch(_chainId, _provider) {
 	return true;
 }
 
-export async function initWallet() {
+export async function initWallet(_provider) {
 
 	console.log('Init wallet');
 
-	// Metamask
+	// Metamask is window.ethereum
 
-	if (!window.ethereum) return showToast('Metamask not installed.');
+	walletProvider = new ethers.providers.Web3Provider(_provider || window.ethereum);
 
-	walletProvider = new ethers.providers.Web3Provider(window.ethereum);
+	let listener = _provider ? _provider : window.ethereum;
 
 	// Chain id (number)
 	const network = await walletProvider.getNetwork();
 	handleChainSwitch(network.chainId, walletProvider);
-	ethereum.on('chainChanged', (_chainId) => {
+	listener.on('chainChanged', (_chainId) => {
 		_chainId = parseInt(_chainId, 16);
 		console.log('chain changed to', _chainId);
 		handleChainSwitch(_chainId, walletProvider);
@@ -47,21 +48,32 @@ export async function initWallet() {
 
 	// Account
 	handleAccountsChanged(await walletProvider.send('eth_accounts'));
-	ethereum.on('accountsChanged', handleAccountsChanged);
+	listener.on('accountsChanged', handleAccountsChanged);
 
 	function handleAccountsChanged(accounts) {
 		if (!accounts.length) {
 			signer.set(null);
-			return showToast('Please connect to MetaMask.');
+			return;
 		}
 		signer.set(walletProvider.getSigner());
 	}
+
+	listener.on('disconnect', (code, reason) => {
+		// does not work for metamask
+		console.log('disconnected', code, reason);
+	});
 	
 }
 
-export async function connectWallet() {
+export async function connectWallet(_type) {
+	if (!window.ethereum) return showToast('Please install Metamask to connect.');
 	try {
-		await walletProvider.send("eth_requestAccounts", []);
+		if (_type == 'WalletConnect') {
+			//await wcProvider.enable();
+			//initWallet(wcProvider);
+		} else {
+			await walletProvider.send("eth_requestAccounts", []);
+		}
 		signer.set(walletProvider.getSigner());
 	} catch(e) {
 		console.error(e);

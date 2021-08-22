@@ -79,6 +79,6 @@
 			</div>
 		</div>
 	{:else}
-		<a on:click={connectWallet}>Connect Metamask</a>
+		<a on:click={() => {connectWallet()}}>Connect Wallet</a>
 	{/if}
 </div>

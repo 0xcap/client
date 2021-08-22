@@ -19,10 +19,14 @@
 	-- close position modal
 	-- position details modal
 	-- history
-	- vault page
-	- toasts
+	-- vault page
+	-- toasts
+	- more wallets, disconnected / to approve state
 	- footer
-	- icons
+	- support for more wallets
+	- icons, favicon
+	- contract updates
+	- error messages from contract
 	*/
 
 </script>

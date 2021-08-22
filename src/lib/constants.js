@@ -91,23 +91,23 @@ export const CHAIN_DATA = {
 		network: `http://localhost:8545`,
 		explorer: `http://localhost:8545`
 	},
-	1: { // Ethereum mainnet
+	'xx1': { // Ethereum mainnet
 		id: 1,
 		label: 'Mainnet',
 		network: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
 		explorer: 'https://etherscan.io/'
 	},
-	4: {
+	'xx4': {
 		id: 4,
 		label: 'Rinkeby',
 		network: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
 	},
-	10: {
+	'xx10': {
 		id: 10,
 		label: 'Optimism',
 		network: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
 	},
-	42161: {
+	'xx42161': {
 		id: 42161,
 		label: 'Arbitrum',
 		network: `https://arb1.arbitrum.io/rpc`,

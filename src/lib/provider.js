@@ -16,11 +16,13 @@ export async function initProvider(_chainId, _provider) {
 		if (localChainId) {
 			_chainId = localChainId;
 		} else {
+			_chainId = DEFAULT_CHAIN_ID;
 			localStorage.setItem('chainId', DEFAULT_CHAIN_ID);
 		}
 	}
 	console.log('h14', _chainId, providerChainId);
-	if (_chainId == providerChainId || !CHAIN_DATA[_chainId]) return;
+	if (!CHAIN_DATA[_chainId]) _chainId = DEFAULT_CHAIN_ID;
+	if (_chainId == providerChainId) return;
 	providerChainId = _chainId;
 	chainId.set(_chainId);
 	const __provider = _provider || new ethers.providers.JsonRpcProvider(CHAIN_DATA[_chainId]['network'])

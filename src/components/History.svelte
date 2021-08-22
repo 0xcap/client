@@ -115,6 +115,7 @@
 
 </style>
 
+{#if $history.length}
 <div class='history'>
 
 	<div class='header'>
@@ -145,3 +146,4 @@
 		{/each}
 	{/if}
 </div>
+{/if}

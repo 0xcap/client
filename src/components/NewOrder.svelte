@@ -1,6 +1,8 @@
 <script>
 	import { onMount } from 'svelte'
 
+	import { signer, address } from '../stores/provider'
+
 	import { LOGOS } from '../lib/constants'
 	import { baseInfo } from '../stores/bases'
 	import { userBaseBalance, userBaseAllowance } from '../stores/wallet'
@@ -115,6 +117,11 @@
 				color: var(--gray-darkest);
 			}
 
+			.button-default {
+				background-color: var(--blue);
+				color: var(--gray-dark);
+			}
+
 			.button-short {
 				background-color: var(--red);
 				margin-right: 8px;
@@ -161,8 +168,8 @@
 	</label>
 
 	<div class='buttons'>
-		{#if $userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1}
-			<button on:click={_approveUserBaseAllowance}>Approve</button>
+		{#if $address && ($userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1)}
+			<button class='button-default' on:click={_approveUserBaseAllowance}>Approve {$baseInfo.symbol}</button>
 		{:else}
 			<button class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
