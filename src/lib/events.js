@@ -118,8 +118,11 @@ export async function fetchHistoryEvents(address) {
 	const filter = tradingContract.filters.ClosePosition(null, address);
 	const _events = await tradingContract.queryFilter(filter, -170000); // last 170K blocks, eg 30 days
 	let formattedEvents = [];
+	let i = 0;
 	for (const ev of _events) {
+		i++;
 		formattedEvents.unshift(formatEvent(ev));
+		if (i == 100) break; // 100 first events only
 	}
 	return formattedEvents;
 	// possibly use graph protocol for more efficient queries later

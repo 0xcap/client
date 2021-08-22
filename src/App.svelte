@@ -13,7 +13,7 @@
 
 	onMount(async () => {	
 		initProvider();
-		loadRoute(location.pathname);
+		loadRoute(location.hash);
 	});
 
 	$: initEventListeners($address, $chainId);

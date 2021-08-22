@@ -1,6 +1,11 @@
 <script>
-	import { stake, unstake } from '../lib/methods'
 	import { userStaked, vaultCap, vaultBalance, vaultTotalStaked } from '../stores/vault'
+	import { baseId, baseInfo } from '../stores/bases'
+	import { showModal } from '../stores/modals'
+
+
+	import { LOGOS_BASE } from '../lib/constants'
+	import { formatBaseAmount } from '../lib/utils'
 
 	let amountToStake;
 	let amountToUnstake;
@@ -21,29 +26,119 @@
 
 <style>
 
+	.vault {
+		border: 1px solid var(--gray-dark);
+		border-radius: var(--base-radius);
+		padding: var(--base-padding);
+		margin: var(--base-padding) 0;
+	}
+
+	.title {
+		display: flex;
+		align-items: center;
+		font-size: 22px;
+		font-weight: 700;
+		margin-bottom: var(--base-padding);
+	}
+
+		.title img {
+			width: 32px;
+			height: 32px;
+			border-radius: 24px;
+			margin-right: 10px;
+		}
+
+	.description {
+		color: var(--gray-light);
+		margin-bottom: var(--base-padding);
+		line-height: 1.45;
+	}
+
+	.balance {
+		margin-bottom: var(--base-padding);
+	}
+
+	.balance .heading {
+		color: var(--gray-light);
+		margin-bottom: 10px;
+	}
+
+	.balance .balance-value {
+		font-size: 28px;
+		font-weight: 700;
+	}
+
+	.stake-info {
+		margin-bottom: var(--base-padding);
+	}
+
+	.row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 0;
+	}
+
+	.label {
+		color: var(--gray-light);
+	}
+
+	.stake-meter {
+		background-color: var(--gray-dark);
+	}
+
+	.stake-progress {
+		background-color: #fff;
+		height: 4px;
+	}
+
+	.my-stake-info {
+		border-top: 1px solid var(--gray-dark);
+		padding-top: var(--base-padding);
+	}
+
 </style>
 
-<div class='container'>
-	vault
+<div class='vault'>
 
-	<div>
-		Staked: {$userStaked}, Vault Total Staked: {$vaultTotalStaked}, Vault Balance: {$vaultBalance}, Vault Cap: {$vaultCap}
+	<div class='title'>
+		<img src={LOGOS_BASE[$baseId]} alt={`${$baseInfo.symbol} logo`}>
+		<span>Vault ({$baseInfo.symbol})</span>
 	</div>
 
-	<div>
-		Amount to stake: <input type=number bind:value={amountToStake} min=0 max=10000000>
+	<div class='description'>This vault backs trader profits while receiving their losses, funding, and fees, in {$baseInfo.symbol}. Its maximum daily drawdown is set to 15%.</div>
+
+	<div class='balance'>
+		<div class='heading'>Balance</div>
+		<div class='balance-value'>{$vaultBalance}</div>
 	</div>
 
-	<div>
-		<a on:click={_stake}>Stake</a>
+	<div class='stake-info'>
+		<div class='row'>
+			<div class='label'>Total Staked</div>
+			<div class='value'>{$vaultTotalStaked} ({$vaultTotalStaked*100/$vaultCap}%)</div>
+		</div>
+		<div class='stake-meter'>
+			<div class='stake-progress' style={`width: ${$vaultTotalStaked*100/$vaultCap}%`}></div>
+		</div>
+		<div class='row'>
+			<div class='label'>Max Stake Capacity</div>
+			<div class='value'>{$vaultCap}</div>
+		</div>
 	</div>
 
-	<div>
-		Amount to unstake: <input type=number bind:value={amountToUnstake} min=0 max=10000000>
-	</div>
+	<div class='my-stake-info'>
 
-	<div>
-		<a on:click={_unstake}>Unstake</a>
+		<div class='row'>
+			<div class='label'>My Stake <a on:click={() => {showModal('Stake')}}>(stake)</a></div>
+			<div class='value'>{$userStaked} ({$userStaked*100/$vaultTotalStaked}%)</div>
+		</div>
+
+		<div class='row'>
+			<div class='label'>My Balance <a on:click={() => {showModal('Redeem')}}>(redeem)</a></div>
+			<div class='value'>{formatBaseAmount($vaultBalance * $userStaked/$vaultTotalStaked)}</div>
+		</div>
+
 	</div>
 
 </div>

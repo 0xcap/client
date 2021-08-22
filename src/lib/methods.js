@@ -156,6 +156,14 @@ export async function getVaultTotalStaked(_baseId) {
 	return formatUnits(await contract().getTotalStaked(_baseId), base.decimals);
 }
 
+export async function getStakingPeriod() {
+	return await contract().stakingPeriod();
+}
+
+export async function getRedemptionPeriod() {
+	return await contract().unstakingPeriod();
+}
+
 
 export async function stake(_baseId, amount) {
 	_baseId = _baseId || get(baseId);
@@ -172,7 +180,7 @@ export async function stake(_baseId, amount) {
 	}	
 }
 
-export async function unstake(_baseId, _stake) {
+export async function redeem(_baseId, _stake) {
 	_baseId = _baseId || get(baseId);
 	const base = getBaseInfo(_baseId);
 	if (!base) return;

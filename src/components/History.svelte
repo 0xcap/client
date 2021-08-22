@@ -5,6 +5,20 @@
 
 	import { showModal } from '../stores/modals'
 
+	let hide_history = false;
+	if (localStorage.getItem('hide_history')) {
+		hide_history = true;
+	}
+
+	function toggle() {
+		hide_history = !hide_history;
+		if (hide_history) {
+			localStorage.setItem('hide_history', true);
+		} else {
+			localStorage.removeItem('hide_history');
+		}
+	}
+
 </script>
 
 <style>
@@ -105,26 +119,29 @@
 
 	<div class='header'>
 		<div class='title'>History</div>
+		<a on:click={toggle}>{hide_history ? 'Show' : 'Hide'}</a>
 	</div>
 
-	{#each $history as event}
-		<div class='item' on:click={() => {showModal('EventDetails', event)}}>
-			<div class='left'>
-				<div class='info'>
-					<div class='product'>
-						<span>{event.product}</span>
-						<span class='leverage'>{event.leverage}x</span>
+	{#if !hide_history}
+		{#each $history as event}
+			<div class='item' on:click={() => {showModal('EventDetails', event)}}>
+				<div class='left'>
+					<div class='info'>
+						<div class='product'>
+							<span>{event.product}</span>
+							<span class='leverage'>{event.leverage}x</span>
+						</div>
+						<div class='close'>
+							{event.amount} {event.base} at {event.priceWithFee}
+						</div>
 					</div>
-					<div class='close'>
-						{event.amount} {event.base} at {event.priceWithFee}
+				</div>
+				<div class='right'>
+					<div class={`pnl ${event.pnl * 1 > 0 ? 'pos' : 'neg'}`}>
+						{event.pnl * 1 > 0 ? '+' : ''}{event.pnl || 0}
 					</div>
 				</div>
 			</div>
-			<div class='right'>
-				<div class={`pnl ${event.pnl * 1 > 0 ? 'pos' : 'neg'}`}>
-					{event.pnl * 1 > 0 ? '+' : ''}{event.pnl || 0}
-				</div>
-			</div>
-		</div>
-	{/each}
+		{/each}
+	{/if}
 </div>

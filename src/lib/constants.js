@@ -15,6 +15,9 @@ const TRADING_ABI = [
 	"function getUserStaked(address user, uint8 baseId) view returns(uint256)",
 	"function getUserPositions(address user, uint8 baseId) view returns(tuple(uint8 baseId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationPrice, uint256 id)[] _positions)",
 
+	"function stakingPeriod() view returns(uint256)",
+	"function unstakingPeriod() view returns(uint256)",
+
 	"function stake(uint8 baseId, uint256 amount)",
 	"function unstake(uint8 baseId, uint256 _stake)",
 
@@ -41,6 +44,10 @@ export const ERC20_ABI = [
 
 	"event Approval(address indexed owner, address indexed spender, uint256 value)"
 ];
+
+export const LOGOS_BASE = {
+	1: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+}
 
 // Price precision per product id
 export const PRICE_PRECISION = {

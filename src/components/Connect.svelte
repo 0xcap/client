@@ -71,7 +71,7 @@
 	{#if $address}
 		<div class='address-wrap'>
 			<div class='balance'>
-				{formatBaseAmount($userBaseBalance)} {$baseInfo.symbol}
+				
 			</div>
 			<div class='address' on:click={() => {showModal('Account')}}>
 				<span>{shortAddr($address)}</span>
