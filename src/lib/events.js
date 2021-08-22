@@ -11,7 +11,7 @@ import { refreshUserHistory } from '../stores/history'
 
 import { completeTransaction } from '../stores/transactions'
 
-import { toBytes32, fromBytes32, formatUnits, parseUnits } from './utils'
+import { toBytes32, fromBytes32, formatUnits, parseUnits, formatBaseAmount } from './utils'
 
 function handleEvent() {
 
@@ -98,6 +98,7 @@ const formatEvent = function(ev) {
 			priceWithFee: formatUnits(priceWithFee, PRICE_DECIMALS),
 			margin: formatUnits(margin, base.decimals),
 			leverage: formatUnits(leverage, LEVERAGE_DECIMALS),
+			amount: formatBaseAmount(formatUnits(margin, base.decimals) * formatUnits(leverage, LEVERAGE_DECIMALS), baseId),
 			pnl: formatUnits(pnl, base.decimals),
 			wasLiquidated,
 			txHash: ev.transactionHash,

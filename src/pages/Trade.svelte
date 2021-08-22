@@ -13,6 +13,7 @@
 	import PositionDetails from '../components/PositionDetails.svelte'
 	import AddMargin from '../components/AddMargin.svelte'
 	import ClosePosition from '../components/ClosePosition.svelte'
+	import EventDetails from '../components/EventDetails.svelte'
 
 	import Toasts from '../components/Toasts.svelte'
 
@@ -52,6 +53,9 @@
 	{/if}
 	{#if $activeModal && $activeModal.name == 'ClosePosition'}
 		<ClosePosition data={$activeModal.data} />
+	{/if}
+	{#if $activeModal && $activeModal.name == 'EventDetails'}
+		<EventDetails data={$activeModal.data} />
 	{/if}
 	<NewOrder />
 	

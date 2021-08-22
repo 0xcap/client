@@ -17,8 +17,8 @@
 	-- positions
 	-- add margin modal
 	-- close position modal
-	- position details modal
-	- history
+	-- position details modal
+	-- history
 	- vault page
 	- toasts
 	- footer
