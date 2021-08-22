@@ -9,6 +9,7 @@
 	import { shortAddr, formatBaseAmount } from '../lib/utils'
 
 	import { showModal } from '../stores/modals'
+	import { SPINNER_ICON } from '../lib/icons'
 
 	import { hasPending, checkPendingTransactions, clearTransactions } from '../stores/transactions'
 
@@ -49,6 +50,12 @@
 
 		.pending {
 			color: var(--pink);
+			margin-right: 6px;
+		}
+
+		:global(.pending svg) {
+			height: 24px;
+			margin-bottom: -3px;
 		}
 
 	a {
@@ -72,8 +79,8 @@
 				
 			</div>
 			<div class='address' on:click={() => {showModal('Account')}}>
+				{#if $hasPending}<div class='pending'>{@html SPINNER_ICON}</div>{/if}
 				<span>{shortAddr($address)}</span>
-				{#if $hasPending}<div class='pending'>P</div>{/if}
 			</div>
 		</div>
 	{:else}

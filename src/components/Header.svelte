@@ -24,7 +24,7 @@
 	-- disconnected / to approve state
 	-- footer
 	-- icons, favicon
-	- chainlink logo next to price and in modal
+	-- chainlink logo next to price and in modal
 	- contract updates
 	- error messages from contract
 	- more wallets
