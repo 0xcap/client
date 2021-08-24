@@ -8,28 +8,6 @@
 
 	import { PLUS_ICON } from '../lib/icons'
 
-/*
-Todo
--- product info should be an object, pass through cache (fetch from contract when unavailable locally), interest % and feed is needed for each one to calculate UPL per position
--- position settlement script
--- live prices
--- calculate UPL per position and total UPL including interest
--- add margin
--- close partial & full
--- historical positions (from events)
--- vault info: cap, balance, etc.
--- unstake
--- pending tx check on page load to check if they're complete
--- error handling and toasts
--- products depend on chain because of chainlink
--- chain switching in ui
--- block explorer links, tx data in transactions array
-- ui design
-- error strings
-- data dashboard, liquidations
-
-*/
-
 	let upls = {};
 	let totalUPL = 0;
 	let count = 0;

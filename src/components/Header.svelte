@@ -27,13 +27,17 @@
 	-- chainlink logo next to price and in modal
 	-- contract updates
 	- write contract tests for everything
-	- update client contract calls to match new definitions
-	- liq price should be calculated on client
-	- fetching vault info has changed
-	- add fee rebate, protocol fee, etc in historical positions
-	- refine design, animate, sounds, DRY
+	-- update client contract calls to match new definitions
+	-- liq price should be calculated on client
+	-- fetching vault info has changed
+	-- add fee rebate, protocol fee, etc in historical positions
+	- github link
+	- refine design, animate, sounds, DRY, icons, ESC to hide modals
 	- error messages from contract
 	- comment / document code
+	- data dashboard, liquidations
+	- L2 chainlink sequencer https://docs.chain.link/docs/l2-sequencer-flag/
+	- deploy
 	*/
 
 </script>

@@ -44,7 +44,7 @@
 	</div>
 
 	<div class='row'>
-		<div class='label'>Base</div>
+		<div class='label'>Vault</div>
 		<div class='value'>{data.base}</div>
 	</div>
 
@@ -55,7 +55,7 @@
 
 	<div class='row'>
 		<div class='label'>Price</div>
-		<div class='value'>{data.priceWithFee}</div>
+		<div class='value'>{data.price}</div>
 	</div>
 
 	<div class='row'>
@@ -76,6 +76,16 @@
 	<div class='row'>
 		<div class='label'>Profit or Loss</div>
 		<div class='value'>{data.pnl * 1 > 0 ? '+' : ''}{data.pnl}</div>
+	</div>
+
+	<div class='row'>
+		<div class='label'>Fee Rebate</div>
+		<div class='value'>{data.feeRebate}</div>
+	</div>
+
+	<div class='row'>
+		<div class='label'>Protocol Fee</div>
+		<div class='value'>{data.protocolFee}</div>
 	</div>
 
 	<div class='row'>

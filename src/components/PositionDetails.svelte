@@ -56,7 +56,7 @@
 	</div>
 
 	<div class='row'>
-		<div class='label'>Base</div>
+		<div class='label'>Vault</div>
 		<div class='value'>{data.base}</div>
 	</div>
 
