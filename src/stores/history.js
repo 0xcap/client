@@ -11,5 +11,6 @@ export const history = derived([baseId, address, refreshUserHistory], async ([$b
 		return;
 	}
 	const his = await fetchHistoryEvents($address);
+	console.log('his', his);
 	set(his);
 },[]);

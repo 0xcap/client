@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte'
 	import { toasts, hideToast } from '../stores/toasts'
+	import { CANCEL_ICON } from '../lib/icons'
 </script>
 
 <style>
@@ -26,20 +27,33 @@
 		display: flex;
 		justify-content: space-between;
 	}
+	.toast.info {
+		background-color: var(--blue);
+		color: var(--black-almost);
+	}
 	.text {
 		padding: var(--base-padding);
 	}
 	.close {
 		padding: var(--base-padding);
 	}
+	:global(.toast-wrapper .close svg) {
+		height: 12px;
+		width:  12px;
+		margin-top: 1px;
+		fill: #fff;
+	}
+	:global(.toast.info .close svg) {
+		fill: var(--black-almost);
+	}
 </style>
 
 <div class='toast-container'>
 	<div class='toast-wrapper'>
 		{#each $toasts as toast}
-			<div class='toast'>
+			<div class={`toast ${toast.type}`}>
 				<div class='text'>{toast.message}</div>
-				<a class='close' on:click={() => {hideToast(toast.id)}}>Close</a>
+				<a class='close' on:click={() => {hideToast(toast.id)}}>{@html CANCEL_ICON}</a>
 			</div>
 		{/each}
 	</div>

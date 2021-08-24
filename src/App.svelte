@@ -47,6 +47,7 @@
 		--green: rgb(0,200,5);
 		--green-dark: rgb(0,180,5);
 		--pink: rgb(225,80,221);
+		--orange: rgb(253,167,20);
 		--base-padding: 16px;
 		--base-radius: 5px;
 		--container-width: 480px;

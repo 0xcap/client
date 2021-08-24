@@ -157,6 +157,11 @@ Todo
 					font-size: 80%;
 				}
 
+				.settling {
+					margin-left: 6px;
+					color: var(--orange);
+				}
+
 
 		.right {
 			display: flex;
@@ -172,12 +177,12 @@ Todo
 				padding: var(--base-padding);
 			}
 
-			:global(.add-margin svg) {
+			:global(.positions .add-margin svg) {
 				height: 16px;
 				fill: var(--gray);
 			}
 
-			:global(.close svg) {
+			:global(.positions .close svg) {
 				height: 16px;
 				fill: var(--gray);
 				transform: rotate(45deg);
@@ -213,7 +218,7 @@ Todo
 						<span class='leverage'>{position.leverage}x</span>
 					</div>
 					<div class='entry'>
-						{position.amount} {position.base} at {position.price}{#if position.isSettling}&#8226;{/if}
+						{position.amount} {position.base} at {position.price}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
 					</div>
 				</div>
 			</div>

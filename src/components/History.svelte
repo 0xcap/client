@@ -133,7 +133,7 @@
 							<span class='leverage'>{event.leverage}x</span>
 						</div>
 						<div class='close'>
-							{event.amount} {event.base} at {event.priceWithFee}
+							{event.amount} {event.base} at {event.price}
 						</div>
 					</div>
 				</div>

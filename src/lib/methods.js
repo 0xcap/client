@@ -8,6 +8,7 @@ import { productId, productInfo } from '../stores/order'
 import { showToast } from '../stores/toasts'
 
 import { activateProduct } from '../stores/prices'
+import { hideModal } from '../stores/modals'
 
 import { PRICE_DECIMALS, LEVERAGE_DECIMALS, ERC20_ABI } from './constants'
 import { toBytes32, fromBytes32, formatUnits, parseUnits, formatBaseAmount } from './utils'
@@ -214,8 +215,12 @@ export async function submitOrder(_baseId, _productId, isLong, margin, leverage,
 	const base = getBaseInfo(_baseId);
 	if (!base) return;
 
+	margin = parseInt(margin * 10**(base.decimals));
+
+	console.log('parseUnits(margin, base.decimals)', margin);
+
 	try {
-		const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, parseUnits(margin, base.decimals), parseUnits(leverage, LEVERAGE_DECIMALS), positionId || 0, releaseMargin);
+		const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, margin, parseUnits(leverage, LEVERAGE_DECIMALS), positionId || 0, releaseMargin);
 		let description;
 		const _productInfo = await getProductInfo(_productId);
 		if (isClose) {
@@ -232,6 +237,7 @@ export async function submitOrder(_baseId, _productId, isLong, margin, leverage,
 			hash: tx.hash,
 			description
 		});
+		hideModal();
 	} catch(e) {
 		showToast(e);
 	}

@@ -24,6 +24,7 @@
 	$: checkEntire(entire);
 
 	async function _submitOrder() {
+		console.log('(amount*1)/(data.leverage*1)', (amount*1)/(data.leverage*1));
 		await submitOrder(
 			data.baseId,
 			data.productId,

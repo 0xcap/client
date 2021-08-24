@@ -4,6 +4,7 @@
 	import { signer, address, chainId } from '../stores/provider'
 	import { transactions, clearTransactions } from '../stores/transactions'
 	import { CHAIN_DATA } from '../lib/constants'
+	import { SPINNER_ICON } from '../lib/icons'
 
 	import { shortAddr } from '../lib/utils'
 
@@ -61,6 +62,12 @@
 			font-size: 80%;
 		}
 
+		:global(.txs svg) {
+			height: 16px;
+			margin-left: 6px;
+			margin-bottom: -4px;
+		}
+
 </style>
 
 <Modal title='Account'>
@@ -82,7 +89,7 @@
 		<div class='txs'>
 			{#each $transactions as tx}
 				<div class='row tx'>
-					<span>{tx.description}{#if tx.state == 'pending'} P{/if}</span>
+					<span>{tx.description}{#if tx.state == 'pending'}{@html SPINNER_ICON}{/if}</span>
 					<a href={txLink(tx.hash)}>tx</a>
 				</div>
 			{/each}

@@ -8,10 +8,17 @@ import { refreshUserStaked } from '../stores/vault'
 import { refreshUserPositions } from '../stores/positions'
 import { refreshUserBaseAllowance, refreshUserBaseBalance } from '../stores/wallet'
 import { refreshUserHistory } from '../stores/history'
+import { showToast } from '../stores/toasts'
 
 import { completeTransaction } from '../stores/transactions'
 
 import { toBytes32, fromBytes32, formatUnits, parseUnits, formatBaseAmount } from './utils'
+	
+// toasts dark for a period after page load
+let acceptToasts = false;
+setTimeout(() => {
+	acceptToasts = true;
+}, 2000);
 
 function handleEvent() {
 
@@ -30,7 +37,7 @@ function handleEvent() {
 		refreshUserBaseBalance.update(n => n + 1);
 	}
 
-	if (ev.event == 'Unstaked') {
+	if (ev.event == 'Redeemed') {
 		completeTransaction(ev.transactionHash);
 		refreshUserStaked.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
@@ -44,6 +51,7 @@ function handleEvent() {
 	if (ev.event == 'AddMargin') {
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
+		if (acceptToasts) showToast('Margin added.', 'info');
 	}
 
 	if (ev.event == 'ClosePosition') {
@@ -85,9 +93,9 @@ const formatEvent = function(ev) {
 
 	if (ev.event == 'ClosePosition') {
 
-		const { id, user, baseId, productId, price, margin, leverage, pnl, feeRebate, protocolFee, wasLiquidated } = ev.args;
+		const { id, user, vaultId, productId, price, margin, leverage, pnl, feeRebate, protocolFee, wasLiquidated } = ev.args;
 
-		const base = getBaseInfo(baseId);
+		const base = getBaseInfo(vaultId);
 		if (!base) return;
 
 		return {
@@ -98,7 +106,7 @@ const formatEvent = function(ev) {
 			price: formatUnits(price, PRICE_DECIMALS),
 			margin: formatUnits(margin, base.decimals),
 			leverage: formatUnits(leverage, LEVERAGE_DECIMALS),
-			amount: formatBaseAmount(formatUnits(margin, base.decimals) * formatUnits(leverage, LEVERAGE_DECIMALS), baseId),
+			amount: formatBaseAmount(formatUnits(margin, base.decimals) * formatUnits(leverage, LEVERAGE_DECIMALS), vaultId),
 			pnl: formatUnits(pnl, base.decimals),
 			feeRebate: formatUnits(feeRebate, base.decimals),
 			protocolFee: formatUnits(protocolFee, base.decimals),
@@ -106,7 +114,7 @@ const formatEvent = function(ev) {
 			txHash: ev.transactionHash,
 			block: ev.blockNumber,
 			productId: productId,
-			baseId: baseId
+			vaultId: vaultId
 		};
 
 	}
@@ -126,6 +134,7 @@ export async function fetchHistoryEvents(address) {
 		formattedEvents.unshift(formatEvent(ev));
 		if (i == 100) break; // 100 first events only
 	}
+	//console.log('formattedEvents', formattedEvents);
 	return formattedEvents;
 	// possibly use graph protocol for more efficient queries later
 }

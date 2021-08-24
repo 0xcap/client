@@ -53,7 +53,7 @@
 			margin-right: 6px;
 		}
 
-		:global(.pending svg) {
+		:global(.connect .pending svg) {
 			height: 24px;
 			margin-bottom: -3px;
 		}
