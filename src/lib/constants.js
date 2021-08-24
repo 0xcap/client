@@ -5,30 +5,23 @@ const INFURA_KEY = '8cccc478d2e54cb3bc3ec5524793f636';
 
 // ABIS
 const TRADING_ABI = [
+
 	"function getLatestPrice(uint16 productId) view returns(uint256)",
-	"function getBase(uint8 baseId) view returns(address)",
-	"function getProduct(uint16 productId) view returns(tuple(uint256 leverage, uint256 fee, uint256 interest, address feed, bool isActive) product)",
-	"function getPosition(uint256 positionId) view returns(tuple(uint8 baseId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationPrice, uint256 id) position)",
-	"function getCap(uint8 baseId) view returns(uint256)",
-	"function getBalance(uint8 baseId) view returns(uint256)",
-	"function getTotalStaked(uint8 baseId) view returns(uint256)",
-	"function getUserStaked(address user, uint8 baseId) view returns(uint256)",
-	"function getUserPositions(address user, uint8 baseId) view returns(tuple(uint8 baseId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationPrice, uint256 id)[] _positions)",
+	"function getVault(uint8 vaultId) view returns(tuple(address base, uint256 cap, uint256 maxOpenInterest, uint256 maxDailyDrawdown, uint256 stakingPeriod, uint256 redemptionPeriod, uint256 protocolFee, uint256 openInterest, uint256 balance, uint256 totalStaked, bool isActive))",
+	"function getProduct(uint16 productId) view returns(tuple(uint256 leverage, uint256 fee, uint256 interest, address feed, uint256 settlementTime, uint256 minTradeDuration, uint256 liquidationThreshold, uint256 liquidationBounty, bool isActive) product)",
+	"function getPosition(uint256 positionId) view returns(tuple(uint8 vaultId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationPrice, uint256 id) position)",
+	"function getUserPositions(address user, uint8 vaultId) view returns(tuple(uint8 vaultId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 id)[] _positions)",
+	"function getUserStaked(address user, uint8 vaultId) view returns(uint256)",
 
-	"function stakingPeriod() view returns(uint256)",
-	"function unstakingPeriod() view returns(uint256)",
+	"function stake(uint8 vaultId, uint256 amount)",
+	"function redeem(uint8 vaultId, uint256 amount)",
+	"function submitOrder(uint8 vaultId, uint16 productId, bool isLong, uint256 margin, uint256 leverage, uint256 positionId, bool releaseMargin)",
 
-	"function stake(uint8 baseId, uint256 amount)",
-	"function unstake(uint8 baseId, uint256 _stake)",
-
-	"function submitOrder(uint8 baseId, uint16 productId, bool isLong, uint256 existingPositionid, uint256 margin, uint256 leverage, bool releaseMargin)",
-
-	"event Staked(address indexed from, uint8 indexed baseId, uint256 amount)",
-	"event Unstaked(address indexed to, uint8 indexed baseId, uint256 amount)",
-
-	"event NewPosition(uint256 id, address indexed user, uint8 indexed baseId, uint16 indexed productId, bool isLong, uint256 priceWithFee, uint256 margin, uint256 leverage)",
-	"event AddMargin(uint256 id, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage, uint256 newLiquidationPrice)",
-	"event ClosePosition(uint256 id, address indexed user, uint8 indexed baseId, uint16 indexed productId, uint256 priceWithFee, uint256 margin, uint256 leverage, int256 pnl, bool wasLiquidated)",
+	"event Staked(address indexed from, uint8 indexed vaultId, uint256 amount)",
+	"event Redeemed(address indexed to, uint8 indexed vaultId, uint256 amount)",
+	"event NewPosition(uint256 id, address indexed user, uint8 indexed vaultId, uint16 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
+	"event AddMargin(uint256 id, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
+	"event ClosePosition(uint256 id, address indexed user, uint8 indexed vaultId, uint16 indexed productId, uint256 price, uint256 margin, uint256 leverage, int256 pnl, uint256 feeRebate, uint256 protocolFee, bool wasLiquidated)",
 	"event NewPositionSettled(uint256 id, address indexed user, uint256 price)",
 	"event PositionLiquidated(uint256 id, address indexed by, uint256 vaultReward, uint256 liquidatorReward)"
 ];
@@ -72,14 +65,14 @@ export const CHAIN_DATA = {
 		label: 'Localhost',
 		contracts: {
 			TRADING: {
-				address: '0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3',
+				address: '0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B',
 				abi: TRADING_ABI
 			}
 		},
 		bases: {
 			1: {
 				symbol: 'USDC',
-				address: '0x82e01223d51Eb87e16A03E24687EDF0F294da6f1',
+				address: '0x172076E0166D1F9Cc711C77Adf8488051744980C',
 				decimals: 6,
 				precision: 2
 			}

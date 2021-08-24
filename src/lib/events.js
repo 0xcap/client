@@ -66,7 +66,7 @@ export function initEventListeners(address, chainId) {
 	if (!address || !chainId) return;
 	
 	tradingContract.on(tradingContract.filters.Staked(address), handleEvent);
-	tradingContract.on(tradingContract.filters.Unstaked(address), handleEvent);
+	tradingContract.on(tradingContract.filters.Redeemed(address), handleEvent);
 	tradingContract.on(tradingContract.filters.NewPosition(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.NewPositionSettled(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.AddMargin(null, address), handleEvent);
@@ -85,7 +85,7 @@ const formatEvent = function(ev) {
 
 	if (ev.event == 'ClosePosition') {
 
-		const { id, user, baseId, productId, priceWithFee, margin, leverage, pnl, wasLiquidated } = ev.args;
+		const { id, user, baseId, productId, price, margin, leverage, pnl, feeRebate, protocolFee, wasLiquidated } = ev.args;
 
 		const base = getBaseInfo(baseId);
 		if (!base) return;
@@ -95,11 +95,13 @@ const formatEvent = function(ev) {
 			id: id.toNumber(),
 			base: base.symbol,
 			product: getProductSymbol(productId),
-			priceWithFee: formatUnits(priceWithFee, PRICE_DECIMALS),
+			price: formatUnits(price, PRICE_DECIMALS),
 			margin: formatUnits(margin, base.decimals),
 			leverage: formatUnits(leverage, LEVERAGE_DECIMALS),
 			amount: formatBaseAmount(formatUnits(margin, base.decimals) * formatUnits(leverage, LEVERAGE_DECIMALS), baseId),
 			pnl: formatUnits(pnl, base.decimals),
+			feeRebate: formatUnits(feeRebate, base.decimals),
+			protocolFee: formatUnits(protocolFee, base.decimals),
 			wasLiquidated,
 			txHash: ev.transactionHash,
 			block: ev.blockNumber,

@@ -25,10 +25,14 @@
 	-- footer
 	-- icons, favicon
 	-- chainlink logo next to price and in modal
-	- contract updates
+	-- contract updates
+	- write contract tests for everything
+	- update client contract calls to match new definitions
+	- liq price should be calculated on client
+	- fetching vault info has changed
+	- add fee rebate, protocol fee, etc in historical positions
+	- refine design, animate, sounds, DRY
 	- error messages from contract
-	- more wallets
-	- write tests for everything
 	- comment / document code
 	*/
 

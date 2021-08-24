@@ -13,7 +13,7 @@ export function fromBytes32(string) {
 }
 export function formatUnits(number, units) {
   if (!units) units = 6; // usdc
-  return ethers.utils.formatUnits(number, units);
+  return ethers.utils.formatUnits(number || 0, units);
 }
 export function parseUnits(number, units) {
   if (!units) units = 6; // usdc

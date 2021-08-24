@@ -28,9 +28,9 @@
 			null,
 			null,
 			isLong,
-			0,
 			$margin * 1,
 			$leverage * 1,
+			0,
 			false
 		);
 	}

@@ -28,9 +28,9 @@
 			data.baseId,
 			data.productId,
 			!data.isLong,
-			data.id,
 			(amount*1)/(data.leverage*1),
 			1,
+			data.id,
 			false,
 			true
 		);

@@ -10,6 +10,6 @@ export const positions = derived([baseId, address, refreshUserPositions], async 
 		set([]);
 		return;
 	}
-	const pos = await getUserPositions($baseId, $address);
+	const pos = await getUserPositions($address, $baseId);
 	set(pos);
 },[]);

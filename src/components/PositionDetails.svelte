@@ -1,10 +1,30 @@
 <script>
 
 	import { onMount } from 'svelte'
+	import { getProductInfo } from '../lib/methods'
+	import { formatUnits } from '../lib/utils'
 
 	import Modal from './Modal.svelte'
 
 	export let data;
+
+	let liquidationPrice;
+
+	async function calculateLiquidationPrice() {
+		const productInfo = await getProductInfo(data.productId);
+		const liquidationThreshold = productInfo.liquidationThreshold * 1 || 80;
+		console.log('liquidationThreshold', liquidationThreshold);
+		if (data.isLong) {
+			liquidationPrice = data.price * (1 - liquidationThreshold / 100 / data.leverage);
+		} else {
+			liquidationPrice = data.price * (1 + liquidationThreshold/100 / data.leverage);
+		}
+		liquidationPrice = liquidationPrice.toFixed(2);
+	}
+
+	onMount(async () => {
+		await calculateLiquidationPrice();
+	});	
 
 </script>
 
@@ -82,7 +102,7 @@
 
 	<div class='row'>
 		<div class='label'>Liquidation Price</div>
-		<div class='value'>{data.liquidationPrice}</div>
+		<div class='value'>{liquidationPrice}</div>
 	</div>
 
 </Modal>

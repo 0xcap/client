@@ -1,5 +1,5 @@
 <script>
-	import { userStaked, vaultCap, vaultBalance, vaultTotalStaked } from '../stores/vault'
+	import { vaultInfo, userStaked } from '../stores/vault'
 	import { baseId, baseInfo } from '../stores/bases'
 	import { showModal } from '../stores/modals'
 
@@ -110,20 +110,32 @@
 
 	<div class='balance'>
 		<div class='heading'>Balance</div>
-		<div class='balance-value'>{$vaultBalance}</div>
+		<div class='balance-value'>{$vaultInfo.balance || 0}</div>
 	</div>
 
 	<div class='stake-info'>
 		<div class='row'>
 			<div class='label'>Total Staked</div>
-			<div class='value'>{$vaultTotalStaked} ({$vaultTotalStaked*100/$vaultCap}%)</div>
+			<div class='value'>{$vaultInfo.totalStaked || 0} ({$vaultInfo.totalStaked*100/$vaultInfo.cap || 0}%)</div>
 		</div>
 		<div class='stake-meter'>
-			<div class='stake-progress' style={`width: ${$vaultTotalStaked*100/$vaultCap}%`}></div>
+			<div class='stake-progress' style={`width: ${$vaultInfo.totalStaked*100/$vaultInfo.cap || 0}%`}></div>
 		</div>
 		<div class='row'>
 			<div class='label'>Max Stake Capacity</div>
-			<div class='value'>{$vaultCap}</div>
+			<div class='value'>{$vaultInfo.cap}</div>
+		</div>
+		<div class='row'>
+			<div class='label'>Open Interest</div>
+			<div class='value'>{$vaultInfo.openInterest}</div>
+		</div>
+		<div class='row'>
+			<div class='label'>Max Open Interest</div>
+			<div class='value'>{$vaultInfo.maxOpenInterest}</div>
+		</div>
+		<div class='row'>
+			<div class='label'>Max Daily Drawdown</div>
+			<div class='value'>{$vaultInfo.maxDailyDrawdown}%</div>
 		</div>
 	</div>
 
@@ -131,12 +143,12 @@
 
 		<div class='row'>
 			<div class='label'>My Stake <a on:click={() => {showModal('Stake')}}>(stake)</a></div>
-			<div class='value'>{$userStaked} ({$userStaked*100/$vaultTotalStaked}%)</div>
+			<div class='value'>{$userStaked} ({$userStaked*100/$vaultInfo.totalStaked || 0}%)</div>
 		</div>
 
 		<div class='row'>
 			<div class='label'>My Balance <a on:click={() => {showModal('Redeem')}}>(redeem)</a></div>
-			<div class='value'>{formatBaseAmount($vaultBalance * $userStaked/$vaultTotalStaked)}</div>
+			<div class='value'>{formatBaseAmount($vaultInfo.balance * $userStaked/$vaultInfo.totalStaked || 0)}</div>
 		</div>
 
 	</div>

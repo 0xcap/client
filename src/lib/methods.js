@@ -40,6 +40,26 @@ const formatPositions = function(positions, _baseId) {
 	return formattedPositions;
 }
 
+const formatVaultInfo = function(v, _baseId) {
+	const base = getBaseInfo(_baseId);
+	if (!base) return;
+	console.log('v', v);
+	return {
+		id: _baseId,
+		symbol: base.symbol,
+		cap: formatUnits(v.cap),
+		maxOpenInterest: formatUnits(v.maxOpenInterest),
+		maxDailyDrawdown: formatUnits(v.maxDailyDrawdown, 2),
+		stakingPeriod: v.stakingPeriod,
+		redemptionPeriod: v.redemptionPeriod,
+		protocolFee: formatUnits(v.protocolFee,2),
+		openInterest: formatUnits(v.openInterest),
+		balance: formatUnits(v.balance),
+		totalStaked: formatUnits(v.totalStaked),
+		isActive: v.isActive
+	}
+}
+
 const formatProductInfo = function(p, _productId) {
 	return {
 		symbol: getProductSymbol(_productId),
@@ -47,6 +67,10 @@ const formatProductInfo = function(p, _productId) {
 		fee: formatUnits(p.fee, 2),
 		interest: formatUnits(p.interest, 2),
 		feed: p.feed,
+		settlementTime: p.settlementTime,
+		minTradeDuration: p.minTradeDuration,
+		liquidationThreshold: formatUnits(p.liquidationThreshold, 2),
+		liquidationBounty: formatUnits(p.liquidationBounty, 2),
 		isActive: p.isActive
 	}
 }
@@ -128,42 +152,22 @@ export async function approveUserBaseAllowance(_baseId, amount, contractName) {
 	}
 }
 
-export async function getUserPositions(_baseId, _address) {
+export async function getUserPositions(_address, _baseId) {
 	const positions = await contract().getUserPositions(_address, _baseId);
 	return formatPositions(positions, _baseId);
 }
 
 // Vault
 
-export async function getUserStaked(_baseId, _address) {
-	const base = getBaseInfo(_baseId);
+export async function getVault(_baseId) {
+	console.log('getVault', _baseId);
+	return formatVaultInfo(await contract().getVault(_baseId), _baseId);
+}
+
+export async function getUserStaked(_address, _baseId) {
 	const staked = await contract().getUserStaked(_address, _baseId);
-	return formatUnits(staked, base.decimals);
+	return formatUnits(staked);
 }
-
-export async function getVaultCap(_baseId) {
-	const base = getBaseInfo(_baseId);
-	return formatUnits(await contract().getCap(_baseId), base.decimals);
-}
-
-export async function getVaultBalance(_baseId) {
-	const base = getBaseInfo(_baseId);
-	return formatUnits(await contract().getBalance(_baseId), base.decimals);
-}
-
-export async function getVaultTotalStaked(_baseId) {
-	const base = getBaseInfo(_baseId);
-	return formatUnits(await contract().getTotalStaked(_baseId), base.decimals);
-}
-
-export async function getStakingPeriod() {
-	return await contract().stakingPeriod();
-}
-
-export async function getRedemptionPeriod() {
-	return await contract().unstakingPeriod();
-}
-
 
 export async function stake(_baseId, amount) {
 	_baseId = _baseId || get(baseId);
@@ -185,7 +189,7 @@ export async function redeem(_baseId, _stake) {
 	const base = getBaseInfo(_baseId);
 	if (!base) return;
 	try {
-		const tx = await contract('', true).unstake(_baseId, parseUnits(_stake, base.decimals));
+		const tx = await contract('', true).redeem(_baseId, parseUnits(_stake, base.decimals));
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Unstake ${_stake} ${base.symbol}`
@@ -204,21 +208,21 @@ export async function getLatestPrice(_productId) {
 
 // Order
 
-export async function submitOrder(_baseId, _productId, isLong, existingPositionId, margin, leverage, releaseMargin, isClose) {
+export async function submitOrder(_baseId, _productId, isLong, margin, leverage, positionId, releaseMargin, isClose) {
 	_baseId = _baseId || get(baseId);
 	_productId = _productId || get(productId);
 	const base = getBaseInfo(_baseId);
 	if (!base) return;
 
 	try {
-		const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, existingPositionId || 0, parseUnits(margin, base.decimals), parseUnits(leverage, LEVERAGE_DECIMALS), releaseMargin);
+		const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, parseUnits(margin, base.decimals), parseUnits(leverage, LEVERAGE_DECIMALS), positionId || 0, releaseMargin);
 		let description;
 		const _productInfo = await getProductInfo(_productId);
 		if (isClose) {
 			description = `Close position ${margin} ${base.symbol} on ${_productInfo.symbol}`;
 		} else if (releaseMargin) {
 			description = `Close position (RM) ${margin} ${base.symbol} on ${_productInfo.symbol}`;
-		} else if (existingPositionId) {
+		} else if (positionId) {
 			// add margin
 			description = `Add margin ${margin} ${base.symbol} on ${_productInfo.symbol}`;
 		} else {
