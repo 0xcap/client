@@ -57,7 +57,7 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
-		margin-bottom: var(--base-padding);
+		margin-bottom: 50px;
 	}
 
 	.header {
@@ -75,9 +75,9 @@
 		align-items: center;
 		justify-content: space-between;
 		border-radius: var(--base-radius);
-		background-color: var(--gray-between);
+		background-color: var(--black-almost);
 		overflow: hidden;
-		height: 64px;
+		height: 76px;
 		font-size: 20px;
 	}
 
@@ -96,7 +96,7 @@
 
 			.direction {
 				width: 10px;
-				height: 64px;
+				height: 76px;
 				margin-right: var(--base-padding);
 			}
 				.direction.long {
@@ -132,7 +132,7 @@
 
 				.entry {
 					color: var(--gray-light);
-					margin-top: 6px;
+					margin-top: 12px;
 					font-size: 80%;
 				}
 
@@ -169,49 +169,55 @@
 
 	.empty {
 		color: var(--gray-light);
+		text-align: center;
 	}
 
 </style>
 
 <div class='positions'>
 
-	<div class='header'>
-		<div class='title'>Positions {#if count > 0}({count}){/if}</div>
-		{#if count > 1}
-			<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{totalUPL * 1 > 0 ? '+' : ''}{totalUPL}</div>
-		{/if}
-	</div>
-
 	{#if count == 0}
-		<div class='empty'>No positions to show.</div>
+		<div class='empty'>Your positions will appear here.</div>
+
+	{:else}
+
+		<div class='header'>
+			<div class='title'>Positions {#if count > 0}({count}){/if}</div>
+			{#if count > 1}
+				<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{totalUPL * 1 > 0 ? '+' : ''}{totalUPL}</div>
+			{/if}
+		</div>
+
+		{#each $positions as position}
+			<div class='position'>
+				<div class='left' on:click={() => {showModal('PositionDetails', position)}}>
+					<div class={`direction ${position.isLong ? 'long' : 'short'}`}></div>
+					<div class='info'>
+						<div class='product'>
+							<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
+							<span>{position.product}</span>
+							<span class='leverage'>{position.leverage}x</span>
+						</div>
+						<div class='entry'>
+							{position.amount} {position.base} at {formatPrice(position.price, position.productId)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
+						</div>
+					</div>
+				</div>
+				<div class='right'>
+					<div class={`upl ${upls[position.id] * 1 > 0 ? 'pos' : 'neg'}`}>
+						{upls[position.id] * 1 > 0 ? '+' : ''}{upls[position.id] || 0}
+					</div>
+					<a class='add-margin' on:click={() => {showModal('AddMargin', position)}}>
+						{@html PLUS_ICON}
+					</a>
+					<a class='close' on:click={() => {showModal('ClosePosition', position)}}>
+						{@html PLUS_ICON}
+					</a>
+				</div>
+			</div>
+		{/each}
+
 	{/if}
 
-	{#each $positions as position}
-		<div class='position'>
-			<div class='left' on:click={() => {showModal('PositionDetails', position)}}>
-				<div class={`direction ${position.isLong ? 'long' : 'short'}`}></div>
-				<div class='info'>
-					<div class='product'>
-						<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
-						<span>{position.product}</span>
-						<span class='leverage'>{position.leverage}x</span>
-					</div>
-					<div class='entry'>
-						{position.amount} {position.base} at {formatPrice(position.price, position.productId)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
-					</div>
-				</div>
-			</div>
-			<div class='right'>
-				<div class={`upl ${upls[position.id] * 1 > 0 ? 'pos' : 'neg'}`}>
-					{upls[position.id] * 1 > 0 ? '+' : ''}{upls[position.id] || 0}
-				</div>
-				<a class='add-margin' on:click={() => {showModal('AddMargin', position)}}>
-					{@html PLUS_ICON}
-				</a>
-				<a class='close' on:click={() => {showModal('ClosePosition', position)}}>
-					{@html PLUS_ICON}
-				</a>
-			</div>
-		</div>
-	{/each}
+	
 </div>

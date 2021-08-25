@@ -50,6 +50,9 @@
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
 		margin: 24px 0;
+		background-color: var(--black-almost);
+		padding: var(--base-padding);
+		border-radius: var(--base-radius);
 	}
 
 		.row {
@@ -59,6 +62,7 @@
 			border: 1px solid var(--gray-dark);
 			border-radius: var(--base-radius);
 			padding: var(--base-padding);
+			background-color: var(--gray-darkest);
 			cursor: pointer;
 		}
 
@@ -112,8 +116,10 @@
 				}
 
 		.buttons {
-			display: flex;
 			font-weight: 700;
+			display: grid;
+			grid-auto-flow: column;
+			grid-gap: 16px;
 		}
 
 			button {
@@ -124,6 +130,7 @@
 				padding: var(--base-padding);
 				border-radius: var(--base-radius);
 				color: var(--gray-darkest);
+				font-size: 20px;
 			}
 
 			.button-default {
@@ -133,14 +140,12 @@
 
 			.button-short {
 				background-color: var(--red);
-				margin-right: 8px;
 			}
 			.button-short:hover {
 				background-color: var(--red-dark);
 			}
 			.button-long {
 				background-color: var(--green);
-				margin-left: 8px;
 			}
 			.button-long:hover {
 				background-color: var(--green-dark);
@@ -154,7 +159,7 @@
 		<div class='label-wrap'>
 			<div class='label'>Product</div>
 			<div class='sub-label'>
-				<span title='Price provided by Chainlink'>Current price: {formatPrice($prices[$productId]) || ''}</span>
+				<span title='Price provided by Chainlink'>Price: {formatPrice($prices[$productId]) || ''}</span>
 			</div>
 		</div>
 		<div class='value-wrap'>
@@ -171,7 +176,7 @@
 	<label class='row' class:focused={amountFocused} for='amount'>
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
-			<div class='sub-label'>{formatBaseAmount($buyingPower)} {$baseInfo && $baseInfo.symbol} available to trade <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
+			<div class='sub-label'>Available: {formatBaseAmount($buyingPower)} {$baseInfo && $baseInfo.symbol} <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
 		</div>
 		<div class='value-wrap input-wrap'>
 			<input id='amount' type='number' on:focus={() => {amountFocused = true}}  on:blur={() => {amountFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">

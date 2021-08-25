@@ -26,7 +26,7 @@
 	.trade {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 22px;
+		grid-gap: 32px;
 	}
 </style>
 

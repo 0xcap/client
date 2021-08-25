@@ -7,7 +7,7 @@
 		
 	footer {
 		padding: var(--base-padding) 0;
-		margin-top: var(--base-padding);
+		margin-top: 32px;
 		font-size: 80%;
 		color: var(--gray-light);
 		text-align: center;

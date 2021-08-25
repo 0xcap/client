@@ -22,10 +22,11 @@
 	}
 
 	.modal {
-		width: 360px;
+		width: 420px;
 		border: 1px solid var(--gray-dark);
 		border-radius: var(--base-radius);
 		background-color: var(--gray-darkest);
+		overflow: hidden;
 	}
 
 	.modal-header {
