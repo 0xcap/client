@@ -106,7 +106,7 @@
 		<span>Vault ({$baseInfo.symbol})</span>
 	</div>
 
-	<div class='description'>This vault backs trader profits while receiving their losses, funding, and fees, in {$baseInfo.symbol}. Its maximum daily drawdown is set to 15%.</div>
+	<div class='description'>This vault backs trader profits while receiving their losses, funding, and fees, in {$baseInfo.symbol}.</div>
 
 	<div class='balance'>
 		<div class='heading'>Balance</div>

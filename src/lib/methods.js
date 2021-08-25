@@ -215,12 +215,12 @@ export async function submitOrder(_baseId, _productId, isLong, margin, leverage,
 	const base = getBaseInfo(_baseId);
 	if (!base) return;
 
-	margin = parseInt(margin * 10**(base.decimals));
+	const marginUnits = parseInt(margin * 10**(base.decimals));
 
-	console.log('parseUnits(margin, base.decimals)', margin);
+	console.log('parseUnits(margin, base.decimals)', marginUnits);
 
 	try {
-		const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, margin, parseUnits(leverage, LEVERAGE_DECIMALS), positionId || 0, releaseMargin);
+		const tx = await contract('', true).submitOrder(_baseId, _productId, isLong, marginUnits, parseUnits(leverage, LEVERAGE_DECIMALS), positionId || 0, releaseMargin);
 		let description;
 		const _productInfo = await getProductInfo(_productId);
 		if (isClose) {

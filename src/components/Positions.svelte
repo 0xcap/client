@@ -7,6 +7,7 @@
 	import { LOGOS } from '../lib/constants'
 
 	import { PLUS_ICON } from '../lib/icons'
+	import { formatPrice } from '../lib/utils'
 
 	let upls = {};
 	let totalUPL = 0;
@@ -196,7 +197,7 @@
 						<span class='leverage'>{position.leverage}x</span>
 					</div>
 					<div class='entry'>
-						{position.amount} {position.base} at {position.price}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
+						{position.amount} {position.base} at {formatPrice(position.price, position.productId)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
 					</div>
 				</div>
 			</div>

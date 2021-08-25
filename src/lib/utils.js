@@ -31,7 +31,7 @@ export function formatBaseAmount(amount, _baseId) {
   if (!_baseId) _baseId = get(baseId);
   if (!amount || !_baseId) return 0;
   const base = getBaseInfo(_baseId);
-  if (amount * 1 >= 1000) return parseInt(amount*1).toLocaleString();
+  if (amount * 1 >= 1000) return Math.round(amount*1).toLocaleString();
   return (amount * 1).toFixed(base.precision || 2);
 }
 

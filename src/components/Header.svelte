@@ -31,13 +31,25 @@
 	-- liq price should be calculated on client
 	-- fetching vault info has changed
 	-- add fee rebate, protocol fee, etc in historical positions
+	-- display currently connected network top right
+	- loading states: buttons, initial, etc
+	- info on modal add margin, stake (how much balance I have), close (position amount), etc.
+	- toasts when transactions are submitted / completed. Should be in top right like uniswap, under header
+	- bigger everything, more spacing
+	- to locale string for numbers
+	- error messages from contract
 	- github link
+	- footer: hosted on IPFS
+	- test CAP staking and fee rebates
+	- test protocol fee
+	-- deploy to rinkeby
+
 	- refine design, animate, sounds, DRY, icons, ESC to hide modals
 	- error messages from contract
 	- comment / document code
 	- data dashboard, liquidations
 	- L2 chainlink sequencer https://docs.chain.link/docs/l2-sequencer-flag/
-	- deploy
+	
 	*/
 
 </script>

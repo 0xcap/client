@@ -116,7 +116,7 @@
 					<img src={LOGOS[product.id]} alt={`${$productInfo.symbol} logo`}>
 					<span>{product.symbol}</span>
 				</div>
-				<div>{formatPrice($prices[product.id]) || ''}</div>
+				<div>{formatPrice($prices[product.id], product.id) || ''}</div>
 			</a>
 		{/each}
 	</div>

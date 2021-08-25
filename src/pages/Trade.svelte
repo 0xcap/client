@@ -7,7 +7,7 @@
 	import NewOrder from '../components/NewOrder.svelte'
 	import Positions from '../components/Positions.svelte'
 	import History from '../components/History.svelte'
-	import Account from '../components/Account.svelte'
+	
 
 	import Products from '../components/Products.svelte'
 	import PositionDetails from '../components/PositionDetails.svelte'
@@ -19,12 +19,6 @@
 
 	import { provider, signer, address, chainId } from '../stores/provider'
 	import { activeModal } from '../stores/modals'
-
-	onMount(async () => {	
-		initProvider();
-	});
-
-	$: initEventListeners($address, $chainId);
 
 </script>
 
@@ -40,11 +34,6 @@
 	{#if $activeModal && $activeModal.name == 'Products'}
 		<Products />
 	{/if}
-	{#if $address}
-		{#if $activeModal && $activeModal.name == 'Account'}
-			<Account />
-		{/if}
-	{/if}
 	{#if $activeModal && $activeModal.name == 'PositionDetails'}
 		<PositionDetails data={$activeModal.data} />
 	{/if}
@@ -58,10 +47,6 @@
 		<EventDetails data={$activeModal.data} />
 	{/if}
 	<NewOrder />
-	
-	<hr/>
 	<Positions />
-	
-	<hr/>
 	<History />
 </div>

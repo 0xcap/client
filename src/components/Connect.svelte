@@ -1,7 +1,9 @@
 <script>
 	import { onMount } from 'svelte'
-	import { signer, address } from '../stores/provider'
+	import { signer, address, chainId } from '../stores/provider'
 	import { initWallet, connectWallet } from '../lib/wallet'
+
+	import { CHAIN_DATA } from '../lib/constants'
 
 	import { baseInfo } from '../stores/bases'
 	import { userBaseBalance } from '../stores/wallet'
@@ -22,7 +24,14 @@
 		}
 	}
 
+	let network = '';
+	async function checkChain(_chainId) {
+		if (!_chainId) return;
+		network = CHAIN_DATA[_chainId].label || "Unsupported";
+	}
+
 	$: checkTransactions($address);
+	$: checkChain($chainId);
 
 	onMount(async () => {	
 		initWallet();
@@ -31,7 +40,12 @@
 </script>
 
 <style>
-		
+	
+	.connect {
+		display: flex;
+		align-items: center;
+	}
+	
 	.address-wrap {
 		display: flex;
 		align-items: center;
@@ -55,7 +69,7 @@
 
 		:global(.connect .pending svg) {
 			height: 24px;
-			margin-bottom: -3px;
+			margin-bottom: -2px;
 		}
 
 	a {
@@ -73,6 +87,7 @@
 </style>
 
 <div class='connect'>
+	{#if network}{network} {/if}
 	{#if $address}
 		<div class='address-wrap'>
 			<div class='balance'>

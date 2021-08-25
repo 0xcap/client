@@ -10,6 +10,9 @@
 	import Toasts from './components/Toasts.svelte'
 	import Footer from './components/Footer.svelte'
 
+	import Account from './components/Account.svelte'
+	import { activeModal } from './stores/modals'
+
 	import { provider, signer, address, chainId } from './stores/provider'
 
 	onMount(async () => {	
@@ -25,6 +28,11 @@
 	<Toasts />
 	{#if $provider}
 		<Header />
+		{#if $address}
+			{#if $activeModal && $activeModal.name == 'Account'}
+				<Account />
+			{/if}
+		{/if}
 		<svelte:component this={$component}/>
 		<Footer />
 	{/if}

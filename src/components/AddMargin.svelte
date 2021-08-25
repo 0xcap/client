@@ -35,6 +35,13 @@
 		padding: var(--base-padding);
 	}
 
+	.details {
+		display: flex;
+		padding: var(--base-padding);
+		border-top: 1px solid var(--gray-dark);
+		color: var(--gray-light);
+	}
+
 	.button {
 		border-top: 1px solid var(--gray-dark);
 		padding: var(--base-padding);
@@ -53,6 +60,9 @@
 <Modal title='Add Margin'>
 	<div class='body'>
 		<input id='amount' type=number bind:value={margin} min=0 max=10000000 placeholder="Margin to add"> 
+	</div>
+	<div class='details'>
+		Current margin: {data.margin}
 	</div>
 	<div class='button'>
 		<button on:click={_submitOrder}>Add Margin</button>
