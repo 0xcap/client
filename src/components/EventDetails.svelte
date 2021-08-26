@@ -22,8 +22,11 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-bottom: 1px solid var(--gray-dark);
-		padding: var(--base-padding);
+		padding: calc(var(--base-padding)/2);
+		border-bottom: 1px solid var(--black-almost);
+	}
+	.row:hover {
+		background-color: var(--gray-dark);
 	}
 
 	.label {

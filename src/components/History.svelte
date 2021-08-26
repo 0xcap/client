@@ -26,7 +26,7 @@
 	.history {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
+		grid-gap: 2px;
 		margin-bottom: var(--base-padding);
 	}
 
@@ -34,6 +34,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		margin-bottom: var(--base-padding);
 	}
 
 		.title {
@@ -44,7 +45,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-radius: var(--base-radius);
 		background-color: var(--gray-between);
 		overflow: hidden;
 		height: 58px;
@@ -133,7 +133,7 @@
 							<span class='leverage'>{event.leverage}x</span>
 						</div>
 						<div class='close'>
-							{event.amount} {event.base} at {event.price}
+							Closed {event.amount} {event.base} at {event.price}
 						</div>
 					</div>
 				</div>

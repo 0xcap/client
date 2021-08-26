@@ -37,9 +37,17 @@
 
 	let amountFocused = false;
 
+	function checkFocus(_address) {
+		const elem = document.getElementById('amount');
+		if (elem && _address) elem.focus();
+	}
+
 	onMount(() => {
 		activateProduct($productId);
+		checkFocus($address);
 	});
+
+	$: checkFocus($address);
 
 </script>
 
@@ -48,11 +56,14 @@
 	.new-order {
 		display:  grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
+		grid-gap: 12px;
 		margin: 24px 0;
 		background-color: var(--black-almost);
-		padding: var(--base-padding);
-		border-radius: var(--base-radius);
+		padding: 12px;
+		border-radius: 18px;
+		box-shadow: rgba(0,200,5,0.1) 0px 12px 28px 0;
+		/*box-shadow: rgba(255,80,0,0.15) 0px 12px 32px 0;*/
+		
 	}
 
 		.row {
@@ -119,7 +130,7 @@
 			font-weight: 700;
 			display: grid;
 			grid-auto-flow: column;
-			grid-gap: 16px;
+			grid-gap: 12px;
 		}
 
 			button {
@@ -136,6 +147,13 @@
 			.button-default {
 				background-color: var(--blue);
 				color: var(--gray-dark);
+			}
+
+			.button-disabled {
+				background-color: var(--gray-dark);
+				color: var(--gray-light);
+				pointer-events: none;
+				cursor: default;
 			}
 
 			.button-short {
@@ -184,7 +202,11 @@
 	</label>
 
 	<div class='buttons'>
-		{#if $address && ($userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1)}
+		{#if !$address}
+			<button class='button-disabled'>Connect a wallet</button>
+		{:else if !$amount}
+			<button class='button-disabled'>Enter an amount</button>
+		{:else if $userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1}
 			<button class='button-default' on:click={_approveUserBaseAllowance}>Approve {$baseInfo.symbol}</button>
 		{:else}
 			<button class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>

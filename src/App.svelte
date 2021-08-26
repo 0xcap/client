@@ -45,12 +45,12 @@
 	@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap');
 
 	:global(:root) {
-		--black-almost: rgba(23,23,23,0.65);
+		--black-almost: rgba(23,23,23,0.55);
 		--gray-darkest: rgb(30,30,30);
 		--gray-between: rgba(40,40,40,0.25);
 		--gray-dark: rgb(55,55,55);
 		--gray: rgb(80,80,80);
-		--gray-light: rgb(104,104,104);
+		--gray-light: rgb(114,114,114);
 		--blue: rgb(88,201,242);
 		--blue-dark: rgb(88,201,220);
 		--red: rgb(255,80,0);
@@ -59,7 +59,7 @@
 		--green-dark: rgb(0,180,5);
 		--pink: rgb(225,80,221);
 		--orange: rgb(253,167,20);
-		--base-padding: 20px;
+		--base-padding: 24px;
 		--base-radius: 10px;
 		--container-width: 580px;
 	}

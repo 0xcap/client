@@ -56,7 +56,7 @@
 	.positions {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
+		grid-gap: 10px;
 		margin-bottom: 50px;
 	}
 
@@ -64,17 +64,25 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		margin-bottom: var(--base-padding);
 	}
 
 		.title {
 			font-weight: 700;
 		}
 
+	.pbody {
+		border-radius: var(--base-radius);
+		overflow: hidden;
+		display: grid;
+		grid-auto-flow: row;
+		grid-gap: 4px;
+	}
+
 	.position {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-radius: var(--base-radius);
 		background-color: var(--black-almost);
 		overflow: hidden;
 		height: 76px;
@@ -188,6 +196,7 @@
 			{/if}
 		</div>
 
+		<div class='pbody'>
 		{#each $positions as position}
 			<div class='position'>
 				<div class='left' on:click={() => {showModal('PositionDetails', position)}}>
@@ -216,6 +225,7 @@
 				</div>
 			</div>
 		{/each}
+	</div>
 
 	{/if}
 

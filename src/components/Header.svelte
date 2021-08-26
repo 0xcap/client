@@ -35,6 +35,7 @@
 
 	- write contract tests for everything
 	- show percent in U/PL
+	- have button in product modal Select BTC/USD 15x
 	- fix numbers display, variable decimals for U/PL, etc.
 	- loading states: buttons, initial, etc
 	- info on modal add margin, stake (how much balance I have), close (position amount), etc.
@@ -49,8 +50,9 @@
 	- add wallet base balance to account modal
 	- tooltips
 	- footer: hosted on IPFS
-	- test more products
-	- test CAP staking and fee rebates
+	- keeper shouldn't submit transaction if they already did for the given IDs (pending tx on same set of IDs)
+	- more products
+	- CAP staking and fee rebates
 	- test protocol fee
 	-- deploy to rinkeby
 	- write trading bot on rinkeby / local that continously trades and stakes, with random amounts, to test
@@ -110,7 +112,7 @@
 	}
 
 	img {
-		height: 24px;
+		height: 20px;
 	}
 
 </style>
