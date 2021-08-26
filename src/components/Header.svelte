@@ -4,7 +4,7 @@
 	import { switchChain } from '../lib/wallet'
 	import { chainId, setNewChain } from '../stores/provider'
 
-	import { navigateTo, currentPage } from '../stores/router'
+	
 
 	import { CHAIN_DATA } from '../lib/constants'
 
@@ -36,6 +36,7 @@
 	- write contract tests for everything
 	- show percent in U/PL
 	- have button in product modal Select BTC/USD 15x
+	- show wallet balance top right
 	- fix numbers display, variable decimals for U/PL, etc.
 	- loading states: buttons, initial, etc
 	- info on modal add margin, stake (how much balance I have), close (position amount), etc.
@@ -53,6 +54,7 @@
 	- keeper shouldn't submit transaction if they already did for the given IDs (pending tx on same set of IDs)
 	- more products
 	- CAP staking and fee rebates
+	- remove edge from Cap logo
 	- test protocol fee
 	-- deploy to rinkeby
 	- write trading bot on rinkeby / local that continously trades and stakes, with random amounts, to test
@@ -84,33 +86,6 @@
 		cursor: pointer;
 	}
 
-	nav {
-		margin-left: 12px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	nav .inner {
-		background-color: var(--black-almost);
-		padding: 4px;
-		border-radius: var(--base-radius);
-		display: grid;
-		grid-auto-flow: column;
-		grid-gap: 10px;
-	}
-
-	nav a {
-		padding: 10px 16px;
-		color: var(--gray-light);
-	}
-	nav a.selected {
-		color: #fff;
-		font-weight: 700;
-		background-color: var(--gray-dark);
-		border-radius: 8px;
-	}
-
 	img {
 		height: 20px;
 	}
@@ -136,9 +111,5 @@
 			</div>
 	</header>
 
-	<nav>
-		<div class="inner">
-			<a class:selected={$currentPage == 'trade'} on:click={() => {navigateTo('/trade')}}>Trade</a><a class:selected={$currentPage == 'vault'} on:click={() => {navigateTo('/vault')}}>Vault</a><a class:selected={$currentPage == 'stake'} on:click={() => {navigateTo('/$CAP')}}>$CAP</a>
-		</div>
-	</nav>
+	
 </div>

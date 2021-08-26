@@ -27,7 +27,6 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: 2px;
-		margin-bottom: var(--base-padding);
 	}
 
 	.header {

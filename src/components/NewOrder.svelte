@@ -5,10 +5,10 @@
 
 	import { LOGOS } from '../lib/constants'
 	import { baseInfo } from '../stores/bases'
-	import { userBaseBalance, userBaseAllowance } from '../stores/wallet'
-	import { productId, productInfo, margin, leverage, amount, buyingPower } from '../stores/order'
-
+	import { margin, leverage, amount, buyingPower } from '../stores/order'
+	import { productId, productInfo } from '../stores/products'
 	import { prices, activateProduct } from '../stores/prices'
+	import { userBaseBalance, userBaseAllowance } from '../stores/wallet'
 
 	import { setBaseId, setProductId, listProducts, approveUserBaseAllowance, submitOrder } from '../lib/methods'
 
@@ -57,7 +57,6 @@
 		display:  grid;
 		grid-auto-flow: row;
 		grid-gap: 12px;
-		margin: 24px 0;
 		background-color: var(--black-almost);
 		padding: 12px;
 		border-radius: 18px;

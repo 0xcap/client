@@ -1,19 +1,20 @@
 <script>
 
-	import { component, loadRoute } from './stores/router'
-
 	import { onMount } from 'svelte'
 	import { initProvider } from './lib/provider'
 	import { initEventListeners } from './lib/events'
 
 	import Header from './components/Header.svelte'
+	import Nav from './components/Nav.svelte'
+
 	import Toasts from './components/Toasts.svelte'
 	import Footer from './components/Footer.svelte'
 
 	import Account from './components/Account.svelte'
-	import { activeModal } from './stores/modals'
 
-	import { provider, signer, address, chainId } from './stores/provider'
+	import { activeModal } from './stores/modals'
+	import { provider, address, chainId } from './stores/provider'
+	import { component, loadRoute } from './stores/router'
 
 	onMount(async () => {	
 		initProvider();
@@ -23,23 +24,6 @@
 	$: initEventListeners($address, $chainId);
 
 </script>
-
-<div class='gr'></div>
-<div>
-	<Toasts />
-	<Header />
-	<main>
-		{#if $provider}
-			{#if $address}
-				{#if $activeModal && $activeModal.name == 'Account'}
-					<Account />
-				{/if}
-			{/if}
-			<svelte:component this={$component}/>
-			<Footer />
-		{/if}
-	</main>
-</div>
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap');
@@ -63,11 +47,7 @@
 		--base-radius: 10px;
 		--container-width: 580px;
 	}
-	:global(a) {
-		color: var(--blue);
-		text-decoration: none;
-		cursor: pointer;
-	}
+
 	:global(html) {
 		background-color: var(--gray-darkest);
 		color: #fff;
@@ -75,6 +55,7 @@
 		font-size: 19px;
 		height: 100%;
 	}
+
 	:global(body) {
 		position: relative;
 		height: 100%;
@@ -82,11 +63,18 @@
 		margin: 0;
 	}
 
+	:global(a) {
+		color: var(--blue);
+		text-decoration: none;
+		cursor: pointer;
+	}
+	
 	:global(input::-webkit-outer-spin-button,input::-webkit-inner-spin-button) {
 	    display: none;
 	    -webkit-appearance: none;
 	    margin: 0;
 	}
+
 	:global(input[type='number'],input[type='range'],button) {
 		appearance: textfield;
 		font-family: inherit;
@@ -98,19 +86,14 @@
 		background-color: transparent;
 		width: 100%;
 	}
-	:global(hr) {
-		display: none;
+
+	.grid {
+		display: grid;
+		grid-auto-flow: row;
+		grid-gap: 40px;
 	}
 
-	main {
-		width: 100%;
-		max-width: var(--container-width);
-		padding: 30px var(--base-padding);
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-
-	.gr {
+	.radial-gradient {
 		position: fixed;
 	    top: 0;
 	    left: 0;
@@ -122,4 +105,30 @@
 		transform: translate(-50vw,-100vh);
 		z-index: -1;
 	}
+
+	main {
+		width: 100%;
+		max-width: var(--container-width);
+		padding: 0 var(--base-padding);
+		margin: 0 auto;
+		box-sizing: border-box;
+	}
+
 </style>
+
+{#if $activeModal && $activeModal.name == 'Account'}
+	<Account />
+{/if}
+<Toasts />
+<div class='grid'>
+	<div class='radial-gradient'></div>
+	<Header />
+	<Nav />
+	{#if $provider}
+	<main>
+		<svelte:component this={$component}/>
+	</main>
+	{/if}
+	<Footer />
+</div>
+

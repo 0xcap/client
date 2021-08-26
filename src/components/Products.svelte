@@ -8,7 +8,8 @@
 
 	import { CHAINLINK_FULL_ICON } from '../lib/icons'
 
-	import { productId, productInfo, leverage, setCachedLeverage } from '../stores/order'
+	import { leverage, setCachedLeverage } from '../stores/order'
+	import { productId, productInfo } from '../stores/products'
 	import { formatPrice } from '../lib/utils'
 
 	let products = listProducts();

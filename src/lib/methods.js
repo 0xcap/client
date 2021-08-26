@@ -4,7 +4,7 @@ import { contract, getBases, getBaseInfo, getProductSymbol, getProducts, getCont
 import { address } from '../stores/provider'
 import { addPendingTransaction } from '../stores/transactions'
 import { baseId } from '../stores/bases'
-import { productId, productInfo } from '../stores/order'
+import { productId, productInfo } from '../stores/products'
 import { showToast } from '../stores/toasts'
 
 import { activateProduct } from '../stores/prices'

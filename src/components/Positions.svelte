@@ -57,7 +57,6 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: 10px;
-		margin-bottom: 50px;
 	}
 
 	.header {

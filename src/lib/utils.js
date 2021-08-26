@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import { PRICE_PRECISION } from './constants'
 import { get } from 'svelte/store'
 import { baseId } from '../stores/bases'
-import { productId } from '../stores/order'
+import { productId } from '../stores/products'
 import { getBaseInfo } from './contracts'
 
 export function toBytes32(string) {
