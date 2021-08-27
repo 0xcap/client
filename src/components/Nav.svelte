@@ -1,17 +1,16 @@
 <script>
-	import { navigateTo, currentPage } from '../stores/router'
-
+	import { currentPage } from '../stores/router'
 </script>
 
 <style>
+
 	nav {
-		margin-left: 12px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
-	nav .inner {
+	.inner {
 		background-color: var(--black-almost);
 		padding: 4px;
 		border-radius: var(--base-radius);
@@ -20,20 +19,24 @@
 		grid-gap: 10px;
 	}
 
-	nav a {
-		padding: 10px 16px;
+	a {
+		padding: 8px 12px;
 		color: var(--gray-light);
 	}
-	nav a.selected {
+	a:hover {
 		color: #fff;
-		font-weight: 700;
-		background-color: var(--gray-dark);
-		border-radius: 8px;
 	}
+	
+	a.selected {
+		color: #fff;
+		background-color: var(--gray-dark);
+		border-radius: 12px;
+	}
+
 </style>
 
 <nav>
 	<div class="inner">
-		<a class:selected={$currentPage == 'trade'} on:click={() => {navigateTo('/trade')}}>Trade</a><a class:selected={$currentPage == 'vault'} on:click={() => {navigateTo('/vault')}}>Vault</a>
+		<a class:selected={$currentPage == 'trade'} href='#/trade'>Trade</a><a class:selected={$currentPage == 'vault'} href='#/vault'>Vault</a>
 	</div>
 </nav>

@@ -35,7 +35,7 @@
 		--gray-between: rgba(40,40,40,0.25);
 		--gray-dark: rgb(55,55,55);
 		--gray: rgb(80,80,80);
-		--gray-light: rgb(134,134,134);
+		--gray-light: rgb(125,125,125);
 		--blue: rgb(88,201,242);
 		--blue-dark: rgb(65,194,241);
 		--red: rgb(255,80,0);
@@ -46,7 +46,7 @@
 		--orange: rgb(253,167,20);
 		--base-padding: 22px;
 		--semi-padding: 12px;
-		--base-radius: 10px;
+		--base-radius: 16px;
 		--container-width: 580px;
 	}
 
@@ -116,6 +116,16 @@
 		box-sizing: border-box;
 	}
 
+	.nav {
+		display: none;
+	}
+
+	@media (max-width: 960px) {
+		.nav {
+			display: block;
+		}
+	}
+
 </style>
 
 {#if $activeModal && $activeModal.name == 'Account'}
@@ -125,7 +135,7 @@
 <div class='grid'>
 	<div class='radial-gradient'></div>
 	<Header />
-	<Nav />
+	<div class='nav'><Nav /></div>
 	{#if $contractsReady}
 	<main>
 		<svelte:component this={$component}/>

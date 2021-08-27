@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte'
 
 	import { CHAIN_DATA } from '../lib/constants'
-	import { SPINNER_ICON, TWITTER_ICON, TELEGRAM_ICON } from '../lib/icons'
+	import { SPINNER_ICON, MENU_ICON } from '../lib/icons'
 	import { initWallet, connectWallet } from '../lib/wallet'
 	import { formatToDisplay, shortAddr } from '../lib/utils'
 
@@ -94,7 +94,7 @@
 	.menu a {
 		display: block;
 		padding: 8px 16px;
-		color: var(--gray-light);
+		color: rgb(180,180,180);
 	}
 	.menu a:hover {
 		color: #fff;
@@ -106,10 +106,9 @@
 		margin: 6px 4px 0;
 	}
 
-	:global(.wallet .menu svg) {
-		height: 14px;
-		margin-bottom: -3px;
-		fill: var(--blue);
+	:global(.wallet .menu-icon svg) {
+		height: 18px;
+		fill: #fff;
 	}
 
 </style>
@@ -124,7 +123,7 @@
 		<div class='balance'>
 			{formatToDisplay($userBaseBalance)} {$selectedBase.symbol}
 		</div>
-		<div class='clickable-item address-wrap' on:click={() => {showModal('Account')}}>
+		<div class='clickable-item address-wrap' on:click={() => {showModal('Account')}} data-intercept="true">
 			{#if $hasPending}<div class='has-pending'>{@html SPINNER_ICON}</div>{/if}
 			<div class='address'>{shortAddr($selectedAddress)}</div>
 		</div>
@@ -133,15 +132,15 @@
 	{/if}
 
 	<div class='menu-wrap'>
-		<div class:selected={$menuVisible} class='clickable-item menu-icon' on:click={toggleMenu} data-intercept="true">M</div>
+		<div class:selected={$menuVisible} class='clickable-item menu-icon' on:click={toggleMenu} data-intercept="true">{@html MENU_ICON}</div>
 		{#if $menuVisible}
 			<div class='menu'>
-				<a href='https://docs.cap.finance'>Docs</a>
-				<a href='https://github.com/0xcap'>Github</a>
-				<a href='https://blog.cap.finance'>Blog</a>
-				<a href='https://t.me/capfin'>Telegram</a>
-				<a href='https://twitter.com/CapDotFinance'>Twitter</a>
-				<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x43044f861ec040db59a7e324c40507addb673142'>Buy CAP</a>	
+				<a href='https://docs.cap.finance' target="_blank">Docs</a>
+				<a href='https://github.com/0xcap' target="_blank">Github</a>
+				<a href='https://blog.cap.finance' target="_blank">Blog</a>
+				<a href='https://t.me/capfin' target="_blank">Telegram</a>
+				<a href='https://twitter.com/CapDotFinance' target="_blank">Twitter</a>
+				<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x43044f861ec040db59a7e324c40507addb673142' target="_blank">Buy CAP</a>	
 			</div>
 		{/if}
 	</div>

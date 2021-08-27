@@ -22,7 +22,7 @@ export function loadRoute(path) {
 		}
 		component.set(Trade);
 		currentPage.set('trade');
-	} else if (path.includes('vault')) {
+	} else if (path.includes('/vault')) {
 		component.set(Vault);
 		currentPage.set('vault');
 	} else {
@@ -35,8 +35,6 @@ export function navigateTo(path) {
 	console.log('path', path);
     if (!path || path == '/') {
     	path = '';
-    } else {
-    	path = '#' + path;
     }
     window.history.pushState(null, null, path);
     loadRoute(path);

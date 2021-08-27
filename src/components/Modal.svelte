@@ -59,7 +59,7 @@
 
 <div class='modal-container'>
 
-	<div class='modal'>
+	<div class='modal' data-intercept="true">
 
 		<div class='modal-header'>
 			<div class='modal-title'>{title}</div>

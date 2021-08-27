@@ -4,6 +4,12 @@ export const CANCEL_ICON = `<svg viewBox="0 0 512 512">
 <polygon points="512,59.076 452.922,0 256,196.922 59.076,0 0,59.076 196.922,256 0,452.922 59.076,512 256,315.076 452.922,512 
 			512,452.922 315.076,256"/></svg>`;
 
+export const MENU_ICON = `<svg viewBox="0 0 512 512">
+	<circle cx="256" cy="256" r="64"/>
+	<circle cx="256" cy="448" r="64"/>
+	<circle cx="256" cy="64" r="64"/>
+</svg>`
+
 export const SPINNER_ICON = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><style>@keyframes rotate-center{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}</style><g style="animation:rotate-center 1s cubic-bezier(.18,.89,.32,1.28) infinite both;transform-origin:center center"><circle cx="12" cy="12" r="8" stroke="rgb(55,55,55)" stroke-width="2"/><path d="M18.447 14.73a.53.53 0 00.233.68l.89.457a.48.48 0 00.66-.223A9 9 0 0016.551 4.22a.48.48 0 00-.667.205l-.456.89a.53.53 0 00.209.688 7.001 7.001 0 012.81 8.726z" fill="rgb(225,80,221)"/></g></svg>`;
 
 export const TWITTER_ICON = `<svg viewBox="0 0 20 20" xml:space="preserve">
