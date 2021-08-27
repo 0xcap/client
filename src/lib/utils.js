@@ -31,8 +31,9 @@ export function shortAddr(_address) {
 	return _address.substring(0,6) + '...' + _address.slice(-4);
 }
 
-export function formatToDisplay(amount, baseId) {
+export function formatToDisplay(amount, precision) {
 	if (isNaN(amount)) return 0;
+	if (precision) return (amount * 1).toFixed(precision);
 	if (amount * 1 >= 1000 || amount * 1 <= -1000) {
 		return Math.round(amount*1).toLocaleString();
 	} else if (amount * 1 >= 100 || amount * 1 <= -100) {
@@ -44,12 +45,12 @@ export function formatToDisplay(amount, baseId) {
 	}
 }
 
-export function formatPnl(pnl) {
+export function formatPnl(pnl, isPercent) {
 	let string = '';
 	if (pnl * 1 > 0) {
 		string += '+';
 	}
-	string += formatToDisplay(pnl) || 0;
+	string += formatToDisplay(pnl, isPercent ? 2 : null) || 0;
 	return string;
 }
 

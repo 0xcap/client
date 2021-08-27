@@ -126,7 +126,7 @@
 
 	button {
 		padding: var(--base-padding);
-		border-radius: var(--base-radius);
+		border-radius: 14px;
 		color: var(--gray-darkest);
 		font-size: 20px;
 		font-weight: 700;

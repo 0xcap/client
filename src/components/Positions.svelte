@@ -10,6 +10,7 @@
 	import { formatToDisplay, intify, formatPnl } from '../lib/utils'
 
 	let upls = {};
+	let upls_percent = {};
 	let totalUPL = 0;
 	let count = 0;
 	$: count = $positions && $positions.length || 0;
@@ -19,18 +20,22 @@
 		for (const position of $positions) {
 			const upl = await getUPL(position);
 			upls[position.id] = upl * 1;
+			upls_percent[position.id] = (100 * upl * 1 / position.margin);
 			totalUPL += upl * 1;
 		}
 		totalUPL = totalUPL.toFixed(4);
 	}
 
 	async function getUPL(position) {
-		const latestPrice = $prices[position.productId];
+		let latestPrice = $prices[position.productId];
 		let upl = 0;
 		if (latestPrice) {
+			const productInfo = await getProduct(position.productId);
 			if (position.isLong) {
+				latestPrice = latestPrice * (1 - productInfo.fee/100);
 				upl = position.margin * position.leverage * (latestPrice * 1 - position.price * 1) / position.price;
 			} else {
+				latestPrice = latestPrice * (1 + productInfo.fee/100);
 				upl = position.margin * position.leverage * (position.price * 1 - latestPrice * 1) / position.price;
 			}
 			// Add interest
@@ -39,7 +44,6 @@
 			if (now < position.timestamp * 1 - 1800) {
 				interest = 0;
 			} else {
-				const productInfo = await getProduct(position.productId);
 				interest = position.margin * position.leverage * ((productInfo.interest || 0) / 100) * (now - position.timestamp * 1) / (360 * 24 * 3600);
 			}
 			upl -= interest;
@@ -92,6 +96,7 @@
 		display: flex;
 		align-items: center;
 		cursor: pointer;
+		flex: 1 1 auto;
 	}
 
 	.direction {
@@ -144,8 +149,14 @@
 		align-items: center;
 	}
 
-	.upl {
+	.upl-wrap {
 		margin-right: 24px;
+		text-align: right;
+	}
+
+	.upl-percent {
+		margin-top: 10px;
+		font-size: 80%;
 	}
 
 	.pos {
@@ -215,7 +226,14 @@
 					</div>
 
 					<div class='tools'>
-						<div class={`upl ${upls[position.id] * 1 > 0 ? 'pos' : 'neg'}`}>{formatPnl(upls[position.id])}</div>
+						<div class={`upl-wrap ${upls[position.id] * 1 > 0 ? 'pos' : 'neg'}`}>
+							<div class='upl'>
+								{formatPnl(upls[position.id])}
+							</div>
+							<div class='upl-percent'>
+								{formatPnl(upls_percent[position.id], true)}%
+							</div>
+						</div>
 						<a class='add-margin' on:click={() => {showModal('AddMargin', position)}} data-intercept="true">
 							{@html PLUS_ICON}
 						</a>

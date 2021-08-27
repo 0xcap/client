@@ -1,5 +1,22 @@
 <script>
 
+	/*
+	TODO:
+	-- position UPL should include fee
+	- refactor modal elements into components: Input wrap, details, button
+	- toasts on tx completion
+	- add margin / close error if still settling
+	- wallet balance in account modal
+	- tx icon
+	- tooltips?
+	- footer: hosted on IPFS
+	- keeper on vercel, called by github actions shouldn't submit transaction if they already did for the given IDs (pending tx on same set of IDs)
+	- logos should be links not base64
+	- more products
+	- sounds
+
+	*/
+
 	import { onMount } from 'svelte'
 	import { PRICE_DECIMALS } from '../lib/constants'
 	import { calculateLiquidationPrice } from '../lib/helpers'
@@ -38,7 +55,6 @@
 
 	let submitIsPending = false;
 	async function _submitOrder() {
-		if (!margin*1) return showToast('Margin is required.');
 		submitIsPending = true;
 		const error = await submitOrder(
 			data.baseId,
