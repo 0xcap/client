@@ -24,7 +24,7 @@ export const userBaseBalance = derived([selectedBaseId, selectedAddress, refresh
 		set(0);
 		return;
 	}
-	set(await getBalance($selectedBaseId, $selectedAddress));
+	set(await getBalance($selectedBaseId, $selectedAddress) * 1);
 }, 0);
 
 export const userBaseAllowance = derived([selectedBaseId, selectedAddress, refreshUserBaseAllowance], async ([$selectedBaseId, $selectedAddress, $refreshUserBaseAllowance], set) => {
@@ -32,5 +32,5 @@ export const userBaseAllowance = derived([selectedBaseId, selectedAddress, refre
 		set(0);
 		return;
 	}
-	set(await getAllowance($selectedBaseId, $selectedAddress));
+	set(await getAllowance($selectedBaseId, $selectedAddress) * 1);
 }, 0);

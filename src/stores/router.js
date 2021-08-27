@@ -5,7 +5,7 @@ import Vault from '../pages/Vault.svelte'
 import NotFound from '../pages/NotFound.svelte'
 
 import { PRODUCT_TO_ID } from '../lib/constants'
-import { setProductId } from '../lib/helpers'
+import { selectProduct } from '../lib/helpers'
 
 export const currentPage = writable('');
 export const component = writable();
@@ -18,7 +18,7 @@ export function loadRoute(path) {
 		// set product and component
 		const product = path.split('/')[2];
 		if (product && PRODUCT_TO_ID[product]) {
-			setProductId(PRODUCT_TO_ID[product]);
+			selectProduct(PRODUCT_TO_ID[product]);
 		}
 		component.set(Trade);
 		currentPage.set('trade');

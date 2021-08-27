@@ -10,3 +10,4 @@ export function showModal(name, data) {
 export function hideModal() {
 	activeModal.set({});
 }
+

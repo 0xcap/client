@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte'
 	import { stake, redeem } from '../lib/methods'
-	import { vaultInfo } from '../stores/vault'
+	import { selectedVault } from '../stores/vault'
 	
 	import Modal from './Modal.svelte'
 
@@ -20,7 +20,7 @@
 		document.getElementById('amount').focus();
 	});
 
-	$: getNextRedemptionTime($vaultInfo.stakingPeriod, $vaultInfo.redemptionPeriod);
+	$: getNextRedemptionTime($selectedVault.stakingPeriod, $selectedVault.redemptionPeriod);
 
 	function getNextRedemptionTime(staking_period, redemption_period) {
 		const now = Date.now() / 1000;

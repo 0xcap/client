@@ -2,6 +2,8 @@ import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 
 import { bases, selectedBaseId } from '../stores/bases'
+import { hideMenu } from '../stores/menu'
+import { hideModal } from '../stores/modals'
 import { products, selectedProductId } from '../stores/products'
 
 import { activateProductPrices } from './helpers'
@@ -144,4 +146,61 @@ export function setCachedLeverage(productId, _leverage) {
 	} else {
 		localStorage.setItem('cachedLeverages', JSON.stringify({[productId]: _leverage}));
 	}
+}
+
+export function catchLinks(cb) {
+
+	window.addEventListener('click', (ev) => {
+
+      if (ev.altKey || ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.defaultPrevented) {
+          return true;
+      }
+      
+      let anchor = null;
+      for (let n = ev.target; n.parentNode; n = n.parentNode) {
+          if (n.nodeName === 'A') {
+              anchor = n;
+              break;
+          }
+      }
+
+      if (!anchor) return true;
+      
+      let href = anchor.getAttribute('href');
+      
+      if (!href || href && href.includes('http')) return true;
+      
+      ev.preventDefault();
+      
+      cb(href);
+
+      return false;
+
+  });
+
+}
+
+export function hidePopoversOnClick() {
+
+	window.addEventListener('click', (ev) => {
+
+      if (ev.altKey || ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.defaultPrevented) {
+          return true;
+      }
+      
+      let interceptor = null;
+      for (let n = ev.target; n.parentNode; n = n.parentNode) {
+          if (n.getAttribute('data-intercept')) {
+              interceptor = true;
+              break;
+          }
+      }
+
+      if (interceptor) return true;
+
+      hideModal();
+      hideMenu();
+
+  });
+
 }

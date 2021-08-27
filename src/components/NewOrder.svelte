@@ -2,62 +2,53 @@
 	import { onMount } from 'svelte'
 
 	import { LOGOS } from '../lib/constants'
+	import { selectProduct } from '../lib/helpers'
+	import { approveAllowance, submitOrder } from '../lib/methods'
+	import { formatToDisplay } from '../lib/utils'
+
 	import { selectedBase } from '../stores/bases'
+	import { showModal } from '../stores/modals'
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
 	import { selectedProductId, selectedProduct } from '../stores/products'
 	import { prices } from '../stores/prices'
-	import { selectedAddress, userBaseBalance, userBaseAllowance } from '../stores/wallet'
+	import { selectedAddress, userBaseAllowance } from '../stores/wallet'
 
-	import { approveAllowance, submitOrder } from '../lib/methods'
-
-	import { showModal } from '../stores/modals'
-
-	import { formatToDisplay } from '../lib/utils'
-
-	import { CHAINLINK_ICON } from '../lib/icons'
-
-	import { activateProductPrices } from '../lib/helpers'
-
-	async function _approveUserBaseAllowance() {
+	let approveIsPending = false;
+	async function _approveAllowance() {
+		approveIsPending = true;
 		const error = await approveAllowance();
-		if (error) {
-			showToast(error);
-		} else {
-			// disable / pending state for approve button
-		}
+		if (error) approveIsPending = false;
 	}
 
+	let submitIsPending = false;
 	async function _submitOrder(isLong) {
-		// todo: checks
+
+		submitIsPending = true;
 		const error = await submitOrder(
 			null,
-			null,
+			$selectedProductId,
 			isLong,
 			$margin * 1,
 			$leverage * 1,
 			0,
 			false
 		);
-		if (error) {
-			showToast(error);
-		} else {
-			// disable / pending state for form
-		}
+		submitIsPending = false;
 	}
 
-	let amountFocused = false;
+	let amountIsFocused = false;
 
 	function checkFocus(address) {
 		const elem = document.getElementById('amount');
 		if (elem && address) elem.focus();
 	}
+	$: checkFocus($selectedAddress);
 
 	onMount(() => {
-		activateProductPrices($selectedProductId);
+		// Activates prices
+		selectProduct($selectedProductId);
 		checkFocus($selectedAddress);
 	});
-
-	$: checkFocus($selectedAddress);
 
 </script>
 
@@ -182,7 +173,7 @@
 
 <div class='new-order'>
 
-	<div class='row' on:click={() => {showModal('Products')}}>
+	<div class='row' on:click={() => {showModal('Products')}} data-intercept="true">
 		<div class='label-wrap'>
 			<div class='label'>Product</div>
 			<div class='sub-label'>
@@ -200,13 +191,13 @@
 		</div>
 	</div>
 
-	<label class='row' class:focused={amountFocused} for='amount'>
+	<label class='row' class:focused={amountIsFocused} for='amount'>
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
-			<div class='sub-label'>Available: {formatToDisplay($buyingPower)} {$selectedBase && $selectedBase.symbol} <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
+			<div class='sub-label'>Available: {formatToDisplay($buyingPower)} {$selectedBase.symbol} <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
 		</div>
 		<div class='value-wrap input-wrap'>
-			<input id='amount' type='number' on:focus={() => {amountFocused = true}}  on:blur={() => {amountFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
+			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
 		</div>
 	</label>
 
@@ -215,10 +206,10 @@
 			<button class='button-disabled'>Connect a wallet</button>
 		{:else if !$amount}
 			<button class='button-disabled'>Enter an amount</button>
-		{:else if $userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1}
-			<button class='button-default' on:click={_approveUserBaseAllowance}>Approve {$selectedBase.symbol}</button>
+		{:else if !$userBaseAllowance}
+			<button class={approveIsPending ? 'button-disabled' : 'button-default'} on:click={_approveAllowance}>Approve {$selectedBase.symbol}</button>
 		{:else}
-			<button class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
+			<button class={submitIsPending ? 'button-disabled' : 'button-short'} on:click={() => {_submitOrder(false)}}>Short</button><button class={submitIsPending ? 'button-disabled' : 'button-long'} on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
 	</div>
 

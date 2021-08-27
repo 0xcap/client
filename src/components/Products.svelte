@@ -1,6 +1,6 @@
 <script>
 	import { onDestroy } from 'svelte'
-	import { setProductId } from '../lib/helpers'
+	import { selectProduct } from '../lib/helpers'
 	import { LOGOS } from '../lib/constants'
 
 	import Modal from './Modal.svelte'
@@ -110,7 +110,7 @@
 	<div class='product-list'>
 
 		{#each $productList as product}
-			<a class:selected={product.id == $selectedProductId} on:click={() => {setProductId(product.id)}}>
+			<a class:selected={product.id == $selectedProductId} on:click={() => {selectProduct(product.id)}}>
 				<div class='product'>
 					<img src={LOGOS[product.id]} alt={`${product.symbol} logo`}>
 					<span>{product.symbol}</span>

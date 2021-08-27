@@ -7,7 +7,7 @@ import { getUserStaked, getVault } from '../lib/methods'
 
 export const refreshUserStaked = writable(0);
 
-export const vaultInfo = derived([selectedBaseId], async ([$selectedBaseId], set) => {
+export const selectedVault = derived([selectedBaseId], async ([$selectedBaseId], set) => {
 	if (!$selectedBaseId) {
 		set({});
 		return;

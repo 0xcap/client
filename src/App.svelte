@@ -1,22 +1,25 @@
 <script>
 
 	import { onMount } from 'svelte'
-	import { initEventListeners } from './lib/events'
-
+	
 	import Toasts from './components/Toasts.svelte'
 	import Header from './components/Header.svelte'
 	import Nav from './components/Nav.svelte'
 	import Footer from './components/Footer.svelte'
-
 	import Account from './components/Account.svelte'
+
+	import { initEventListeners } from './lib/events'
+	import { catchLinks, hidePopoversOnClick } from './lib/utils'
 
 	import { contractsReady } from './stores/contracts'
 	import { activeModal } from './stores/modals'
-	import { component, loadRoute } from './stores/router'
+	import { component, loadRoute, navigateTo } from './stores/router'
 	import { selectedAddress, chainId } from './stores/wallet'
 
 	onMount(async () => {
 		loadRoute(location.hash);
+		catchLinks((path) => navigateTo(path));
+		hidePopoversOnClick();
 	});
 
 	$: initEventListeners($selectedAddress, $chainId);
@@ -32,16 +35,17 @@
 		--gray-between: rgba(40,40,40,0.25);
 		--gray-dark: rgb(55,55,55);
 		--gray: rgb(80,80,80);
-		--gray-light: rgb(114,114,114);
+		--gray-light: rgb(134,134,134);
 		--blue: rgb(88,201,242);
-		--blue-dark: rgb(88,201,220);
+		--blue-dark: rgb(65,194,241);
 		--red: rgb(255,80,0);
 		--red-dark: rgb(235,80,0);
 		--green: rgb(0,200,5);
 		--green-dark: rgb(0,180,5);
 		--pink: rgb(225,80,221);
 		--orange: rgb(253,167,20);
-		--base-padding: 24px;
+		--base-padding: 22px;
+		--semi-padding: 12px;
 		--base-radius: 10px;
 		--container-width: 580px;
 	}
@@ -50,7 +54,7 @@
 		background-color: var(--gray-darkest);
 		color: #fff;
 		font-family: 'Ubuntu Mono';
-		font-size: 19px;
+		font-size: 18px;
 		height: 100%;
 	}
 

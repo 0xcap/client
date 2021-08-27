@@ -2,12 +2,11 @@ import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 
 import { CHAIN_DATA } from './constants'
-
-import { initContracts } from '../lib/contracts'
+import { initContracts } from './contracts'
 
 import { showToast } from '../stores/toasts'
 import { clearTransactions } from '../stores/transactions'
-import { provider, signer, chainId } from '../stores/wallet'
+import { provider, signer, selectedAddress, chainId } from '../stores/wallet'
 
 let walletProvider;
 
@@ -21,18 +20,22 @@ function handleChainSwitch(_chainId, _provider) {
 		window.location.reload();
 	} else {
 		chainId.set(_chainId);
-		// init contracts with connected chain id
-		//_provider = _provider || new ethers.providers.JsonRpcProvider(CHAIN_DATA[_chainId]['network'])
 		initContracts(_chainId, _provider);
 	}
 
 }
 
+function handleAccountsChanged(accounts) {
+	if (!accounts.length) return signer.set(null);
+	if (get(selectedAddress) && get(selectedAddress) != accounts[0]) {
+		clearTransactions();
+	}
+	signer.set(walletProvider.getSigner());
+}
+
 export async function initWallet() {
 
-	console.log('Init wallet');
-
-	// Metamask is window.ethereum
+	// Window.ethereum is Metamask
 
 	if (!window.ethereum) return showToast('Install Metamask to use Cap.');
 
@@ -45,40 +48,18 @@ export async function initWallet() {
 	// Chain id (number)
 	const network = await walletProvider.getNetwork();
 	handleChainSwitch(network.chainId, walletProvider);
-	listener.on('chainChanged', (_chainId) => {
-		_chainId = parseInt(_chainId, 16);
-		console.log('chain changed to', _chainId);
-		handleChainSwitch(_chainId, walletProvider);
-	});
+	listener.on('chainChanged', (_chainId) => handleChainSwitch(parseInt(_chainId, 16), walletProvider));
 
 	// Account
 	handleAccountsChanged(await walletProvider.send('eth_accounts'));
 	listener.on('accountsChanged', handleAccountsChanged);
-
-	function handleAccountsChanged(accounts) {
-		if (!accounts.length) {
-			signer.set(null);
-			return;
-		}
-		signer.set(walletProvider.getSigner());
-	}
-
-	listener.on('disconnect', (code, reason) => {
-		// does not work for metamask
-		console.log('disconnected', code, reason);
-	});
 	
 }
 
-export async function connectWallet(_type) {
+export async function connectWallet() {
 	if (!window.ethereum) return showToast('Please install Metamask to connect.');
 	try {
-		if (_type == 'WalletConnect') {
-			//await wcProvider.enable();
-			//initWallet(wcProvider);
-		} else {
-			await walletProvider.send("eth_requestAccounts", []);
-		}
+		await walletProvider.send("eth_requestAccounts", []);
 		signer.set(walletProvider.getSigner());
 	} catch(e) {
 		console.error(e);

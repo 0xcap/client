@@ -2,6 +2,7 @@ import { get } from 'svelte/store'
 import { contracts } from '../stores/contracts'
 import { activeProducts } from '../stores/prices'
 import { selectedProductId } from '../stores/products'
+import { signer } from '../stores/wallet'
 
 export function getContract(name, withSigner) {
   if (!name) name = 'TRADING';
@@ -14,7 +15,7 @@ export function getContractAddress(name) {
   return get(contracts)[name].address;
 }
 
-export function setProductId(productId) {
+export function selectProduct(productId) {
 	selectedProductId.set(productId);
 	localStorage.setItem('selectedProductId', productId);
 	activateProductPrices(productId);

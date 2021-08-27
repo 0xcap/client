@@ -4,9 +4,9 @@ import { LEVERAGE_DECIMALS, PRICE_DECIMALS } from './constants'
 import { getContract, getContractAddress } from './helpers'
 import { formatUnits, parseUnits, formatProduct, formatVault, formatPositions } from './utils'
 
-import { bases } from '../stores/bases'
+import { bases, selectedBaseId } from '../stores/bases'
+import { showToast } from '../stores/toasts'
 import { addPendingTransaction } from '../stores/transactions'
-
 
 // Products
 
@@ -21,19 +21,19 @@ export async function getProduct(productId) {
 // Base
 
 export async function getBalance(baseId, address) {
-	const base = get(bases)[baseId];
+	const base = get(bases)[baseId || get(selectedBaseId)];
 	const balance = await getContract(base.symbol).balanceOf(address);
 	return formatUnits(balance, base.decimals);
 }
 
 export async function getAllowance(baseId, address) {
-	const base = get(bases)[baseId];
+	const base = get(bases)[baseId || get(selectedBaseId)];
 	const allowance = await getContract(base.symbol).allowance(address, getContractAddress());
 	return formatUnits(allowance, base.decimals);
 }
 
 export async function approveAllowance(baseId, amount) {
-	const base = get(bases)[baseId];
+	const base = get(bases)[baseId || get(selectedBaseId)];
 	if (!amount) amount = 10n**27n; // 1 billion at 10^18
 	try {
 		const tx = await getContract(base.symbol, true).approve(getContractAddress(), amount);
@@ -42,6 +42,7 @@ export async function approveAllowance(baseId, amount) {
 			description: `Approve ${base.symbol}`
 		});
 	} catch(e) {
+		showToast(e);
 		return e;
 	}
 }
@@ -67,6 +68,7 @@ export async function stake(baseId, amount) {
 			description: `Stake ${amount} ${base.symbol}`
 		});
 	} catch(e) {
+		showToast(e);
 		return e;
 	}
 }
@@ -80,6 +82,7 @@ export async function redeem(baseId, amount) {
 			description: `Redeem ${amount} ${base.symbol}`
 		});
 	} catch(e) {
+		showToast(e);
 		return e;
 	}
 }
@@ -98,6 +101,7 @@ export async function getUserPositions(baseId, address) {
 
 export async function submitOrder(baseId, productId, isLong, margin, leverage, positionId, releaseMargin, isClose) {
 	
+	baseId = baseId || get(selectedBaseId);
 	const base = get(bases)[baseId];
 	const marginUnits = parseInt(margin * 10**(base.decimals));
 	const leverageUnits = parseUnits(leverage, LEVERAGE_DECIMALS);
@@ -125,6 +129,7 @@ export async function submitOrder(baseId, productId, isLong, margin, leverage, p
 		});
 
 	} catch(e) {
+		showToast(e);
 		return e;
 	}
 

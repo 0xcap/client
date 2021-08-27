@@ -1,5 +1,5 @@
 <script>
-	import { vaultInfo, userStaked } from '../stores/vault'
+	import { selectedVault, userStaked } from '../stores/vault'
 	import { selectedBaseId, selectedBase } from '../stores/bases'
 	import { showModal } from '../stores/modals'
 
@@ -110,32 +110,32 @@
 
 	<div class='balance'>
 		<div class='heading'>Balance</div>
-		<div class='balance-value'>{$vaultInfo.balance || 0}</div>
+		<div class='balance-value'>{$selectedVault.balance || 0}</div>
 	</div>
 
 	<div class='stake-info'>
 		<div class='row'>
 			<div class='label'>Total Staked</div>
-			<div class='value'>{$vaultInfo.totalStaked || 0} ({$vaultInfo.totalStaked*100/$vaultInfo.cap || 0}%)</div>
+			<div class='value'>{$selectedVault.totalStaked || 0} ({$selectedVault.totalStaked*100/$selectedVault.cap || 0}%)</div>
 		</div>
 		<div class='stake-meter'>
-			<div class='stake-progress' style={`width: ${$vaultInfo.totalStaked*100/$vaultInfo.cap || 0}%`}></div>
+			<div class='stake-progress' style={`width: ${$selectedVault.totalStaked*100/$selectedVault.cap || 0}%`}></div>
 		</div>
 		<div class='row'>
 			<div class='label'>Max Stake Capacity</div>
-			<div class='value'>{$vaultInfo.cap}</div>
+			<div class='value'>{$selectedVault.cap}</div>
 		</div>
 		<div class='row'>
 			<div class='label'>Open Interest</div>
-			<div class='value'>{$vaultInfo.openInterest}</div>
+			<div class='value'>{$selectedVault.openInterest}</div>
 		</div>
 		<div class='row'>
 			<div class='label'>Max Open Interest</div>
-			<div class='value'>{$vaultInfo.maxOpenInterest}</div>
+			<div class='value'>{$selectedVault.maxOpenInterest}</div>
 		</div>
 		<div class='row'>
 			<div class='label'>Max Daily Drawdown</div>
-			<div class='value'>{$vaultInfo.maxDailyDrawdown}%</div>
+			<div class='value'>{$selectedVault.maxDailyDrawdown}%</div>
 		</div>
 	</div>
 
@@ -143,12 +143,12 @@
 
 		<div class='row'>
 			<div class='label'>My Stake <a on:click={() => {showModal('Stake')}}>(stake)</a></div>
-			<div class='value'>{$userStaked} ({$userStaked*100/$vaultInfo.totalStaked || 0}%)</div>
+			<div class='value'>{$userStaked} ({$userStaked*100/$selectedVault.totalStaked || 0}%)</div>
 		</div>
 
 		<div class='row'>
 			<div class='label'>My Balance <a on:click={() => {showModal('Redeem')}}>(redeem)</a></div>
-			<div class='value'>{formatToDisplay($vaultInfo.balance * $userStaked/$vaultInfo.totalStaked || 0)}</div>
+			<div class='value'>{formatToDisplay($selectedVault.balance * $userStaked/$selectedVault.totalStaked || 0)}</div>
 		</div>
 
 	</div>
