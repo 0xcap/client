@@ -1,15 +1,6 @@
 <script>
 
 	import Connect from './Connect.svelte'
-	import { switchChain } from '../lib/wallet'
-	import { chainId, setNewChain } from '../stores/provider'
-
-	
-
-	import { CHAIN_DATA } from '../lib/constants'
-
-	// get available chains
-	let chains = Object.values(CHAIN_DATA);
 
 	/* todo
 	-- wallet transactions modal
@@ -102,13 +93,6 @@
 		<div class='right'>
 			<Connect/>
 		</div>
-
-		<div class='hidden'>
-				Chains:
-				{#each chains as chain}
-				<a class:selected={$chainId == chain.id} on:click={() => {switchChain(chain.id)}}>{chain.label}</a> | 
-				{/each}
-			</div>
 	</header>
 
 	

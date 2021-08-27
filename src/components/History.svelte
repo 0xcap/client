@@ -1,9 +1,9 @@
 <script>
 	import { onMount } from 'svelte'
-	import { signer, address } from '../stores/provider'
 	import { history } from '../stores/history'
 
 	import { showModal } from '../stores/modals'
+	import { formatToDisplay } from '../lib/utils'
 
 	let hide_history = false;
 	if (localStorage.getItem('hide_history')) {
@@ -132,7 +132,7 @@
 							<span class='leverage'>{event.leverage}x</span>
 						</div>
 						<div class='close'>
-							Closed {event.amount} {event.base} at {event.price}
+							Closed {formatToDisplay(event.amount)} {event.base} at {event.price}
 						</div>
 					</div>
 				</div>

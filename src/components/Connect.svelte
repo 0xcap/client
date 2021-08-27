@@ -1,23 +1,20 @@
 <script>
 	import { onMount } from 'svelte'
-	import { signer, address, chainId } from '../stores/provider'
+	import { selectedAddress, chainId } from '../stores/wallet'
 	import { initWallet, connectWallet } from '../lib/wallet'
 
 	import { CHAIN_DATA } from '../lib/constants'
 
-	import { baseInfo } from '../stores/bases'
-	import { userBaseBalance } from '../stores/wallet'
-
-	import { shortAddr, formatBaseAmount } from '../lib/utils'
+	import { shortAddr } from '../lib/utils'
 
 	import { showModal } from '../stores/modals'
 	import { SPINNER_ICON } from '../lib/icons'
 
 	import { hasPending, checkPendingTransactions, clearTransactions } from '../stores/transactions'
 
-	async function checkTransactions(_address) {
-		if (!_address) return;
-		if (!localStorage.getItem('address') || _address.toLowerCase() != localStorage.getItem('address').toLowerCase()) {
+	async function checkTransactions(address) {
+		if (!address) return;
+		if (!localStorage.getItem('address') || address.toLowerCase() != localStorage.getItem('address').toLowerCase()) {
 			clearTransactions();
 		} else {
 			await checkPendingTransactions();
@@ -30,7 +27,7 @@
 		network = CHAIN_DATA[_chainId].label || "Unsupported";
 	}
 
-	$: checkTransactions($address);
+	$: checkTransactions($selectedAddress);
 	$: checkChain($chainId);
 
 	onMount(async () => {	
@@ -88,14 +85,14 @@
 
 <div class='connect'>
 	{#if network}{network} {/if}
-	{#if $address}
+	{#if $selectedAddress}
 		<div class='address-wrap'>
 			<div class='balance'>
 				
 			</div>
 			<div class='address' on:click={() => {showModal('Account')}}>
 				{#if $hasPending}<div class='pending'>{@html SPINNER_ICON}</div>{/if}
-				<span>{shortAddr($address)}</span>
+				<span>{shortAddr($selectedAddress)}</span>
 			</div>
 		</div>
 	{:else}

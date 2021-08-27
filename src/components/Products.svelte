@@ -1,6 +1,6 @@
 <script>
 	import { onDestroy } from 'svelte'
-	import { setProductId, listProducts } from '../lib/methods'
+	import { setProductId } from '../lib/helpers'
 	import { LOGOS } from '../lib/constants'
 
 	import Modal from './Modal.svelte'
@@ -8,21 +8,19 @@
 
 	import { CHAINLINK_FULL_ICON } from '../lib/icons'
 
-	import { leverage, setCachedLeverage } from '../stores/order'
-	import { productId, productInfo } from '../stores/products'
-	import { formatPrice } from '../lib/utils'
-
-	let products = listProducts();
+	import { leverage } from '../stores/order'
+	import { selectedProductId, selectedProduct, productList } from '../stores/products'
+	import { formatToDisplay, setCachedLeverage } from '../lib/utils'
 
 	const unsubscribe = leverage.subscribe(value => {
-		setCachedLeverage($productId, value);
+		setCachedLeverage($selectedProductId, value);
 	});
 
 	onDestroy(unsubscribe);
 
 	// 8h funding
 	let funding = 0;
-	$: funding = (($productInfo.interest * 1) / 360 / 3).toFixed(4) || 0;
+	$: funding = (($selectedProduct.interest * 1) / 360 / 3).toFixed(4) || 0;
 
 </script>
 
@@ -111,13 +109,13 @@
 
 	<div class='product-list'>
 
-		{#each products as product}
-			<a class:selected={product.id == $productId} on:click={() => {setProductId(product.id)}}>
+		{#each $productList as product}
+			<a class:selected={product.id == $selectedProductId} on:click={() => {setProductId(product.id)}}>
 				<div class='product'>
-					<img src={LOGOS[product.id]} alt={`${$productInfo.symbol} logo`}>
+					<img src={LOGOS[product.id]} alt={`${product.symbol} logo`}>
 					<span>{product.symbol}</span>
 				</div>
-				<div>{formatPrice($prices[product.id], product.id) || ''}</div>
+				<div>{formatToDisplay($prices[product.id], product.id) || ''}</div>
 			</a>
 		{/each}
 	</div>
@@ -128,12 +126,12 @@
 			<div class='value'>{$leverage}x</div>
 		</div>
 		<div class='range'>
-			<input type=range bind:value={$leverage} min=1 max={$productInfo.leverage * 1 || 100}> 
+			<input type=range bind:value={$leverage} min=1 max={$selectedProduct.leverage * 1 || 100}> 
 		</div>
 	</div>
 
 	<div class='details'>
-		{$productInfo.fee}% fee | -{funding}% 8hr funding
+		{$selectedProduct.fee}% fee | -{funding}% 8hr funding
 	</div>
 
 	<div class='details topped'>

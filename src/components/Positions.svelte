@@ -3,11 +3,11 @@
 	import { prices } from '../stores/prices'
 	import { showModal } from '../stores/modals'
 
-	import { getProductInfo } from '../lib/methods'
+	import { getProduct } from '../lib/methods'
 	import { LOGOS } from '../lib/constants'
 
 	import { PLUS_ICON } from '../lib/icons'
-	import { formatPrice } from '../lib/utils'
+	import { formatToDisplay } from '../lib/utils'
 
 	let upls = {};
 	let totalUPL = 0;
@@ -39,7 +39,7 @@
 			if (now < position.timestamp * 1 - 1800) {
 				interest = 0;
 			} else {
-				const productInfo = await getProductInfo(position.productId);
+				const productInfo = await getProduct(position.productId);
 				interest = position.margin * position.leverage * ((productInfo.interest || 0) / 100) * (now - position.timestamp * 1) / (360 * 24 * 3600);
 			}
 			upl -= interest;
@@ -207,7 +207,7 @@
 							<span class='leverage'>{position.leverage}x</span>
 						</div>
 						<div class='entry'>
-							{position.amount} {position.base} at {formatPrice(position.price, position.productId)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
+							{formatToDisplay(position.amount)} {position.base} at {formatToDisplay(position.price)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
 						</div>
 					</div>
 				</div>

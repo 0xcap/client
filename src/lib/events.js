@@ -1,8 +1,6 @@
 import { get } from 'svelte/store'
-import { contract } from './contracts'
-import { PRICE_DECIMALS, LEVERAGE_DECIMALS } from './constants'
-import { getBaseInfo, getProductSymbol } from './contracts'
-import { provider, signer } from '../stores/provider'
+
+import { getContract } from './helpers'
 
 import { refreshUserStaked } from '../stores/vault'
 import { refreshUserPositions } from '../stores/positions'
@@ -12,7 +10,7 @@ import { showToast } from '../stores/toasts'
 
 import { completeTransaction } from '../stores/transactions'
 
-import { toBytes32, fromBytes32, formatUnits, parseUnits, formatBaseAmount } from './utils'
+import { formatEvent } from './utils'
 	
 // toasts dark for a period after page load
 let acceptToasts = false;
@@ -68,7 +66,7 @@ function handleEvent() {
 }
 
 export function initEventListeners(address, chainId) {
-	const tradingContract = contract();
+	const tradingContract = getContract();
 	if (!tradingContract) return;
 	tradingContract.removeAllListeners();
 	if (!address || !chainId) return;
@@ -81,49 +79,16 @@ export function initEventListeners(address, chainId) {
 	tradingContract.on(tradingContract.filters.ClosePosition(null, address), handleEvent);
 	// todo: other event listeners
 
-	const USDCContract = contract('USDC');
+	const USDCContract = getContract('USDC');
 	if (!USDCContract) return;
 	USDCContract.removeAllListeners();
 	USDCContract.on(USDCContract.filters.Approval(address, tradingContract.address), handleEvent);
 }
 
-const formatEvent = function(ev) {
-
-	//console.log('Formatting event', ev);
-
-	if (ev.event == 'ClosePosition') {
-
-		const { id, user, vaultId, productId, price, margin, leverage, pnl, feeRebate, protocolFee, wasLiquidated } = ev.args;
-
-		const base = getBaseInfo(vaultId);
-		if (!base) return;
-
-		return {
-			type: 'ClosePosition',
-			id: id.toNumber(),
-			base: base.symbol,
-			product: getProductSymbol(productId),
-			price: formatUnits(price, PRICE_DECIMALS),
-			margin: formatUnits(margin, base.decimals),
-			leverage: formatUnits(leverage, LEVERAGE_DECIMALS),
-			amount: formatBaseAmount(formatUnits(margin, base.decimals) * formatUnits(leverage, LEVERAGE_DECIMALS), vaultId),
-			pnl: formatUnits(pnl, base.decimals),
-			feeRebate: formatUnits(feeRebate, base.decimals),
-			protocolFee: formatUnits(protocolFee, base.decimals),
-			wasLiquidated,
-			txHash: ev.transactionHash,
-			block: ev.blockNumber,
-			productId: productId,
-			vaultId: vaultId
-		};
-
-	}
-
-}
 
 export async function fetchHistoryEvents(address) {
 	if (!address) return;
-	const tradingContract = contract();
+	const tradingContract = getContract();
 	if (!tradingContract) return;
 	const filter = tradingContract.filters.ClosePosition(null, address);
 	const _events = await tradingContract.queryFilter(filter, -170000); // last 170K blocks, eg 30 days

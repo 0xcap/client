@@ -1,7 +1,7 @@
 <script>
 
 	import { onMount } from 'svelte'
-	import { getProductInfo } from '../lib/methods'
+	import { getProduct } from '../lib/methods'
 	import { formatUnits } from '../lib/utils'
 
 	import Modal from './Modal.svelte'
@@ -11,7 +11,7 @@
 	let liquidationPrice;
 
 	async function calculateLiquidationPrice() {
-		const productInfo = await getProductInfo(data.productId);
+		const productInfo = await getProduct(data.productId);
 		const liquidationThreshold = productInfo.liquidationThreshold * 1 || 80;
 		console.log('liquidationThreshold', liquidationThreshold);
 		if (data.isLong) {

@@ -1,10 +1,10 @@
 <script>
 
-	import Header from '../components/Header.svelte'
 	import NewOrder from '../components/NewOrder.svelte'
 	import Positions from '../components/Positions.svelte'
 	import History from '../components/History.svelte'
 
+	// Modals
 	import Products from '../components/Products.svelte'
 	import PositionDetails from '../components/PositionDetails.svelte'
 	import AddMargin from '../components/AddMargin.svelte'

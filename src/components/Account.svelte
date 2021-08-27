@@ -1,7 +1,7 @@
 <script>
 
 	import { onMount } from 'svelte'
-	import { signer, address, chainId } from '../stores/provider'
+	import { selectedAddress, chainId } from '../stores/wallet'
 	import { transactions, clearTransactions } from '../stores/transactions'
 	import { CHAIN_DATA } from '../lib/constants'
 	import { SPINNER_ICON } from '../lib/icons'
@@ -73,9 +73,9 @@
 <Modal title='Account'>
 
 	<div class='info'>
-		<div class='address'>{shortAddr($address)}</div>
+		<div class='address'>{shortAddr($selectedAddress)}</div>
 		<div class='view'>
-			<a href={addrLink($address)}>View on Etherscan</a>
+			<a href={addrLink($selectedAddress)}>View on Etherscan</a>
 		</div>
 	</div>
 

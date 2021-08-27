@@ -1,5 +1,6 @@
 import { writable, derived } from 'svelte/store'
 import { userBaseBalance } from './wallet'
+import { getCachedLeverage } from '../lib/utils'
 
 export const amount = writable();
 export const leverage = writable(getCachedLeverage(1) || 100);
@@ -19,23 +20,3 @@ export const buyingPower = derived([userBaseBalance, leverage], ([$userBaseBalan
 	return Math.floor($userBaseBalance * $leverage);
 }, 0);
 
-export function getCachedLeverage(_productId) {
-	let cl = localStorage.getItem('cachedLeverages');
-	if (cl) {
-		try {
-			cl = JSON.parse(cl);
-			return cl[_productId] * 1;
-		} catch(e) {}
-	}
-}
-
-export function setCachedLeverage(_productId, _leverage) {
-	let cl = localStorage.getItem('cachedLeverages');
-	if (cl) {
-		cl = JSON.parse(cl);
-		cl[_productId] = _leverage * 1;
-		localStorage.setItem('cachedLeverages', JSON.stringify(cl));
-	} else {
-		localStorage.setItem('cachedLeverages', JSON.stringify({[_productId]: _leverage}));
-	}
-}

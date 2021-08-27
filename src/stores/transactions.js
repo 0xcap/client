@@ -1,5 +1,5 @@
 import { writable, derived, get } from 'svelte/store'
-import { provider } from './provider'
+import { provider } from './wallet'
 
 export const hasPending = writable(false);
 export const transactions = writable(JSON.parse(localStorage.getItem('transactions') || '[]'));

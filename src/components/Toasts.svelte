@@ -7,7 +7,7 @@
 <style>
 	.toast-container {
 		position: absolute;
-		top: 0;
+		top: var(--base-padding);
 		left: 0;
 		right: 0;
 		z-index: 101;

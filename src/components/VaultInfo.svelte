@@ -1,11 +1,11 @@
 <script>
 	import { vaultInfo, userStaked } from '../stores/vault'
-	import { baseId, baseInfo } from '../stores/bases'
+	import { selectedBaseId, selectedBase } from '../stores/bases'
 	import { showModal } from '../stores/modals'
 
 
 	import { LOGOS_BASE } from '../lib/constants'
-	import { formatBaseAmount } from '../lib/utils'
+	import { formatToDisplay } from '../lib/utils'
 
 	let amountToStake;
 	let amountToUnstake;
@@ -102,11 +102,11 @@
 <div class='vault'>
 
 	<div class='title'>
-		<img src={LOGOS_BASE[$baseId]} alt={`${$baseInfo.symbol} logo`}>
-		<span>Vault ({$baseInfo.symbol})</span>
+		<img src={LOGOS_BASE[$selectedBaseId]} alt={`${$selectedBase.symbol} logo`}>
+		<span>Vault ({$selectedBase.symbol})</span>
 	</div>
 
-	<div class='description'>This vault backs trader profits while receiving their losses, funding, and fees, in {$baseInfo.symbol}.</div>
+	<div class='description'>This vault backs trader profits while receiving their losses, funding, and fees, in {$selectedBase.symbol}.</div>
 
 	<div class='balance'>
 		<div class='heading'>Balance</div>
@@ -148,7 +148,7 @@
 
 		<div class='row'>
 			<div class='label'>My Balance <a on:click={() => {showModal('Redeem')}}>(redeem)</a></div>
-			<div class='value'>{formatBaseAmount($vaultInfo.balance * $userStaked/$vaultInfo.totalStaked || 0)}</div>
+			<div class='value'>{formatToDisplay($vaultInfo.balance * $userStaked/$vaultInfo.totalStaked || 0)}</div>
 		</div>
 
 	</div>

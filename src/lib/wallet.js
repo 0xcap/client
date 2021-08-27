@@ -1,41 +1,46 @@
 import { ethers } from 'ethers'
 import { get } from 'svelte/store'
-import { signer, chainId, setNewChain } from '../stores/provider'
-import { showToast } from '../stores/toasts'
-import { initContracts } from './contracts'
-import { initProvider } from './provider'
+
 import { CHAIN_DATA } from './constants'
 
-// Wallet (user connected, signer)
+import { initContracts } from '../lib/contracts'
+
+import { showToast } from '../stores/toasts'
+import { clearTransactions } from '../stores/transactions'
+import { provider, signer, chainId } from '../stores/wallet'
+
 let walletProvider;
 
 function handleChainSwitch(_chainId, _provider) {
-	console.log('handleChainSwitch2', _chainId, get(chainId));
-	if (!CHAIN_DATA[_chainId]) {
-		if (get(signer)) {
-			showToast('Network not supported.');
-		}
-		return false;
-	}
+
+	if (!CHAIN_DATA[_chainId] && get(signer)) return showToast('Network not supported.');
+
 	if (get(chainId) != _chainId) {
-		setNewChain(_chainId);
+		localStorage.setItem('chainId', _chainId);
+		clearTransactions();
+		window.location.reload();
 	} else {
 		chainId.set(_chainId);
-		// init provider with connected chain id
-		initProvider(_chainId, _provider);
+		// init contracts with connected chain id
+		//_provider = _provider || new ethers.providers.JsonRpcProvider(CHAIN_DATA[_chainId]['network'])
+		initContracts(_chainId, _provider);
 	}
-	return true;
+
 }
 
-export async function initWallet(_provider) {
+export async function initWallet() {
 
 	console.log('Init wallet');
 
 	// Metamask is window.ethereum
 
-	walletProvider = new ethers.providers.Web3Provider(_provider || window.ethereum);
+	if (!window.ethereum) return showToast('Install Metamask to use Cap.');
 
-	let listener = _provider ? _provider : window.ethereum;
+	walletProvider = new ethers.providers.Web3Provider(window.ethereum);
+
+	provider.set(walletProvider);
+
+	let listener = window.ethereum;
 
 	// Chain id (number)
 	const network = await walletProvider.getNetwork();
@@ -78,31 +83,4 @@ export async function connectWallet(_type) {
 	} catch(e) {
 		console.error(e);
 	}
-}
-
-export async function switchChain(_chainId) {
-
-	const chainIdHex = '0x' + _chainId.toString(16);
-	console.log('chainIdHex', chainIdHex, walletProvider);
-
-	try {
-	  await walletProvider.send('wallet_switchEthereumChain',[{ chainId: chainIdHex}]);
-	} catch (error) {
-		console.log('error', error);
-	  // This error code indicates that the chain has not been added to MetaMask.
-	  if (error.code === 4902) {
-	    try {
-	      await walletProvider.send('wallet_addEthereumChain',[{ 
-	        	chainId: chainIdHex, 
-	        	chainName: CHAIN_DATA[_chainId]['label'],
-	        	rpcUrl: CHAIN_DATA[_chainId]['network']
-	      }]);
-	    } catch (addError) {
-	      // handle "add" error
-	    }
-	  }
-	  // handle other "switch" errors
-	}
-
-
 }

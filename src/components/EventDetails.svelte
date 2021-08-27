@@ -1,7 +1,7 @@
 <script>
 
 	import { onMount } from 'svelte'
-	import { chainId } from '../stores/provider'
+	import { chainId } from '../stores/wallet'
 	import { CHAIN_DATA } from '../lib/constants'
 
 	import Modal from './Modal.svelte'

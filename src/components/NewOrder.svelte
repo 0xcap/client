@@ -1,30 +1,35 @@
 <script>
 	import { onMount } from 'svelte'
 
-	import { signer, address } from '../stores/provider'
-
 	import { LOGOS } from '../lib/constants'
-	import { baseInfo } from '../stores/bases'
+	import { selectedBase } from '../stores/bases'
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
-	import { productId, productInfo } from '../stores/products'
-	import { prices, activateProduct } from '../stores/prices'
-	import { userBaseBalance, userBaseAllowance } from '../stores/wallet'
+	import { selectedProductId, selectedProduct } from '../stores/products'
+	import { prices } from '../stores/prices'
+	import { selectedAddress, userBaseBalance, userBaseAllowance } from '../stores/wallet'
 
-	import { setBaseId, setProductId, listProducts, approveUserBaseAllowance, submitOrder } from '../lib/methods'
+	import { approveAllowance, submitOrder } from '../lib/methods'
 
 	import { showModal } from '../stores/modals'
 
-	import { formatPrice, formatBaseAmount } from '../lib/utils'
+	import { formatToDisplay } from '../lib/utils'
 
 	import { CHAINLINK_ICON } from '../lib/icons'
 
+	import { activateProductPrices } from '../lib/helpers'
+
 	async function _approveUserBaseAllowance() {
-		await approveUserBaseAllowance();
+		const error = await approveAllowance();
+		if (error) {
+			showToast(error);
+		} else {
+			// disable / pending state for approve button
+		}
 	}
 
 	async function _submitOrder(isLong) {
 		// todo: checks
-		await submitOrder(
+		const error = await submitOrder(
 			null,
 			null,
 			isLong,
@@ -33,21 +38,26 @@
 			0,
 			false
 		);
+		if (error) {
+			showToast(error);
+		} else {
+			// disable / pending state for form
+		}
 	}
 
 	let amountFocused = false;
 
-	function checkFocus(_address) {
+	function checkFocus(address) {
 		const elem = document.getElementById('amount');
-		if (elem && _address) elem.focus();
+		if (elem && address) elem.focus();
 	}
 
 	onMount(() => {
-		activateProduct($productId);
-		checkFocus($address);
+		activateProductPrices($selectedProductId);
+		checkFocus($selectedAddress);
 	});
 
-	$: checkFocus($address);
+	$: checkFocus($selectedAddress);
 
 </script>
 
@@ -176,14 +186,14 @@
 		<div class='label-wrap'>
 			<div class='label'>Product</div>
 			<div class='sub-label'>
-				<span title='Price provided by Chainlink'>Price: {formatPrice($prices[$productId]) || ''}</span>
+				<span title='Price provided by Chainlink'>Price: {formatToDisplay($prices[$selectedProductId]) || ''}</span>
 			</div>
 		</div>
 		<div class='value-wrap'>
 			<div class='product-select'>
-				{#if $productInfo.symbol}
-					<img src={LOGOS[$productId]} alt={`${$productInfo.symbol} logo`}>
-					<span>{$productInfo.symbol}</span>
+				{#if $selectedProduct.symbol}
+					<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}>
+					<span>{$selectedProduct.symbol}</span>
 					<span class='leverage'>{$leverage}x</span>
 				{/if}
 			</div>
@@ -193,7 +203,7 @@
 	<label class='row' class:focused={amountFocused} for='amount'>
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
-			<div class='sub-label'>Available: {formatBaseAmount($buyingPower)} {$baseInfo && $baseInfo.symbol} <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
+			<div class='sub-label'>Available: {formatToDisplay($buyingPower)} {$selectedBase && $selectedBase.symbol} <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
 		</div>
 		<div class='value-wrap input-wrap'>
 			<input id='amount' type='number' on:focus={() => {amountFocused = true}}  on:blur={() => {amountFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
@@ -201,12 +211,12 @@
 	</label>
 
 	<div class='buttons'>
-		{#if !$address}
+		{#if !$selectedAddress}
 			<button class='button-disabled'>Connect a wallet</button>
 		{:else if !$amount}
 			<button class='button-disabled'>Enter an amount</button>
 		{:else if $userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1}
-			<button class='button-default' on:click={_approveUserBaseAllowance}>Approve {$baseInfo.symbol}</button>
+			<button class='button-default' on:click={_approveUserBaseAllowance}>Approve {$selectedBase.symbol}</button>
 		{:else}
 			<button class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}

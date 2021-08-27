@@ -1,16 +1,14 @@
 import { writable, derived } from 'svelte/store'
 import { fetchHistoryEvents } from '../lib/events'
-import { address } from './provider'
-import { baseId } from './bases'
+import { selectedAddress } from './wallet'
+import { selectedBaseId } from './bases'
 
 export const refreshUserHistory = writable(0);
 
-export const history = derived([baseId, address, refreshUserHistory], async ([$baseId, $address, refreshUserHistory], set) => {
-	if (!$baseId || !$address) {
+export const history = derived([selectedBaseId, selectedAddress, refreshUserHistory], async ([$selectedBaseId, $selectedAddress, refreshUserHistory], set) => {
+	if (!$selectedBaseId || !$selectedAddress) {
 		set([]);
 		return;
 	}
-	const his = await fetchHistoryEvents($address);
-	console.log('his', his);
-	set(his);
+	set(await fetchHistoryEvents($selectedAddress));
 },[]);

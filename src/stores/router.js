@@ -5,7 +5,7 @@ import Vault from '../pages/Vault.svelte'
 import NotFound from '../pages/NotFound.svelte'
 
 import { PRODUCT_TO_ID } from '../lib/constants'
-import { setProductId } from '../lib/methods'
+import { setProductId } from '../lib/helpers'
 
 export const currentPage = writable('');
 export const component = writable();

@@ -1,27 +1,25 @@
 <script>
 
 	import { onMount } from 'svelte'
-	import { initProvider } from './lib/provider'
 	import { initEventListeners } from './lib/events'
 
+	import Toasts from './components/Toasts.svelte'
 	import Header from './components/Header.svelte'
 	import Nav from './components/Nav.svelte'
-
-	import Toasts from './components/Toasts.svelte'
 	import Footer from './components/Footer.svelte'
 
 	import Account from './components/Account.svelte'
 
+	import { contractsReady } from './stores/contracts'
 	import { activeModal } from './stores/modals'
-	import { provider, address, chainId } from './stores/provider'
 	import { component, loadRoute } from './stores/router'
+	import { selectedAddress, chainId } from './stores/wallet'
 
-	onMount(async () => {	
-		initProvider();
+	onMount(async () => {
 		loadRoute(location.hash);
 	});
 
-	$: initEventListeners($address, $chainId);
+	$: initEventListeners($selectedAddress, $chainId);
 
 </script>
 
@@ -124,7 +122,7 @@
 	<div class='radial-gradient'></div>
 	<Header />
 	<Nav />
-	{#if $provider}
+	{#if $contractsReady}
 	<main>
 		<svelte:component this={$component}/>
 	</main>
