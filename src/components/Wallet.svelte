@@ -83,7 +83,7 @@
 
 	.menu {
 		position: absolute;
-		top: 66px;
+		top: 72px;
 		right: var(--base-padding);
 		background-color: var(--black-almost);
 		border-radius: var(--base-radius);
@@ -104,6 +104,7 @@
 		color: var(--gray-darkest);
 		text-align: center;
 		margin: 6px 4px 0;
+		border-radius: 12px;
 	}
 
 	:global(.wallet .menu-icon svg) {

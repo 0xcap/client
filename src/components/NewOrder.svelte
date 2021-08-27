@@ -1,4 +1,5 @@
 <script>
+
 	import { onMount } from 'svelte'
 
 	import { LOGOS } from '../lib/constants'
@@ -22,7 +23,6 @@
 
 	let submitIsPending = false;
 	async function _submitOrder(isLong) {
-
 		submitIsPending = true;
 		const error = await submitOrder(
 			null,
@@ -58,145 +58,133 @@
 		display:  grid;
 		grid-auto-flow: row;
 		grid-gap: 12px;
-		background-color: var(--black-almost);
 		padding: 12px;
-		border-radius: 18px;
+		background-color: var(--black-almost);
+		border-radius: var(--base-radius);
 		box-shadow: rgba(0,200,5,0.1) 0px 12px 28px 0;
-		/*box-shadow: rgba(255,80,0,0.15) 0px 12px 32px 0;*/
-		
 	}
 
-		.row {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			border: 1px solid var(--gray-dark);
-			border-radius: var(--base-radius);
-			padding: var(--base-padding);
-			background-color: var(--gray-darkest);
-			cursor: pointer;
-		}
+	.input-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px solid rgb(45,45,45);
+		border-radius: 14px;
+		padding: var(--base-padding);
+		background-color: var(--gray-darkest);
+		cursor: pointer;
+	}
 
-		.row:hover, .row.focused {
-			border-color: var(--gray);
-		}
+	.input-row:hover, .input-row.focused {
+		border-color: var(--gray);
+	}
 
-			.sub-label {
-				color: var(--gray-light);
-				font-size: 80%;
-				margin-top: 5px;
-				margin-right: 4px;
-			}
+	.sub-label {
+		color: var(--gray-light);
+		font-size: 80%;
+		margin-top: 5px;
+	}
 
-			:global(.sub-label svg) {
-				height: 12px;
-				fill: var(--gray-light);
-				margin-bottom: -2px;
-			}
+	.product-wrap {
+		display: flex;
+		align-items: center;
+		font-size: 22px;
+		font-weight: 700;
+	}
 
-			.value-wrap {
-				font-size: 20px;
-				font-weight: 700;
-			}
+	.product-wrap img {
+		width: 24px;
+		height: 24px;
+		border-radius: 24px;
+	}
 
-				.product-select {
-					display: flex;
-					align-items: center;
-				}
+	.product-wrap span {
+		margin-left: 8px;
+	}
 
-				.product-select img {
-					width: 24px;
-					height: 24px;
-					border-radius: 24px;
-				}
+	.product-wrap .leverage {
+		font-weight: 400;
+	}
 
-				.product-select span {
-					margin-left: 8px;
-				}
+	.input-wrap {
+		flex: 1 1 auto;
+	}
 
-				.product-select .leverage {
-					font-weight: 400;
-				}
+	input {
+		font-size: 22px;
+		font-weight: 700;
+		text-align: right;
+	}
 
-			.input-wrap {
-				flex: 1 1 auto;
-			}
+	.buttons {
+		display: grid;
+		grid-auto-flow: column;
+		grid-gap: 12px;
+	}
 
-				input {
-					text-align: right;
-				}
+	button {
+		text-align: center;
+		cursor: pointer;
+		user-select: none;
+		appearance: none;
+		padding: var(--base-padding);
+		border-radius: var(--base-radius);
+		color: var(--gray-darkest);
+		font-size: 20px;
+		font-weight: 700;
+	}
 
-		.buttons {
-			font-weight: 700;
-			display: grid;
-			grid-auto-flow: column;
-			grid-gap: 12px;
-		}
+	.button-default {
+		background-color: var(--blue);
+		color: var(--gray-darkest);
+	}
 
-			button {
-				text-align: center;
-				cursor: pointer;
-				user-select: none;
-				appearance: none;
-				padding: var(--base-padding);
-				border-radius: var(--base-radius);
-				color: var(--gray-darkest);
-				font-size: 20px;
-			}
+	.button-disabled {
+		background-color: var(--gray-dark);
+		color: var(--gray-light);
+		pointer-events: none;
+		cursor: default;
+	}
 
-			.button-default {
-				background-color: var(--blue);
-				color: var(--gray-dark);
-			}
-
-			.button-disabled {
-				background-color: var(--gray-dark);
-				color: var(--gray-light);
-				pointer-events: none;
-				cursor: default;
-			}
-
-			.button-short {
-				background-color: var(--red);
-			}
-			.button-short:hover {
-				background-color: var(--red-dark);
-			}
-			.button-long {
-				background-color: var(--green);
-			}
-			.button-long:hover {
-				background-color: var(--green-dark);
-			}
+	.button-short {
+		background-color: var(--red);
+	}
+	.button-short:hover {
+		background-color: var(--red-dark);
+	}
+	.button-long {
+		background-color: var(--green);
+	}
+	.button-long:hover {
+		background-color: var(--green-dark);
+	}
 
 </style>
 
 <div class='new-order'>
 
-	<div class='row' on:click={() => {showModal('Products')}} data-intercept="true">
+	<div class='input-row' on:click={() => {showModal('Products')}} data-intercept="true">
 		<div class='label-wrap'>
 			<div class='label'>Product</div>
-			<div class='sub-label'>
-				<span title='Price provided by Chainlink'>Price: {formatToDisplay($prices[$selectedProductId]) || ''}</span>
+			<div class='sub-label'title='Price provided by Chainlink'>
+				Price: {formatToDisplay($prices[$selectedProductId]) || ''}
 			</div>
 		</div>
-		<div class='value-wrap'>
-			<div class='product-select'>
-				{#if $selectedProduct.symbol}
-					<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}>
-					<span>{$selectedProduct.symbol}</span>
-					<span class='leverage'>{$leverage}x</span>
-				{/if}
-			</div>
+		<div class='product-wrap'>
+			{#if $selectedProduct.symbol}
+				<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}>
+				<span>{$selectedProduct.symbol}</span>
+				<span class='leverage'>{$leverage}x</span>
+			{/if}
 		</div>
 	</div>
 
-	<label class='row' class:focused={amountIsFocused} for='amount'>
+	<label class='input-row' class:focused={amountIsFocused} for='amount'>
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
 			<div class='sub-label'>Available: {formatToDisplay($buyingPower)} {$selectedBase.symbol} <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
 		</div>
-		<div class='value-wrap input-wrap'>
+		<div class='input-wrap'>
 			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
 		</div>
 	</label>

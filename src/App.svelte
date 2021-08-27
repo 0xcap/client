@@ -32,7 +32,7 @@
 	:global(:root) {
 		--black-almost: rgba(23,23,23,0.55);
 		--gray-darkest: rgb(30,30,30);
-		--gray-between: rgba(40,40,40,0.25);
+		--gray-between: rgba(40,40,40);
 		--gray-dark: rgb(55,55,55);
 		--gray: rgb(80,80,80);
 		--gray-light: rgb(125,125,125);
@@ -45,8 +45,8 @@
 		--pink: rgb(225,80,221);
 		--orange: rgb(253,167,20);
 		--base-padding: 22px;
-		--semi-padding: 12px;
-		--base-radius: 16px;
+		--semi-padding: 16px;
+		--base-radius: 18px;
 		--container-width: 580px;
 	}
 

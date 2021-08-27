@@ -203,4 +203,11 @@ export function hidePopoversOnClick() {
 
   });
 
+  window.addEventListener('keydown', (ev) => {
+  	if (ev.key == 'Escape') {
+  		hideModal();
+  		hideMenu();
+  	}
+  })
+
 }
