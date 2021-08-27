@@ -1,6 +1,9 @@
 <script>
 
 	import { onMount } from 'svelte'
+
+	import { PRICE_DECIMALS } from '../lib/constants'
+	import { calculateLiquidationPrice } from '../lib/helpers'
 	import { getProduct } from '../lib/methods'
 	import { formatUnits } from '../lib/utils'
 
@@ -10,21 +13,10 @@
 
 	let liquidationPrice;
 
-	async function calculateLiquidationPrice() {
-		const productInfo = await getProduct(data.productId);
-		const liquidationThreshold = productInfo.liquidationThreshold * 1 || 80;
-		console.log('liquidationThreshold', liquidationThreshold);
-		if (data.isLong) {
-			liquidationPrice = data.price * (1 - liquidationThreshold / 100 / data.leverage);
-		} else {
-			liquidationPrice = data.price * (1 + liquidationThreshold/100 / data.leverage);
-		}
-		liquidationPrice = liquidationPrice.toFixed(2);
-	}
-
 	onMount(async () => {
-		await calculateLiquidationPrice();
-	});	
+		const lp = await calculateLiquidationPrice(data);
+		liquidationPrice = lp && lp.toFixed(PRICE_DECIMALS);
+	});
 
 </script>
 
@@ -34,16 +26,16 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-bottom: 1px solid var(--gray-dark);
+		border-bottom: 1px solid var(--gray-between);
 		padding: var(--base-padding);
+	}
+
+	.row:last-child {
+		border-bottom: none;
 	}
 
 	.label {
 		color: var(--gray-light);
-	}
-
-	.value {
-
 	}
 
 </style>

@@ -4,9 +4,9 @@
 
 	import Modal from './Modal.svelte'
 	
-	import { LOGOS } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
 	import { CHAINLINK_FULL_ICON } from '../lib/icons'
+	import { LOGOS } from '../lib/logos'
 	import { formatToDisplay, setCachedLeverage } from '../lib/utils'
 
 	import { leverage } from '../stores/order'

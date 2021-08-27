@@ -5,6 +5,7 @@ import { bases, selectedBaseId } from '../stores/bases'
 import { hideMenu } from '../stores/menu'
 import { hideModal } from '../stores/modals'
 import { products, selectedProductId } from '../stores/products'
+import { hideToast } from '../stores/toasts'
 
 import { activateProductPrices } from './helpers'
 import { LEVERAGE_DECIMALS, PRICE_DECIMALS } from './constants'
@@ -13,10 +14,16 @@ export function formatUnits(number, units) {
   if (!units) units = 6; // usdc
   return ethers.utils.formatUnits(number || 0, units);
 }
+
 export function parseUnits(number, units) {
   if (!units) units = 6; // usdc
   if (typeof(number) == 'number') number = number.toString();
   return ethers.utils.parseUnits(number, units);
+}
+
+export function intify(number) {
+	if (parseInt(number * 1) == number * 1) return parseInt(number);
+	return number;
 }
 
 export function shortAddr(_address) {
@@ -25,15 +32,25 @@ export function shortAddr(_address) {
 }
 
 export function formatToDisplay(amount, baseId) {
-	if (amount * 1 >= 1000) {
+	if (isNaN(amount)) return 0;
+	if (amount * 1 >= 1000 || amount * 1 <= -1000) {
 		return Math.round(amount*1).toLocaleString();
-	} else if (amount * 1 >= 100) {
+	} else if (amount * 1 >= 100 || amount * 1 <= -100) {
 		return (amount * 1).toFixed(2);
-	} else if (amount * 1 >= 10) {
+	} else if (amount * 1 >= 10 || amount * 1 <= -10) {
 		return (amount * 1).toFixed(4);
 	} else {
 		return (amount * 1).toFixed(6);
 	}
+}
+
+export function formatPnl(pnl) {
+	let string = '';
+	if (pnl * 1 > 0) {
+		string += '+';
+	}
+	string += formatToDisplay(pnl) || 0;
+	return string;
 }
 
 export function formatPositions(positions, baseId) {
@@ -207,6 +224,7 @@ export function hidePopoversOnClick() {
   	if (ev.key == 'Escape') {
   		hideModal();
   		hideMenu();
+  		hideToast();
   	}
   })
 

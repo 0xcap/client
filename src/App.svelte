@@ -77,7 +77,7 @@
 	    margin: 0;
 	}
 
-	:global(input[type='number'],input[type='range'],button) {
+	:global(input[type='number'],input[type='range']) {
 		appearance: textfield;
 		font-family: inherit;
 		font-size: inherit;
@@ -86,6 +86,19 @@
 		outline: none;
 		border: none;
 		background-color: transparent;
+		width: 100%;
+	}
+
+	:global(button) {
+		text-align: center;
+		cursor: pointer;
+		user-select: none;
+		appearance: none;
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		outline: none;
+		border: none;
 		width: 100%;
 	}
 

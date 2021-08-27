@@ -3,7 +3,7 @@ import { userBaseBalance } from './wallet'
 import { getCachedLeverage } from '../lib/utils'
 
 export const amount = writable();
-export const leverage = writable(getCachedLeverage(1) || 100);
+export const leverage = writable(getCachedLeverage(1) || 1);
 
 export const margin = derived([amount, leverage], ([$amount, $leverage]) => {
 	if (!$amount || !$leverage) return 0;

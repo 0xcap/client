@@ -3,8 +3,7 @@
 	import { selectedBaseId, selectedBase } from '../stores/bases'
 	import { showModal } from '../stores/modals'
 
-
-	import { LOGOS_BASE } from '../lib/constants'
+	import { LOGOS_BASE } from '../lib/logos'
 	import { formatToDisplay } from '../lib/utils'
 
 	let amountToStake;

@@ -2,8 +2,8 @@
 
 	import { onMount } from 'svelte'
 
-	import { LOGOS } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
+	import { LOGOS } from '../lib/logos'
 	import { approveAllowance, submitOrder } from '../lib/methods'
 	import { formatToDisplay } from '../lib/utils'
 
@@ -12,6 +12,7 @@
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
 	import { selectedProductId, selectedProduct } from '../stores/products'
 	import { prices } from '../stores/prices'
+	import { showToast } from '../stores/toasts'
 	import { selectedAddress, userBaseAllowance } from '../stores/wallet'
 
 	let approveIsPending = false;
@@ -23,6 +24,7 @@
 
 	let submitIsPending = false;
 	async function _submitOrder(isLong) {
+		if (!$amount) return showToast('Amount is required.');
 		submitIsPending = true;
 		const error = await submitOrder(
 			null,
@@ -123,10 +125,6 @@
 	}
 
 	button {
-		text-align: center;
-		cursor: pointer;
-		user-select: none;
-		appearance: none;
 		padding: var(--base-padding);
 		border-radius: var(--base-radius);
 		color: var(--gray-darkest);
@@ -134,16 +132,19 @@
 		font-weight: 700;
 	}
 
-	.button-default {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-	}
-
-	.button-disabled {
+	button.disabled {
 		background-color: var(--gray-dark);
 		color: var(--gray-light);
 		pointer-events: none;
 		cursor: default;
+	}
+
+	.button-default {
+		background-color: var(--blue);
+		color: var(--gray-darkest);
+	}
+	.button-default:hover {
+		background-color: var(--blue-dark);
 	}
 
 	.button-short {
@@ -192,12 +193,10 @@
 	<div class='buttons'>
 		{#if !$selectedAddress}
 			<button class='button-disabled'>Connect a wallet</button>
-		{:else if !$amount}
-			<button class='button-disabled'>Enter an amount</button>
-		{:else if !$userBaseAllowance}
-			<button class={approveIsPending ? 'button-disabled' : 'button-default'} on:click={_approveAllowance}>Approve {$selectedBase.symbol}</button>
+		{:else if $userBaseAllowance == 0}
+			<button class:disabled={approveIsPending} class='button-default' on:click={_approveAllowance}>Approve {$selectedBase.symbol}</button>
 		{:else}
-			<button class={submitIsPending ? 'button-disabled' : 'button-short'} on:click={() => {_submitOrder(false)}}>Short</button><button class={submitIsPending ? 'button-disabled' : 'button-long'} on:click={() => {_submitOrder(true)}}>Long</button>
+			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
 	</div>
 

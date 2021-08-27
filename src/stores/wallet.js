@@ -29,8 +29,8 @@ export const userBaseBalance = derived([selectedBaseId, selectedAddress, refresh
 
 export const userBaseAllowance = derived([selectedBaseId, selectedAddress, refreshUserBaseAllowance], async ([$selectedBaseId, $selectedAddress, $refreshUserBaseAllowance], set) => {
 	if (!$selectedBaseId || !$selectedAddress) {
-		set(0);
+		set('N/A');
 		return;
 	}
 	set(await getAllowance($selectedBaseId, $selectedAddress) * 1);
-}, 0);
+}, 'N/A');
