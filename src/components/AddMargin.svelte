@@ -3,7 +3,7 @@
 	/*
 	TODO:
 	-- position UPL should include fee
-	- refactor modal elements into components: Input wrap, details, button
+	-- refactor modal elements into components: Input wrap, details, button
 	- toasts on tx completion
 	- add margin / close error if still settling
 	- wallet balance in account modal
@@ -24,6 +24,8 @@
 	import { formatToDisplay, intify } from '../lib/utils'
 	
 	import Modal from './Modal.svelte'
+	import DataList from './DataList.svelte'
+	import ModalButton from './ModalButton.svelte'
 
 	export let data;
 
@@ -74,92 +76,40 @@
 		document.getElementById('amount').focus();
 	});
 
+	let rows;
+	$: rows = [
+		{
+			type: 'input',
+			label: 'Margin to Add',
+			onKeyUp: calculateAmounts
+		},
+		{
+			label: 'Current Margin',
+			value: formatToDisplay(data.margin)
+		},
+		{
+			label: 'New Margin',
+			value: formatToDisplay(newMargin),
+			hasError: !(newMargin*1)
+		},
+		{
+			label: 'New Leverage',
+			value: formatToDisplay(intify(newLeverage)),
+			hasError: newLeverage * 1 < 1
+		},
+		{
+			label: 'New Liquidation Price',
+			value: formatToDisplay(newLiquidationPrice),
+			hasError: newLiquidationPrice * 1 <= 0
+		},
+	];
+
 </script>
 
 <style>
-
-	.input-row {
-		border-bottom: 1px solid var(--gray-dark);
-	}
-
-	.input-row.focused {
-		border-color: var(--blue);
-	}
-
-	input {
-		padding: var(--base-padding);
-	}
-
-	.row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border-bottom: 1px solid var(--gray-between);
-		padding: var(--base-padding);
-	}
-
-	.row:last-child {
-		border-bottom: none;
-	}
-
-	.label {
-		color: var(--gray-light);
-	}
-
-	.error {
-		color: var(--orange);
-	}
-
-	.button-wrap {
-		border-top: 1px solid var(--gray-dark);
-		padding: var(--base-padding);
-	}
-
-	button {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-		padding: var(--base-padding);
-		border-radius: var(--base-radius);
-		font-size: 20px;
-		font-weight: 700;
-		cursor: pointer;
-	}
-	button:hover {
-		background-color: var(--blue-dark);
-	}
-
-	button.disabled {
-		background-color: var(--gray-dark);
-		color: var(--gray-light);
-		pointer-events: none;
-		cursor: default;
-	}
-
 </style>
 
 <Modal title='Add Margin'>
-	<div class='input-row' class:focused={amountIsFocused}>
-		<input id='amount' type=number bind:value={margin} min=0 max=10000000 placeholder="Margin to add" on:keyup={calculateAmounts} on:focus={() => {amountIsFocused = true}} on:blur={() => {amountIsFocused = false}}> 
-	</div>
-	<div class='details'>
-		<div class='row'>
-			<div class='label'>Current margin</div>
-			<div class='value'>{formatToDisplay(data.margin)}</div>
-		</div>
-		<div class='row'>
-			<div class='label'>New margin</div>
-			<div class:error={!newMargin*1} class='value'>{formatToDisplay(newMargin)}</div>
-		</div>
-		<div class='row'>
-			<div class='label'>New Leverage</div>
-			<div class:error={newLeverage * 1 < 1} class='value'>{formatToDisplay(intify(newLeverage))}</div>
-		</div>
-		<div class='row'>
-			<div class='label'>New Liquidation Price</div>
-			<div class:error={newLiquidationPrice * 1 <= 0} class='value'>{formatToDisplay(newLiquidationPrice)}</div>
-		</div>
-	</div>
-	<div class='button-wrap'>
-		<button class:disabled={!canSubmit || submitIsPending} on:click={_submitOrder}>Add Margin</button>
-	</div>
+	<DataList data={rows} bind:value={margin} />
+	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} action={_submitOrder} label='Add Margin' />
 </Modal>

@@ -5,6 +5,8 @@
 	import { formatToDisplay, intify } from '../lib/utils'
 
 	import Modal from './Modal.svelte'
+	import DataList from './DataList.svelte'
+	import ModalButton from './ModalButton.svelte'
 	
 	export let data;
 
@@ -25,23 +27,24 @@
 		newAmount = data.amount * 1 - amount * 1;
 	}
 
-	function checkEntire(_entire) {
-		if (_entire) {
-			prior_amount = amount;
-			amount = data.margin * data.leverage;
-		} else {
-			amount = prior_amount;
-		}
+	function setMaxAmount(_entire) {
+		amount = data.margin * data.leverage;
 		calculateAmounts();
 	}
-
-	$: checkEntire(entire);
 
 	let canSubmit;
 	$: canSubmit = amount*1 > 0 && closePercent <= 100 && newAmount >= 0;
 
 	let submitIsPending = false;
 	async function _submitOrder() {
+		console.log(data.baseId,
+			data.productId,
+			!data.isLong,
+			(amount*1)/(data.leverage*1),
+			1,
+			data.id,
+			false,
+			true);
 		submitIsPending = true;
 		await submitOrder(
 			data.baseId,
@@ -61,113 +64,40 @@
 		document.getElementById('amount').focus();
 	});
 
+	let rows;
+	$: rows = [
+		{
+			type: 'input',
+			label: 'Amount to Close',
+			onKeyUp: calculateAmounts,
+			labelTool: {
+				text: '(Max)', 
+				action: setMaxAmount
+			}
+		},
+		{
+			label: 'Current Amount',
+			value: formatToDisplay(data.amount)
+		},
+		{
+			label: 'Close %',
+			value: `${formatToDisplay(closePercent, 2)}%`,
+			hasError: closePercent * 1 > 100
+		},
+		{
+			label: 'Amount After Close',
+			value: formatToDisplay(newAmount),
+			hasError: newAmount * 1 < 0
+		},
+	];
+
 </script>
 
 <style>
 
-	.input-row {
-		border-bottom: 1px solid var(--gray-dark);
-	}
-
-	.input-row.focused {
-		border-color: var(--blue);
-	}
-
-	.input-row input {
-		padding: var(--base-padding);
-	}
-
-	.options {
-		border-bottom: 1px solid var(--gray-dark);
-	}
-
-	.options label {
-		display: flex;
-		padding: var(--base-padding);
-	}
-
-	.options input {
-		margin-right: 8px;
-	}
-
-	.row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border-bottom: 1px solid var(--gray-between);
-		padding: var(--base-padding);
-	}
-
-	.row:last-child {
-		border-bottom: none;
-	}
-
-	.label {
-		color: var(--gray-light);
-	}
-
-	.error {
-		color: var(--orange);
-	}
-
-	.button-wrap {
-		border-top: 1px solid var(--gray-dark);
-		padding: var(--base-padding);
-	}
-
-	button {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-		padding: var(--base-padding);
-		border-radius: var(--base-radius);
-		font-size: 20px;
-		font-weight: 700;
-		cursor: pointer;
-	}
-	button:hover {
-		background-color: var(--blue-dark);
-	}
-
-	button.disabled {
-		background-color: var(--gray-dark);
-		color: var(--gray-light);
-		pointer-events: none;
-		cursor: default;
-	}
-
-	
-
 </style>
 
 <Modal title='Close Position'>
-
-	<div class='input-row' class:focused={amountIsFocused}>
-		<input id='amount' type=number bind:value={amount} min=0 max=10000000 placeholder="Amount to close" on:keyup={calculateAmounts} on:focus={() => {amountIsFocused = true}} on:blur={() => {amountIsFocused = false}}> 
-	</div>
-
-	<div class='options'>
-		<label class='option' for='entire'>
-			<input id='entire' type='checkbox' bind:checked={entire}> Close entire position
-		</label>
-	</div>
-
-	<div class='details'>
-		<div class='row'>
-			<div class='label'>Current amount</div>
-			<div class='value'>{formatToDisplay(data.amount)}</div>
-		</div>
-		<div class='row'>
-			<div class='label'>Close %</div>
-			<div class:error={closePercent * 1 > 100} class='value'>{formatToDisplay(closePercent, 2)}%</div>
-		</div>
-		<div class='row'>
-			<div class='label'>Amount after close</div>
-			<div class:error={newAmount * 1 < 0} class='value'>{formatToDisplay(newAmount)}</div>
-		</div>
-	</div>
-
-	<div class='button-wrap'>
-		<button class:disabled={!canSubmit || submitIsPending} on:click={_submitOrder}>Close Position</button>
-	</div>
-
+	<DataList data={rows} bind:value={amount} />
+	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} action={_submitOrder} label='Close Position' />
 </Modal>

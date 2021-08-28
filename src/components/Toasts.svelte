@@ -51,7 +51,7 @@
 <div class='toast-container'>
 	<div class='toast-wrapper'>
 		{#each $toasts as toast}
-			<div class={`toast ${toast.type}`}>
+			<div class={`toast ${toast.type}`} data-intercept="true">
 				<div class='text'>{toast.message}</div>
 				<a class='close' on:click={() => {hideToast(toast.id)}}>{@html CANCEL_ICON}</a>
 			</div>
