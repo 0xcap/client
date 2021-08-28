@@ -2,7 +2,7 @@ import { get } from 'svelte/store'
 
 import { LEVERAGE_DECIMALS, PRICE_DECIMALS } from './constants'
 import { getContract, getContractAddress } from './helpers'
-import { formatUnits, parseUnits, formatProduct, formatVault, formatPositions } from './utils'
+import { formatUnits, parseUnits, formatProduct, formatVault, formatPositions, formatToDisplay } from './utils'
 
 import { bases, selectedBaseId } from '../stores/bases'
 import { showToast } from '../stores/toasts'
@@ -122,6 +122,7 @@ export async function submitOrder(baseId, productId, isLong, margin, leverage, p
 	const base = get(bases)[baseId];
 	const marginUnits = parseInt(margin * 10**(base.decimals));
 	const leverageUnits = parseUnits(leverage, LEVERAGE_DECIMALS);
+	const amount = margin * leverage;
 
 	try {
 
@@ -131,19 +132,20 @@ export async function submitOrder(baseId, productId, isLong, margin, leverage, p
 		const product = await getProduct(productId);
 
 		if (isClose) {
-			description = `Close position ${margin} ${base.symbol} on ${product.symbol}`;
+			description = `Close position ${formatToDisplay(amount)} ${base.symbol} on ${product.symbol}`;
 		} else if (releaseMargin) {
-			description = `Close position (RM) ${margin} ${base.symbol} on ${product.symbol}`;
+			description = `Close position (RM) ${formatToDisplay(amount)} ${base.symbol} on ${product.symbol}`;
 		} else if (positionId) {
 			// add margin
-			description = `Add margin ${margin} ${base.symbol} on ${product.symbol}`;
+			description = `Add margin ${formatToDisplay(margin)} ${base.symbol} on ${product.symbol}`;
 		} else {
-			description = `New position ${margin}x${leverage} ${base.symbol} on ${product.symbol}`;
+			description = `New position ${formatToDisplay(amount)} ${base.symbol} on ${product.symbol}`;
 		}
 		addPendingTransaction({
 			hash: tx.hash,
 			description
 		});
+		showToast('Order submitted.', 'info');
 
 	} catch(e) {
 		showToast(e);

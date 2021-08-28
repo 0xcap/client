@@ -4,11 +4,10 @@
 	TODO:
 	-- position UPL should include fee
 	-- refactor modal elements into components: Input wrap, details, button
-	- disappearing toasts
-	- toasts on tx completion
-	- usdc faucet on testnet - instead of Max in amount
-	- wallet balance in account modal
-	- tx icon
+	-- disappearing toasts
+	-- toasts on tx completion
+	-- usdc faucet on testnet - instead of Max in amount
+	-- tx icon
 	- tooltips?
 	- footer: hosted on IPFS
 	- keeper on vercel, called by github actions shouldn't submit transaction if they already did for the given IDs (pending tx on same set of IDs)

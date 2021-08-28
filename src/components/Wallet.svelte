@@ -89,6 +89,7 @@
 		border-radius: var(--base-radius);
 		padding: 6px 0;
 		min-width: 160px;
+		z-index: 102;
 	}
 
 	.menu a {

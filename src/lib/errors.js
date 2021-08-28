@@ -6,7 +6,6 @@ const ERROR_STRINGS = {
 }
 
 export function parseErrorToString(e) {
-	//console.error('sre', e);
 	if (!e) return DEFAULT_ERROR;
 	if (typeof(e) == 'string') return e;
 	let error_string = '';
@@ -20,5 +19,6 @@ export function parseErrorToString(e) {
 	for (const key in ERROR_STRINGS) {
 		if (error_string.includes(key)) return ERROR_STRINGS[key];
 	}
-	return error_string || DEFAULT_ERROR;
+	console.error(e);
+	return DEFAULT_ERROR;
 }

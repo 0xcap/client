@@ -104,7 +104,7 @@
 
 <Modal title='Products'>
 
-	<div class='product-list'>
+	<div class='product-list no-scrollbar'>
 
 		{#each $productList as product}
 			<a class:selected={product.id == $selectedProductId} on:click={() => {selectProduct(product.id)}}>

@@ -102,6 +102,16 @@
 		width: 100%;
 	}
 
+	:global(.no-scrollbar::-webkit-scrollbar) {
+	    width: 0px;
+	    background: transparent; /* Chrome/Safari/Webkit */
+	}
+
+	:global(.no-scrollbar) {
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none;  /* IE 10+ */
+	}
+
 	.grid {
 		display: grid;
 		grid-auto-flow: row;

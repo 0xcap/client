@@ -1,5 +1,4 @@
 <script>
-	import { onMount } from 'svelte'
 	import { toasts, hideToast } from '../stores/toasts'
 	import { CANCEL_ICON } from '../lib/icons'
 </script>
@@ -7,9 +6,8 @@
 <style>
 	.toast-container {
 		position: absolute;
-		top: var(--base-padding);
-		left: 0;
-		right: 0;
+		top: 72px;
+		right: var(--base-padding);
 		z-index: 101;
 		display: flex;
 		align-items: center;
@@ -18,40 +16,50 @@
 	.toast-wrapper {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
-		max-width: var(--container-width);
+		grid-gap: 16px;
+		max-width: 240px;
 	}
 	.toast {
-		background-color: var(--red);
-		border-radius: var(--base-radius);
+		background-color: var(--gray-darkest);
+		border-radius: 12px;
 		display: flex;
 		justify-content: space-between;
+		border: 2px solid transparent;
+	}
+	.toast.error {
+		color: var(--red);
+		border-color: var(--red);
+		fill: var(--red);;
+	}
+	.toast.success {
+		color: var(--green);
+		border-color: var(--green);
+		fill: var(--green);;
 	}
 	.toast.info {
-		background-color: var(--blue);
-		color: var(--black-almost);
+		color: var(--blue);
+		border-color: var(--blue);
+		fill: var(--blue);;
 	}
 	.text {
-		padding: var(--base-padding);
+		line-height: 1.35;
+		font-size: 95%;
 	}
-	.close {
-		padding: var(--base-padding);
+	.text, .close {
+		padding: 12px;
 	}
 	:global(.toast-wrapper .close svg) {
 		height: 12px;
 		width:  12px;
-		margin-top: 1px;
-		fill: #fff;
-	}
-	:global(.toast.info .close svg) {
-		fill: var(--black-almost);
+		margin-bottom: -2px;
+		fill: inherit;
 	}
 </style>
 
 <div class='toast-container'>
 	<div class='toast-wrapper'>
 		{#each $toasts as toast}
-			<div class={`toast ${toast.type}`} data-intercept="true">
+			<div class={`toast ${toast.type || 'error'}`} data-intercept="true">
 				<div class='text'>{toast.message}</div>
 				<a class='close' on:click={() => {hideToast(toast.id)}}>{@html CANCEL_ICON}</a>
 			</div>

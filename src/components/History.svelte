@@ -124,7 +124,7 @@
 
 	{#if !hide_history}
 		{#each $history as event}
-			<div class='item' on:click={() => {showModal('EventDetails', event)}}>
+			<div class='item' on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
 				<div class='left'>
 					<div class='info'>
 						<div class='product'>

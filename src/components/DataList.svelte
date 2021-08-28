@@ -14,6 +14,9 @@
 
 <style>
 
+	.data-list {
+	}
+
 	.row {
 		display: flex;
 		justify-content: space-between;
@@ -54,10 +57,16 @@
 		color: var(--orange);
 	}
 
+	:global(.row .value svg) {
+		fill: var(--blue);
+		height: 16px;
+		margin-bottom: -3px;
+	}
+
 </style>
 
 
-<div class='details'>
+<div class='data-list'>
 	{#each data as row}
 		{#if row.type == 'input'}
 			<div class='row input-row' class:focused={amountIsFocused}>
@@ -74,7 +83,7 @@
 		{:else}
 			<div class='row'>
 				<div class='label'>{row.label}</div>
-				<div class:error={row.hasError} class='value'>{row.value}</div>
+				<div class:error={row.hasError} class='value'>{#if row.renderHTML} {@html row.value}{:else}{row.value}{/if}</div>
 			</div>
 		{/if}
 	{/each}

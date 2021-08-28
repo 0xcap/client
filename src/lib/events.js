@@ -4,7 +4,7 @@ import { getContract } from './helpers'
 
 import { refreshUserStaked } from '../stores/vault'
 import { refreshUserPositions } from '../stores/positions'
-import { refreshUserBaseAllowance, refreshUserBaseBalance } from '../stores/wallet'
+import { refreshUserBaseAllowance, refreshUserBaseBalance, userBaseAllowance } from '../stores/wallet'
 import { refreshUserHistory } from '../stores/history'
 import { showToast } from '../stores/toasts'
 
@@ -16,34 +16,38 @@ import { formatEvent } from './utils'
 let acceptToasts = false;
 setTimeout(() => {
 	acceptToasts = true;
-}, 2000);
+}, 4000);
 
 function handleEvent() {
 
 	const ev = arguments[arguments.length - 1];
 
-	console.log('got event', ev);
+	//console.log('got event', ev);
 	
 	if (ev.event == 'NewPosition') {
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
+		if (acceptToasts) showToast('Position opened.', 'success');
 	}
 
 	if (ev.event == 'Staked') {
 		completeTransaction(ev.transactionHash);
 		refreshUserStaked.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
+		if (acceptToasts) showToast('Staked.', 'success');
 	}
 
 	if (ev.event == 'Redeemed') {
 		completeTransaction(ev.transactionHash);
 		refreshUserStaked.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
+		if (acceptToasts) showToast('Redeemed.', 'success');
 	}
 
-	if (ev.event == 'Approval') { // ERC20
+	if (ev.event == 'Approval') { // ERC20. Is sent on transferFrom
 		completeTransaction(ev.transactionHash);
 		refreshUserBaseAllowance.update(n => n + 1);
+		if (acceptToasts && !get(userBaseAllowance)) showToast('Approved.', 'success');
 	}
 
 	if (ev.event == 'Transfer') { // ERC20
@@ -54,7 +58,7 @@ function handleEvent() {
 	if (ev.event == 'AddMargin') {
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
-		if (acceptToasts) showToast('Margin added.', 'info');
+		if (acceptToasts) showToast('Margin added.', 'success');
 	}
 
 	if (ev.event == 'ClosePosition') {
@@ -62,6 +66,7 @@ function handleEvent() {
 		refreshUserPositions.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
 		refreshUserHistory.update(n => n + 1);
+		if (acceptToasts) showToast('Position closed.', 'success');
 	}
 
 	if (ev.event == 'NewPositionSettled') {

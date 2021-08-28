@@ -154,13 +154,13 @@
 	.button-short {
 		background-color: var(--red);
 	}
-	.button-short:hover {
+	.button-short:not(.disabled):hover {
 		background-color: var(--red-dark);
 	}
 	.button-long {
 		background-color: var(--green);
 	}
-	.button-long:hover {
+	.button-long:not(.disabled):hover {
 		background-color: var(--green-dark);
 	}
 
@@ -203,7 +203,7 @@
 
 	<div class='buttons'>
 		{#if !$selectedAddress}
-			<button class='button-disabled'>Connect a wallet</button>
+			<button class='disabled'>Connect a wallet</button>
 		{:else if $userBaseAllowance == 0}
 			<button class:disabled={approveIsPending} class='button-default' on:click={_approveAllowance}>Approve {$selectedBase.symbol}</button>
 		{:else}

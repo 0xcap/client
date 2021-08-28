@@ -1,14 +1,16 @@
 import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 
+import { CHAIN_DATA, LEVERAGE_DECIMALS, PRICE_DECIMALS } from './constants'
+import { activateProductPrices } from './helpers'
+
 import { bases, selectedBaseId } from '../stores/bases'
 import { hideMenu } from '../stores/menu'
 import { hideModal } from '../stores/modals'
 import { products, selectedProductId } from '../stores/products'
 import { hideToast } from '../stores/toasts'
+import { chainId } from '../stores/wallet'
 
-import { activateProductPrices } from './helpers'
-import { LEVERAGE_DECIMALS, PRICE_DECIMALS } from './constants'
 
 export function formatUnits(number, units) {
   if (!units) units = 6; // usdc
@@ -143,6 +145,16 @@ export function formatEvent(ev) {
 
 	}
 
+}
+
+export function txLink(hash) {
+	const explorer = CHAIN_DATA[get(chainId)]['explorer'];
+	return `${explorer}/tx/${hash}`; 
+}
+
+export function addrLink(addr) {
+	const explorer = CHAIN_DATA[get(chainId)]['explorer'];
+	return `${explorer}/address/${addr}`; 
 }
 
 export function getCachedLeverage(productId) {

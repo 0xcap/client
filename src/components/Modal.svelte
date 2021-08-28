@@ -25,6 +25,7 @@
 
 	.modal {
 		width: 460px;
+		max-height: 520px;
 		border: 1px solid var(--gray-between);
 		border-radius: var(--base-radius);
 		background-color: rgb(25,25,25);
@@ -50,9 +51,14 @@
 		fill: #fff;
 	}
 
+	.modal-body {
+		overflow-y: scroll;
+		max-height: 454px;
+	}
+
 </style>
 
-<div class='modal-container'>
+<div class='modal-container no-scrollbar'>
 
 	<div class='modal' data-intercept="true">
 
@@ -61,7 +67,7 @@
 			<span class='modal-close' on:click={hideModal}>{@html CANCEL_ICON}</span>
 		</div>
 
-		<div class='modal-body'>
+		<div class='modal-body no-scrollbar'>
 			<slot></slot>
 		</div>
 		

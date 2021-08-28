@@ -1,24 +1,12 @@
 <script>
 
-	import { onMount } from 'svelte'
+	import Modal from './Modal.svelte'
+	
+	import { SPINNER_ICON, EXTERNAL_ICON } from '../lib/icons'
+	import { shortAddr, txLink, addrLink } from '../lib/utils'
+
 	import { selectedAddress, chainId } from '../stores/wallet'
 	import { transactions, clearTransactions } from '../stores/transactions'
-	import { CHAIN_DATA } from '../lib/constants'
-	import { SPINNER_ICON } from '../lib/icons'
-
-	import { shortAddr } from '../lib/utils'
-
-	const explorer = CHAIN_DATA[$chainId]['explorer'];
-
-	function txLink(hash) {
-		return `${explorer}/tx/${hash}`; 
-	}
-
-	function addrLink(addr) {
-		return `${explorer}/address/${addr}`; 
-	}
-
-	import Modal from './Modal.svelte'
 
 </script>
 
@@ -26,47 +14,59 @@
 
 	.info {
 		padding: var(--base-padding);
-		border-bottom: 1px solid var(--gray-dark);
+		border-bottom: 1px solid var(--gray-between);
 	}
 
-		.address {
-			font-size: 22px;
-			font-weight: 700;
-			margin-bottom: 10px;
-		}
+	.address {
+		font-size: 22px;
+		font-weight: 700;
+		margin-bottom: 10px;
+	}
 
-		.view {}
+	.empty {
+		color: var(--gray-light);
+		text-align: center;
+	}
 
 	.transactions {
 		padding: var(--base-padding);
 	}
 
-		.row {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
+	.header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: var(--base-padding);
+	}
 
-		.top {
-			padding-bottom: 4px;
-		}
+	.transactions-list {
+		overflow-y: scroll;
+		max-height: 220px;
+		display: grid;
+		grid-auto-flow: row;
+		grid-gap: 12px;
+		padding: 4px 0;
+	}
 
-		.txs {
-			overflow-y: scroll;
-			max-height: 220px;
-		}
+	.row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		color: var(--gray-light);
+		font-size: 80%;
+	}
 
-		.tx {
-			color: var(--gray-light);
-			padding-top: 12px;
-			font-size: 80%;
-		}
+	:global(.transactions-list .description svg) {
+		height: 16px;
+		margin-left: 6px;
+		margin-bottom: -4px;
+	}
 
-		:global(.txs svg) {
-			height: 16px;
-			margin-left: 6px;
-			margin-bottom: -4px;
-		}
+	:global(.transactions-list .link svg) {
+		fill: var(--blue);
+		height: 12px;
+		margin-bottom: -3px;
+	}
 
 </style>
 
@@ -81,19 +81,25 @@
 
 	<div class='transactions'>
 
-		<div class='row top'>
-			<span>Transactions</span>
-			<a on:click={clearTransactions}>(Clear)</a>
-		</div>
+		{#if !$transactions.length}
+			<div class='empty'>Your transactions will appear here.</div>
+		{:else}
 
-		<div class='txs'>
-			{#each $transactions as tx}
-				<div class='row tx'>
-					<span>{tx.description}{#if tx.state == 'pending'}{@html SPINNER_ICON}{/if}</span>
-					<a href={txLink(tx.hash)}>tx</a>
-				</div>
-			{/each}
-		</div>
+			<div class='header'>
+				<span>Transactions</span>
+				<a on:click={clearTransactions}>(Clear)</a>
+			</div>
+
+			<div class='transactions-list no-scrollbar'>
+				{#each $transactions as tx}
+					<div class='row'>
+						<span class='description'>{tx.description}{#if tx.state == 'pending'}{@html SPINNER_ICON}{/if}</span>
+						<a class='link' href={txLink(tx.hash)} target='_blank'>{@html EXTERNAL_ICON}</a>
+					</div>
+				{/each}
+			</div>
+
+		{/if}
 
 	</div>
 
