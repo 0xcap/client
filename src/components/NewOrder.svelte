@@ -4,7 +4,7 @@
 
 	import { selectProduct } from '../lib/helpers'
 	import { LOGOS } from '../lib/logos'
-	import { approveAllowance, submitOrder } from '../lib/methods'
+	import { requestFaucet, approveAllowance, submitOrder } from '../lib/methods'
 	import { formatToDisplay } from '../lib/utils'
 
 	import { selectedBase } from '../stores/bases'
@@ -13,7 +13,11 @@
 	import { selectedProductId, selectedProduct } from '../stores/products'
 	import { prices } from '../stores/prices'
 	import { showToast } from '../stores/toasts'
-	import { selectedAddress, userBaseAllowance } from '../stores/wallet'
+	import { selectedAddress, userBaseAllowance, isTestnet } from '../stores/wallet'
+
+	async function _requestFaucet() {
+		const error = await requestFaucet(null, $selectedAddress);
+	}
 
 	let approveIsPending = false;
 	async function _approveAllowance() {
@@ -183,7 +187,14 @@
 	<label class='input-row' class:focused={amountIsFocused} for='amount'>
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
-			<div class='sub-label'>Available: {formatToDisplay($buyingPower)} {$selectedBase.symbol} <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
+			<div class='sub-label'>
+				Available: {formatToDisplay($buyingPower)} {$selectedBase.symbol} 
+				{#if isTestnet && $buyingPower*1 < 1000}
+					<a on:click={_requestFaucet}>(Faucet)</a>
+				{:else}
+					<a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a>
+				{/if}
+			</div>
 		</div>
 		<div class='input-wrap'>
 			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">

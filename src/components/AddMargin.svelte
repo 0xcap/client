@@ -4,8 +4,9 @@
 	TODO:
 	-- position UPL should include fee
 	-- refactor modal elements into components: Input wrap, details, button
+	- disappearing toasts
 	- toasts on tx completion
-	- add margin / close error if still settling
+	- usdc faucet on testnet - instead of Max in amount
 	- wallet balance in account modal
 	- tx icon
 	- tooltips?

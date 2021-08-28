@@ -46,6 +46,11 @@ function handleEvent() {
 		refreshUserBaseAllowance.update(n => n + 1);
 	}
 
+	if (ev.event == 'Transfer') { // ERC20
+		completeTransaction(ev.transactionHash);
+		refreshUserBaseBalance.update(n => n + 1);
+	}
+
 	if (ev.event == 'AddMargin') {
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
@@ -83,6 +88,8 @@ export function initEventListeners(address, chainId) {
 	if (!USDCContract) return;
 	USDCContract.removeAllListeners();
 	USDCContract.on(USDCContract.filters.Approval(address, tradingContract.address), handleEvent);
+	USDCContract.on(USDCContract.filters.Transfer(address, null), handleEvent);
+	USDCContract.on(USDCContract.filters.Transfer(null, address), handleEvent);
 }
 
 

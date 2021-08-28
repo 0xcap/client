@@ -47,6 +47,23 @@ export async function approveAllowance(baseId, amount) {
 	}
 }
 
+// Faucet
+export async function requestFaucet(baseId, address) {
+	if (!address) return;
+	const base = get(bases)[baseId || get(selectedBaseId)];
+	try {
+		const tx = await getContract(base.symbol, true).mint(address, 100000 * 10**6);
+		addPendingTransaction({
+			hash: tx.hash,
+			description: `Faucet request for 100000 ${base.symbol}`
+		});
+	} catch(e) {
+		showToast(e);
+		return e;
+	}
+}
+
+
 // Vault
 
 export async function getVault(baseId) {

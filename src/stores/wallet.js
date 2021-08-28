@@ -34,3 +34,7 @@ export const userBaseAllowance = derived([selectedBaseId, selectedAddress, refre
 	}
 	set(await getAllowance($selectedBaseId, $selectedAddress) * 1);
 }, 'N/A');
+
+export const isTestnet = derived([chainId], ([$chainId]) => {
+	return $chainId == 4;
+}, false);
