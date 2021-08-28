@@ -9,15 +9,15 @@
 	-- usdc faucet on testnet - instead of Max in amount
 	-- tx icon
 	- tooltips?
-	- footer: hosted on IPFS
+	- modal snaps upwards when clicked from lower scroll
+	-- footer: hosted on IPFS
 	- keeper on vercel, called by github actions shouldn't submit transaction if they already did for the given IDs (pending tx on same set of IDs)
-	- logos should be links not base64
+	-- logos should be links not base64
 	- more products
 	- sounds
 
 	*/
 
-	import { onMount } from 'svelte'
 	import { PRICE_DECIMALS } from '../lib/constants'
 	import { calculateLiquidationPrice } from '../lib/helpers'
 	import { submitOrder } from '../lib/methods'
@@ -70,11 +70,6 @@
 		);
 		submitIsPending = false;
 	}
-
-	let amountIsFocused = false;
-	onMount(() => {
-		document.getElementById('amount').focus();
-	});
 
 	let rows;
 	$: rows = [

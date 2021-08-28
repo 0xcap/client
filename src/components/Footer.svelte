@@ -1,30 +1,19 @@
 <script>
-	
-
+	import { VERSION } from '../lib/constants'
 </script>
 
 <style>
 		
 	footer {
 		padding: var(--base-padding) 0;
-		margin-top: 32px;
 		font-size: 80%;
 		color: var(--gray-light);
 		text-align: center;
-	}
-
-	div {
-		margin-bottom: var(--base-padding);
-	}
-
-	:global(footer svg) {
-		height: 14px;
-		margin-bottom: -3px;
-		fill: var(--blue);
+		line-height: 1.55;
 	}
 
 </style>
 
 <footer>
-	Cap | DeFi Derivatives
+	Cap v{VERSION} | Hosted on IPFS
 </footer>

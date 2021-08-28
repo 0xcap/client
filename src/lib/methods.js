@@ -77,6 +77,7 @@ export async function getUserStaked(baseId, address) {
 }
 
 export async function stake(baseId, amount) {
+	baseId = baseId || get(selectedBaseId);
 	const base = get(bases)[baseId];
 	try {
 		const tx = await getContract(null, true).stake(baseId, parseUnits(amount, base.decimals));
@@ -91,6 +92,7 @@ export async function stake(baseId, amount) {
 }
 
 export async function redeem(baseId, amount) {
+	baseId = baseId || get(selectedBaseId);
 	const base = get(bases)[baseId];
 	try {
 		const tx = await getContract(null, true).redeem(baseId, parseUnits(amount, base.decimals));

@@ -91,6 +91,9 @@
 		height: 80px;
 		font-size: 20px;
 	}
+	.position:hover {
+		background-color: var(--gray-between);
+	}
 
 	.details {
 		display: flex;

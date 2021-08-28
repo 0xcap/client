@@ -1,6 +1,5 @@
 <script>
 
-	import { onMount } from 'svelte'
 	import { submitOrder } from '../lib/methods'
 	import { formatToDisplay, intify } from '../lib/utils'
 
@@ -24,7 +23,9 @@
 			return;
 		}
 		closePercent = 100 * amount * 1 / (data.amount * 1);
+		if (closePercent > 100) closePercent = 100;
 		newAmount = data.amount * 1 - amount * 1;
+		if (newAmount < 0) newAmount = 0;
 	}
 
 	function setMaxAmount(_entire) {
@@ -33,24 +34,21 @@
 	}
 
 	let canSubmit;
-	$: canSubmit = amount*1 > 0 && closePercent <= 100 && newAmount >= 0;
+	$: canSubmit = amount*1 > 0;
 
 	let submitIsPending = false;
 	async function _submitOrder() {
-		console.log(data.baseId,
-			data.productId,
-			!data.isLong,
-			(amount*1)/(data.leverage*1),
-			1,
-			data.id,
-			false,
-			true);
+		if (closePercent >= 100) {
+			marginToSubmit = data.margin * 1;
+		} else {
+			marginToSubmit = (amount*1)/(data.leverage*1);
+		}
 		submitIsPending = true;
 		await submitOrder(
 			data.baseId,
 			data.productId,
 			!data.isLong,
-			(amount*1)/(data.leverage*1),
+			marginToSubmit,
 			1,
 			data.id,
 			false,
@@ -58,11 +56,6 @@
 		);
 		submitIsPending = false;
 	}
-
-	let amountIsFocused = false;
-	onMount(() => {
-		document.getElementById('amount').focus();
-	});
 
 	let rows;
 	$: rows = [
@@ -81,13 +74,11 @@
 		},
 		{
 			label: 'Close %',
-			value: `${formatToDisplay(closePercent, 2)}%`,
-			hasError: closePercent * 1 > 100
+			value: `${formatToDisplay(closePercent, 2)}%`
 		},
 		{
 			label: 'Amount After Close',
-			value: formatToDisplay(newAmount),
-			hasError: newAmount * 1 < 0
+			value: formatToDisplay(newAmount)
 		},
 	];
 

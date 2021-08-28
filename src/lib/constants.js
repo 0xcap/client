@@ -1,4 +1,5 @@
-export const DEFAULT_CHAIN_ID = 31337;
+export const VERSION = '1';
+
 export const PRICE_DECIMALS = 8;
 export const LEVERAGE_DECIMALS = 6;
 const INFURA_KEY = '8cccc478d2e54cb3bc3ec5524793f636';

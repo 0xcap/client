@@ -1,26 +1,26 @@
 <script>
-	import { onMount } from 'svelte'
-	import { stake, redeem } from '../lib/methods'
+
+	import { redeem } from '../lib/methods'
 	import { selectedVault } from '../stores/vault'
-	
+
 	import Modal from './Modal.svelte'
+	import DataList from './DataList.svelte'
+	import ModalButton from './ModalButton.svelte'
 
-	let amountToRedeem;
+	let amount;
 
+	let canSubmit;
+	$: canSubmit = amount*1 > 0;
+
+	let submitIsPending = false;
 	async function _redeem() {
-		// todo: checks
-		await redeem(null, amountToRedeem);
-		console.log('submitted redeem');
+		submitIsPending = true;
+		const error = await redeem(null, amount);
+		submitIsPending = false;
 	}
 
 	let next_period_date;
 	let redemption_in_hours;
-
-	onMount(async () => {
-		document.getElementById('amount').focus();
-	});
-
-	$: getNextRedemptionTime($selectedVault.stakingPeriod, $selectedVault.redemptionPeriod);
 
 	function getNextRedemptionTime(staking_period, redemption_period) {
 		const now = Date.now() / 1000;
@@ -30,15 +30,19 @@
 		redemption_in_hours = parseInt(redemption_period / 3600);
 	}
 
+	$: getNextRedemptionTime($selectedVault.stakingPeriod, $selectedVault.redemptionPeriod);
+
+	let rows;
+	$: rows = [
+		{
+			type: 'input',
+			label: 'Amount to Redeem'
+		},
+	];
+
 </script>
 
 <style>
-	.body{}
-
-	input {
-		padding: var(--base-padding);
-	}
-
 	.details {
 		display: flex;
 		padding: var(--base-padding);
@@ -46,30 +50,12 @@
 		color: var(--gray-light);
 		line-height: 1.45;
 	}
-
-	.button {
-		border-top: 1px solid var(--gray-dark);
-		padding: var(--base-padding);
-	}
-
-	.button button {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-		padding: 10px;
-		border-radius: var(--base-radius);
-		font-weight: 700;
-		cursor: pointer;
-	}
 </style>
 
 <Modal title='Redeem'>
-	<div class='body'>
-		<input id='amount' type=number bind:value={amountToRedeem} min=0 max=10000000 placeholder="Amount to redeem"> 
-	</div>
+	<DataList data={rows} bind:value={amount} />
 	<div class='details'>
 		You can redeem your stake, plus profits or losses, during the next redemption period ({redemption_in_hours} hours starting {next_period_date}).
 	</div>
-	<div class='button'>
-		<button on:click={_redeem}>Redeem</button>
-	</div>
+	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} label='Redeem' action={_redeem} />
 </Modal>
