@@ -20,17 +20,3 @@ export const prices = derived([activeProducts], async ([$activeProducts], set) =
 	c = setInterval(fetchPrices, 5 * 1000);
 	t = setTimeout(fetchPrices, 1 * 500); // to give time for all active products to be gathered, then fetched all at once
 }, {});
-
-export function activateProduct(_productId) {
-	activeProducts.update((x) => {
-		x[_productId] = true;
-		return x;
-	});
-}
-
-export function deactivateProduct(_productId) {
-	activeProducts.update((x) => {
-		delete x[_productId];
-		return x;
-	});
-}

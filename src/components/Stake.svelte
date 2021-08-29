@@ -1,23 +1,23 @@
 <script>
-	import { onMount } from 'svelte'
+
 	import { stake } from '../lib/methods'
-	import { vaultInfo } from '../stores/vault'
+	import { selectedVault } from '../stores/vault'
 	
 	import Modal from './Modal.svelte'
+	import DataList from './DataList.svelte'
+	import ModalButton from './ModalButton.svelte'
 
-	let amountToStake;
+	let amount;
 
+	let canSubmit;
+	$: canSubmit = amount*1 > 0;
+
+	let submitIsPending = false;
 	async function _stake() {
-		// todo: checks
-		await stake(null, amountToStake);
-		console.log('submitted stake');
+		submitIsPending = true;
+		const error = await stake(null, amount);
+		submitIsPending = false;
 	}
-
-	onMount(async () => {
-		document.getElementById('amount').focus();
-	});
-
-	$: getNextRedemptionTime($vaultInfo.stakingPeriod);
 
 	let next_period_date;
 	function getNextRedemptionTime(staking_period) {
@@ -26,17 +26,20 @@
 		const seconds_till_next_period = staking_period - seconds_since_last_period;
 		next_period_date = new Date((now + seconds_till_next_period)*1000).toLocaleString();
 	}
+
+	$: getNextRedemptionTime($selectedVault.stakingPeriod);
 	
+	let rows;
+	$: rows = [
+		{
+			type: 'input',
+			label: 'Amount to Stake'
+		},
+	];
 
 </script>
 
 <style>
-	.body{}
-
-	input {
-		padding: var(--base-padding);
-	}
-
 	.details {
 		display: flex;
 		padding: var(--base-padding);
@@ -44,30 +47,12 @@
 		color: var(--gray-light);
 		line-height: 1.45;
 	}
-
-	.button {
-		border-top: 1px solid var(--gray-dark);
-		padding: var(--base-padding);
-	}
-
-	.button button {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-		padding: 10px;
-		border-radius: var(--base-radius);
-		font-weight: 700;
-		cursor: pointer;
-	}
 </style>
 
 <Modal title='Stake'>
-	<div class='body'>
-		<input id='amount' type=number bind:value={amountToStake} min=0 max=10000000 placeholder="Amount to stake"> 
-	</div>
+	<DataList data={rows} bind:value={amount} />
 	<div class='details'>
 		Your stake will be locked until the next redemption period ({next_period_date}).
 	</div>
-	<div class='button'>
-		<button on:click={_stake}>Stake</button>
-	</div>
+	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} label='Stake' action={_stake} />
 </Modal>

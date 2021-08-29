@@ -1,44 +1,59 @@
 <script>
+
 	import { onMount } from 'svelte'
 
-	import { signer, address } from '../stores/provider'
+	import { selectProduct } from '../lib/helpers'
+	import { LOGOS } from '../lib/logos'
+	import { requestFaucet, approveAllowance, submitOrder } from '../lib/methods'
+	import { formatToDisplay } from '../lib/utils'
 
-	import { LOGOS } from '../lib/constants'
-	import { baseInfo } from '../stores/bases'
-	import { userBaseBalance, userBaseAllowance } from '../stores/wallet'
-	import { productId, productInfo, margin, leverage, amount, buyingPower } from '../stores/order'
-
-	import { prices, activateProduct } from '../stores/prices'
-
-	import { setBaseId, setProductId, listProducts, approveUserBaseAllowance, submitOrder } from '../lib/methods'
-
+	import { selectedBase } from '../stores/bases'
 	import { showModal } from '../stores/modals'
+	import { margin, leverage, amount, buyingPower } from '../stores/order'
+	import { selectedProductId, selectedProduct } from '../stores/products'
+	import { prices } from '../stores/prices'
+	import { showToast } from '../stores/toasts'
+	import { selectedAddress, userBaseAllowance, isTestnet, isUnsupported } from '../stores/wallet'
 
-	import { formatPrice, formatBaseAmount } from '../lib/utils'
-
-	import { CHAINLINK_ICON } from '../lib/icons'
-
-	async function _approveUserBaseAllowance() {
-		await approveUserBaseAllowance();
+	async function _requestFaucet() {
+		const error = await requestFaucet(null, $selectedAddress);
 	}
 
+	let approveIsPending = false;
+	async function _approveAllowance() {
+		approveIsPending = true;
+		const error = await approveAllowance();
+		if (error) approveIsPending = false;
+	}
+
+	let submitIsPending = false;
 	async function _submitOrder(isLong) {
-		// todo: checks
-		await submitOrder(
+		if (!$amount) return showToast('Amount is required.');
+		submitIsPending = true;
+		const error = await submitOrder(
 			null,
-			null,
+			$selectedProductId,
 			isLong,
 			$margin * 1,
 			$leverage * 1,
 			0,
 			false
 		);
+		submitIsPending = false;
 	}
 
-	let amountFocused = false;
+	let amountIsFocused = false;
+
+	function checkFocus(address) {
+		const elem = document.getElementById('amount');
+		if (elem && address) elem.focus();
+	}
+	$: checkFocus($selectedAddress);
 
 	onMount(() => {
-		activateProduct($productId);
+		// Activates prices
+		selectProduct($selectedProductId);
+		checkFocus($selectedAddress);
 	});
 
 </script>
@@ -48,141 +63,153 @@
 	.new-order {
 		display:  grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
-		margin: 24px 0;
+		grid-gap: 12px;
+		padding: 12px;
+		background-color: var(--black-almost);
+		border-radius: var(--base-radius);
+		box-shadow: rgba(0,200,5,0.1) 0px 12px 28px 0;
 	}
 
-		.row {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			border: 1px solid var(--gray-dark);
-			border-radius: var(--base-radius);
-			padding: var(--base-padding);
-			cursor: pointer;
-		}
+	.input-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px solid rgb(45,45,45);
+		border-radius: 14px;
+		padding: var(--base-padding);
+		background-color: var(--gray-darkest);
+		cursor: pointer;
+	}
 
-		.row:hover, .row.focused {
-			border-color: var(--gray);
-		}
+	.input-row:hover, .input-row.focused {
+		border-color: var(--gray);
+	}
 
-			.sub-label {
-				color: var(--gray-light);
-				font-size: 80%;
-				margin-top: 5px;
-				margin-right: 4px;
-			}
+	.sub-label {
+		color: var(--gray-light);
+		font-size: 80%;
+		margin-top: 5px;
+	}
 
-			:global(.sub-label svg) {
-				height: 12px;
-				fill: var(--gray-light);
-				margin-bottom: -2px;
-			}
+	.product-wrap {
+		display: flex;
+		align-items: center;
+		font-size: 22px;
+		font-weight: 700;
+	}
 
-			.value-wrap {
-				font-size: 20px;
-				font-weight: 700;
-			}
+	.product-wrap img {
+		width: 24px;
+		height: 24px;
+		border-radius: 24px;
+	}
 
-				.product-select {
-					display: flex;
-					align-items: center;
-				}
+	.product-wrap span {
+		margin-left: 8px;
+	}
 
-				.product-select img {
-					width: 24px;
-					height: 24px;
-					border-radius: 24px;
-				}
+	.product-wrap .leverage {
+		font-weight: 400;
+	}
 
-				.product-select span {
-					margin-left: 8px;
-				}
+	.input-wrap {
+		flex: 1 1 auto;
+	}
 
-				.product-select .leverage {
-					font-weight: 400;
-				}
+	input {
+		font-size: 22px;
+		font-weight: 700;
+		text-align: right;
+	}
 
-			.input-wrap {
-				flex: 1 1 auto;
-			}
+	.buttons {
+		display: grid;
+		grid-auto-flow: column;
+		grid-gap: 12px;
+	}
 
-				input {
-					text-align: right;
-				}
+	button {
+		padding: var(--base-padding);
+		border-radius: 14px;
+		color: var(--gray-darkest);
+		font-size: 20px;
+		font-weight: 700;
+	}
 
-		.buttons {
-			display: flex;
-			font-weight: 700;
-		}
+	button.disabled {
+		background-color: var(--gray-dark);
+		color: var(--gray-light);
+		pointer-events: none;
+		cursor: default;
+	}
 
-			button {
-				text-align: center;
-				cursor: pointer;
-				user-select: none;
-				appearance: none;
-				padding: var(--base-padding);
-				border-radius: var(--base-radius);
-				color: var(--gray-darkest);
-			}
+	.button-default {
+		background-color: var(--blue);
+		color: var(--gray-darkest);
+	}
+	.button-default:not(.disabled):hover {
+		background-color: var(--blue-dark);
+	}
 
-			.button-default {
-				background-color: var(--blue);
-				color: var(--gray-dark);
-			}
-
-			.button-short {
-				background-color: var(--red);
-				margin-right: 8px;
-			}
-			.button-short:hover {
-				background-color: var(--red-dark);
-			}
-			.button-long {
-				background-color: var(--green);
-				margin-left: 8px;
-			}
-			.button-long:hover {
-				background-color: var(--green-dark);
-			}
+	.button-short {
+		background-color: var(--red);
+	}
+	.button-short:not(.disabled):hover {
+		background-color: var(--red-dark);
+	}
+	.button-long {
+		background-color: var(--green);
+	}
+	.button-long:not(.disabled):hover {
+		background-color: var(--green-dark);
+	}
 
 </style>
 
 <div class='new-order'>
 
-	<div class='row' on:click={() => {showModal('Products')}}>
+	<div class='input-row' on:click={() => {showModal('Products')}} data-intercept="true">
 		<div class='label-wrap'>
 			<div class='label'>Product</div>
-			<div class='sub-label'>
-				<span title='Price provided by Chainlink'>Current price: {formatPrice($prices[$productId]) || ''}</span>
+			<div class='sub-label'title='Price provided by Chainlink'>
+				Price: {formatToDisplay($prices[$selectedProductId]) || ''}
 			</div>
 		</div>
-		<div class='value-wrap'>
-			<div class='product-select'>
-				{#if $productInfo.symbol}
-					<img src={LOGOS[$productId]} alt={`${$productInfo.symbol} logo`}>
-					<span>{$productInfo.symbol}</span>
-					<span class='leverage'>{$leverage}x</span>
-				{/if}
-			</div>
+		<div class='product-wrap'>
+			{#if $selectedProduct.symbol}
+				<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}>
+				<span>{$selectedProduct.symbol}</span>
+				<span class='leverage'>{$leverage}x</span>
+			{/if}
 		</div>
 	</div>
 
-	<label class='row' class:focused={amountFocused} for='amount'>
+	<label class='input-row' class:focused={amountIsFocused} for='amount'>
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
-			<div class='sub-label'>{formatBaseAmount($buyingPower)} {$baseInfo && $baseInfo.symbol} available to trade <a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a></div>
+			<div class='sub-label'>
+				Available: {formatToDisplay($buyingPower)} {$selectedBase.symbol} 
+				{#if isTestnet && $buyingPower*1 < 1000 && !$isUnsupported && $selectedAddress}
+					<a on:click={_requestFaucet}>(Faucet)</a>
+				{:else if $selectedAddress}
+					<a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a>
+				{/if}
+			</div>
 		</div>
-		<div class='value-wrap input-wrap'>
-			<input id='amount' type='number' on:focus={() => {amountFocused = true}}  on:blur={() => {amountFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
+		<div class='input-wrap'>
+			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
 		</div>
 	</label>
 
 	<div class='buttons'>
-		{#if $address && ($userBaseAllowance * 1 == 0 || $margin * 1 > $userBaseAllowance * 1)}
-			<button class='button-default' on:click={_approveUserBaseAllowance}>Approve {$baseInfo.symbol}</button>
+		{#if !$selectedAddress}
+			<button class='disabled'>Connect a wallet</button>
+		{:else if $isUnsupported}
+			<button class='disabled'>Switch to Rinkeby to trade</button>
+		{:else if $userBaseAllowance == 0}
+			<button class:disabled={approveIsPending} class='button-default' on:click={_approveAllowance}>Approve {$selectedBase.symbol}</button>
 		{:else}
-			<button class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
+			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
 	</div>
 

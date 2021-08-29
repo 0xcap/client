@@ -1,5 +1,5 @@
 import { writable, derived, get } from 'svelte/store'
-import { provider } from './provider'
+import { provider } from './wallet'
 
 export const hasPending = writable(false);
 export const transactions = writable(JSON.parse(localStorage.getItem('transactions') || '[]'));
@@ -54,6 +54,8 @@ export async function checkPendingTransactions() {
 	if (!_provider) return;
 	const _transactions = get(transactions);
 
+	if (!_transactions.length) return;
+	
 	let new_transactions = [];
 	let has_pending = false;
 	for (const tx of _transactions) {

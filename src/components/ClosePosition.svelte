@@ -1,8 +1,11 @@
 <script>
-	import { onMount } from 'svelte'
+
 	import { submitOrder } from '../lib/methods'
+	import { formatToDisplay, intify } from '../lib/utils'
 
 	import Modal from './Modal.svelte'
+	import DataList from './DataList.svelte'
+	import ModalButton from './ModalButton.svelte'
 	
 	export let data;
 
@@ -11,80 +14,82 @@
 
 	let prior_amount;
 
-	function checkEntire(_entire) {
-		if (_entire) {
-			prior_amount = amount;
-			console.log('prior_amount', prior_amount);
-			amount = data.margin * data.leverage;
-		} else {
-			amount = prior_amount;
+	let closePercent = 0, newAmount = data.amount;
+
+	function calculateAmounts() {
+		if (!amount*1) {
+			closePercent = 0;
+			newAmount = data.amount;
+			return;
 		}
+		closePercent = 100 * amount * 1 / (data.amount * 1);
+		if (closePercent > 100) closePercent = 100;
+		newAmount = data.amount * 1 - amount * 1;
+		if (newAmount < 0) newAmount = 0;
 	}
 
-	$: checkEntire(entire);
+	function setMaxAmount(_entire) {
+		amount = data.margin * data.leverage;
+		calculateAmounts();
+	}
 
+	let canSubmit;
+	$: canSubmit = amount*1 > 0;
+
+	let submitIsPending = false;
 	async function _submitOrder() {
-		console.log('(amount*1)/(data.leverage*1)', (amount*1)/(data.leverage*1));
+		let marginToSubmit;
+		if (closePercent >= 100) {
+			marginToSubmit = data.margin * 1;
+		} else {
+			marginToSubmit = (amount*1)/(data.leverage*1);
+		}
+		submitIsPending = true;
 		await submitOrder(
 			data.baseId,
 			data.productId,
 			!data.isLong,
-			(amount*1)/(data.leverage*1),
+			marginToSubmit,
 			1,
 			data.id,
 			false,
 			true
 		);
-		console.log('submitted close position');
+		submitIsPending = false;
 	}
 
-	onMount(() => {
-		document.getElementById('amount').focus();
-	});
+	let rows;
+	$: rows = [
+		{
+			type: 'input',
+			label: 'Amount to Close',
+			onKeyUp: calculateAmounts,
+			labelTool: {
+				text: '(Max)', 
+				action: setMaxAmount
+			}
+		},
+		{
+			label: 'Current Amount',
+			value: formatToDisplay(data.amount)
+		},
+		{
+			label: 'Close %',
+			value: `${formatToDisplay(closePercent, 2)}%`
+		},
+		{
+			label: 'Amount After Close',
+			value: formatToDisplay(newAmount)
+		},
+	];
 
 </script>
 
 <style>
 
-	.body input {
-		padding: var(--base-padding);
-	}
-
-	.options {
-
-	}
-
-	.options label {
-		display: flex;
-		padding: var(--base-padding);
-		border-top: 1px solid var(--gray-dark);
-	}
-
-	.button {
-		border-top: 1px solid var(--gray-dark);
-		padding: var(--base-padding);
-	}
-
-	.button button {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-		padding: 10px;
-		border-radius: var(--base-radius);
-		font-weight: 700;
-		cursor: pointer;
-	}
 </style>
 
 <Modal title='Close Position'>
-	<div class='body'>
-		<input id='amount' type=number bind:value={amount} min=0 max=10000000 placeholder="Amount to close"> 
-	</div>
-	<div class='options'>
-		<label class='option' for='entire'>
-			<input id='entire' type='checkbox' bind:checked={entire}> Close entire position
-		</label>
-	</div>
-	<div class='button'>
-		<button on:click={_submitOrder}>Close Position</button>
-	</div>
+	<DataList data={rows} bind:value={amount} />
+	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} action={_submitOrder} label='Close Position' />
 </Modal>

@@ -1,27 +1,27 @@
 <script>
+
 	import { onDestroy } from 'svelte'
-	import { setProductId, listProducts } from '../lib/methods'
-	import { LOGOS } from '../lib/constants'
 
 	import Modal from './Modal.svelte'
-	import { prices } from '../stores/prices'
-
+	
+	import { selectProduct } from '../lib/helpers'
 	import { CHAINLINK_FULL_ICON } from '../lib/icons'
+	import { LOGOS } from '../lib/logos'
+	import { formatToDisplay, setCachedLeverage } from '../lib/utils'
 
-	import { productId, productInfo, leverage, setCachedLeverage } from '../stores/order'
-	import { formatPrice } from '../lib/utils'
-
-	let products = listProducts();
-
+	import { leverage } from '../stores/order'
+	import { prices } from '../stores/prices'
+	import { selectedProductId, selectedProduct, productList } from '../stores/products'
+	
 	const unsubscribe = leverage.subscribe(value => {
-		setCachedLeverage($productId, value);
+		setCachedLeverage($selectedProductId, value);
 	});
 
 	onDestroy(unsubscribe);
 
 	// 8h funding
 	let funding = 0;
-	$: funding = (($productInfo.interest * 1) / 360 / 3).toFixed(4) || 0;
+	$: funding = (($selectedProduct.interest * 1) / 360 / 3).toFixed(4) || 0;
 
 </script>
 
@@ -29,7 +29,7 @@
 
 	.product-list {
 		overflow-y: scroll;
-		max-height: 220px;
+		max-height: 420px;
 	}
 
 	.product-list a {
@@ -41,66 +41,62 @@
 		color: inherit;
 	}
 
-	.product-list .product {
-		display: flex;
-		align-items: center;
+	.product-list a:hover, .product-list a.selected {
+		background-color: var(--gray-between);
 	}
 
 	.product-list a.selected {
 		cursor: default;
 	}
 
-	.product-list a:hover, .product-list a.selected {
-		background-color: var(--gray-dark);
+	.product-wrap {
+		display: flex;
+		align-items: center;
 	}
-	.product-list a img {
+
+	.product-wrap img {
 		width: 24px;
 		height: 24px;
 		border-radius: 24px;
-		margin-right: 10px;
-	}
-
-	.product-list a .check {
-		color: var(--blue);
+		margin-right: 8px;
 	}
 
 	.leverage-container {
 		border-top: 1px solid var(--gray-dark);
 		padding: var(--base-padding);
+		padding-bottom: 0;
 	}
 
-		.row {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding-bottom: var(--base-padding);
-		}
+	.row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-bottom: var(--base-padding);
+		font-size: 20px;
+	}
 
-			.value {
-				font-size: 20px;
-				font-weight: 700;
-			}
+	.value {
+		font-weight: 700;
+	}
 
 	.details {
 		display: flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		text-align: center;
 		padding: var(--base-padding);
-		padding-top: 0;
 		color: var(--gray-light);
 		font-size: 80%;
 	}
 
-	.topped {
+	.border-top {
 		border-top: 1px solid var(--gray-dark);
-		padding-top: var(--base-padding);
 	}
 
 	:global(.details svg) {
-		height: 22px;
+		height: 24px;
 		fill: var(--gray-light);
-		margin-left: 6px;
+		margin-left: 8px;
 		margin-bottom: -2px;
 	}
 
@@ -108,17 +104,18 @@
 
 <Modal title='Products'>
 
-	<div class='product-list'>
+	<div class='product-list no-scrollbar'>
 
-		{#each products as product}
-			<a class:selected={product.id == $productId} on:click={() => {setProductId(product.id)}}>
-				<div class='product'>
-					<img src={LOGOS[product.id]} alt={`${$productInfo.symbol} logo`}>
+		{#each $productList as product}
+			<a class:selected={product.id == $selectedProductId} on:click={() => {selectProduct(product.id)}}>
+				<div class='product-wrap'>
+					<img src={LOGOS[product.id]} alt={`${product.symbol} logo`}>
 					<span>{product.symbol}</span>
 				</div>
-				<div>{formatPrice($prices[product.id]) || ''}</div>
+				<div>{formatToDisplay($prices[product.id], product.id) || ''}</div>
 			</a>
 		{/each}
+
 	</div>
 
 	<div class='leverage-container'>
@@ -127,15 +124,15 @@
 			<div class='value'>{$leverage}x</div>
 		</div>
 		<div class='range'>
-			<input type=range bind:value={$leverage} min=1 max={$productInfo.leverage * 1 || 100}> 
+			<input type=range bind:value={$leverage} min=1 max={$selectedProduct.leverage * 1 || 100}> 
 		</div>
 	</div>
 
 	<div class='details'>
-		{$productInfo.fee}% fee | -{funding}% 8hr funding
+		{$selectedProduct.fee}% fee | -{funding}% 8h funding
 	</div>
 
-	<div class='details topped'>
+	<div class='details border-top'>
 		Prices provided by {@html CHAINLINK_FULL_ICON}
 	</div>
 

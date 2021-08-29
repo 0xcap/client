@@ -5,7 +5,7 @@ import Vault from '../pages/Vault.svelte'
 import NotFound from '../pages/NotFound.svelte'
 
 import { PRODUCT_TO_ID } from '../lib/constants'
-import { setProductId } from '../lib/methods'
+import { selectProduct } from '../lib/helpers'
 
 export const currentPage = writable('');
 export const component = writable();
@@ -18,11 +18,11 @@ export function loadRoute(path) {
 		// set product and component
 		const product = path.split('/')[2];
 		if (product && PRODUCT_TO_ID[product]) {
-			setProductId(PRODUCT_TO_ID[product]);
+			selectProduct(PRODUCT_TO_ID[product]);
 		}
 		component.set(Trade);
 		currentPage.set('trade');
-	} else if (path.includes('vault')) {
+	} else if (path.includes('/vault')) {
 		component.set(Vault);
 		currentPage.set('vault');
 	} else {
@@ -32,11 +32,9 @@ export function loadRoute(path) {
 }
 
 export function navigateTo(path) {
-	console.log('path', path);
+	//console.log('path', path);
     if (!path || path == '/') {
     	path = '';
-    } else {
-    	path = '#' + path;
     }
     window.history.pushState(null, null, path);
     loadRoute(path);

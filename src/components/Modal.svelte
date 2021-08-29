@@ -1,9 +1,11 @@
 <script>
-	import { hideModal } from '../stores/modals'
 
 	import { CANCEL_ICON } from '../lib/icons'
 
+	import { hideModal } from '../stores/modals'
+
 	export let title;
+
 </script>
 
 <style>
@@ -14,7 +16,7 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
-		background-color: rgb(30,30,30,0.9);
+		background-color: rgb(0,0,0,0.524);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -22,10 +24,12 @@
 	}
 
 	.modal {
-		width: 360px;
-		border: 1px solid var(--gray-dark);
+		width: 460px;
+		max-height: 620px;
+		border: 1px solid var(--gray-between);
 		border-radius: var(--base-radius);
-		background-color: var(--gray-darkest);
+		background-color: rgb(25,25,25);
+		overflow: hidden;
 	}
 
 	.modal-header {
@@ -36,36 +40,34 @@
 		border-bottom: 1px solid var(--gray-dark);
 	}
 
-		.modal-title {
-		}
+	.modal-close {
+		cursor: pointer;
+	}
 
-		.modal-close {
-			cursor: pointer;
-		}
-
-		:global(.modal-close svg) {
-			height: 14px;
-			width:  14px;
-			margin-top: 4px;
-			fill: #fff;
-		}
+	:global(.modal-close svg) {
+		height: 14px;
+		width: 14px;
+		margin-top: 4px;
+		fill: #fff;
+	}
 
 	.modal-body {
-
+		overflow-y: scroll;
+		max-height: 554px;
 	}
 
 </style>
 
-<div class='modal-container'>
+<div class='modal-container no-scrollbar'>
 
-	<div class='modal'>
+	<div class='modal' data-intercept="true">
 
 		<div class='modal-header'>
 			<div class='modal-title'>{title}</div>
 			<span class='modal-close' on:click={hideModal}>{@html CANCEL_ICON}</span>
 		</div>
 
-		<div class='modal-body'>
+		<div class='modal-body no-scrollbar'>
 			<slot></slot>
 		</div>
 		

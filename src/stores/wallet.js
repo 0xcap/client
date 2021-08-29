@@ -1,24 +1,49 @@
 import { writable, derived } from 'svelte/store'
-import { address } from './provider'
-import { baseId } from './bases'
+import { selectedBaseId } from './bases'
 
-import { getUserBaseBalance, getUserBaseAllowance } from '../lib/methods'
+import { CHAIN_DATA } from '../lib/constants'
+import { getBalance, getAllowance } from '../lib/methods'
 
 export const refreshUserBaseBalance = writable(0);
 export const refreshUserBaseAllowance = writable(0);
 
-export const userBaseBalance = derived([baseId, address, refreshUserBaseBalance], async ([$baseId, $address, $refreshUserBaseBalance], set) => {
-	if (!$baseId || !$address) {
+export const provider = writable(null);
+
+export const chainId = writable(parseInt(localStorage.getItem('chainId')) || null);
+
+export const signer = writable(null);
+
+export const selectedAddress = derived([signer], async([$signer], set) => {
+	if (!$signer) return set(null);
+	const address = await $signer.getAddress();
+	localStorage.setItem('address', address);
+	set(address);
+});
+
+export const userBaseBalance = derived([selectedBaseId, selectedAddress, refreshUserBaseBalance], async ([$selectedBaseId, $selectedAddress, $refreshUserBaseBalance], set) => {
+	if (!$selectedBaseId || !$selectedAddress) {
 		set(0);
 		return;
 	}
-	set(await getUserBaseBalance($baseId, $address));
+	set(await getBalance($selectedBaseId, $selectedAddress) * 1);
 }, 0);
 
-export const userBaseAllowance = derived([baseId, address, refreshUserBaseAllowance], async ([$baseId, $address, $refreshUserBaseAllowance], set) => {
-	if (!$baseId || !$address) {
-		set(0);
+export const userBaseAllowance = derived([selectedBaseId, selectedAddress, refreshUserBaseAllowance], async ([$selectedBaseId, $selectedAddress, $refreshUserBaseAllowance], set) => {
+	if (!$selectedBaseId || !$selectedAddress) {
+		set('N/A');
 		return;
 	}
-	set(await getUserBaseAllowance($baseId, $address));
-}, 0);
+	set(await getAllowance($selectedBaseId, $selectedAddress) * 1);
+}, 'N/A');
+
+export const networkLabel = derived([chainId], ([$chainId]) => {
+	return CHAIN_DATA[$chainId] && CHAIN_DATA[$chainId].label;
+}, false);
+
+export const isTestnet = derived([chainId], ([$chainId]) => {
+	return $chainId == 4;
+}, false);
+
+export const isUnsupported = derived([chainId, selectedAddress], ([$chainId, $selectedAddress]) => {
+	return $selectedAddress && $chainId && !CHAIN_DATA[$chainId];
+}, false);

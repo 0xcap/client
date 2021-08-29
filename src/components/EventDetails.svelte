@@ -1,96 +1,75 @@
 <script>
 
-	import { onMount } from 'svelte'
-	import { chainId } from '../stores/provider'
-	import { CHAIN_DATA } from '../lib/constants'
-
 	import Modal from './Modal.svelte'
+	import DataList from './DataList.svelte'
+
+	import { EXTERNAL_ICON } from '../lib/icons'
+	import { txLink, formatToDisplay } from '../lib/utils'
 
 	export let data;
 
-	const explorer = CHAIN_DATA[$chainId]['explorer'];
-
-	function txLink(hash) {
-		return `${explorer}/tx/${hash}`; 
-	}
+	let rows;
+	$: rows = [
+		{
+			label: 'Position ID',
+			value: data.id
+		},
+		{
+			label: 'Vault',
+			value: data.base
+		},
+		{
+			label: 'Product',
+			value: data.product
+		},
+		{
+			label: 'Price',
+			value: data.price
+		},
+		{
+			label: 'Margin',
+			value: data.margin
+		},
+		{
+			label: 'Leverage',
+			value: data.leverage
+		},
+		{
+			label: 'Amount',
+			value: formatToDisplay(data.amount)
+		},
+		{
+			label: 'Profit or Loss',
+			value: `${data.pnl * 1 > 0 ? '+' : ''}${data.pnl}`
+		},
+		{
+			label: 'Fee Rebate',
+			value: data.feeRebate
+		},
+		{
+			label: 'Protocol Fee',
+			value: data.protocolFee
+		},
+		{
+			label: 'Was Liquidated',
+			value: data.wasLiquidated ? 'Yes' : 'No'
+		},
+		{
+			label: 'Block',
+			value: data.block
+		},
+		{
+			label: 'Transaction',
+			value: `<a href='${txLink(data.txHash)}' target='_blank'>${EXTERNAL_ICON}</a>`,
+			renderHTML: true
+		},
+	];
 
 </script>
 
 <style>
-
-	.row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border-bottom: 1px solid var(--gray-dark);
-		padding: var(--base-padding);
-	}
-
-	.label {
-		color: var(--gray-light);
-	}
-
-	.value {
-
-	}
-
 </style>
 
 <Modal title='Event Details'>
-
-	<div class='row'>
-		<div class='label'>Position ID</div>
-		<div class='value'>{data.id}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Base</div>
-		<div class='value'>{data.base}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Product</div>
-		<div class='value'>{data.product}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Price</div>
-		<div class='value'>{data.priceWithFee}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Margin</div>
-		<div class='value'>{data.margin}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Leverage</div>
-		<div class='value'>{data.leverage}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Amount</div>
-		<div class='value'>{data.amount}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Profit or Loss</div>
-		<div class='value'>{data.pnl * 1 > 0 ? '+' : ''}{data.pnl}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Was Liquidated</div>
-		<div class='value'>{data.wasLiquidated ? 'Yes' : 'No'}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Block</div>
-		<div class='value'>{data.block}</div>
-	</div>
-
-	<div class='row'>
-		<div class='label'>Transaction</div>
-		<div class='value'><a href={txLink(data.txHash)} target='_blank'>TX</a></div>
-	</div>
-
+	<DataList data={rows} />
 </Modal>

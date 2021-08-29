@@ -1,57 +1,65 @@
 import { get } from 'svelte/store'
-import { contract } from './contracts'
-import { PRICE_DECIMALS, LEVERAGE_DECIMALS } from './constants'
-import { getBaseInfo, getProductSymbol } from './contracts'
-import { provider, signer } from '../stores/provider'
 
-import { refreshUserStaked } from '../stores/vault'
+import { getContract } from './helpers'
+
+import { refreshUserStaked, refreshSelectedVault } from '../stores/vault'
 import { refreshUserPositions } from '../stores/positions'
-import { refreshUserBaseAllowance, refreshUserBaseBalance } from '../stores/wallet'
+import { refreshUserBaseAllowance, refreshUserBaseBalance, userBaseAllowance } from '../stores/wallet'
 import { refreshUserHistory } from '../stores/history'
 import { showToast } from '../stores/toasts'
 
 import { completeTransaction } from '../stores/transactions'
 
-import { toBytes32, fromBytes32, formatUnits, parseUnits, formatBaseAmount } from './utils'
+import { formatEvent } from './utils'
 	
 // toasts dark for a period after page load
 let acceptToasts = false;
 setTimeout(() => {
 	acceptToasts = true;
-}, 2000);
+}, 4000);
 
 function handleEvent() {
 
 	const ev = arguments[arguments.length - 1];
 
-	console.log('got event', ev);
+	//console.log('got event', ev);
 	
 	if (ev.event == 'NewPosition') {
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
+		if (acceptToasts) showToast('Position opened.', 'success');
 	}
 
 	if (ev.event == 'Staked') {
 		completeTransaction(ev.transactionHash);
 		refreshUserStaked.update(n => n + 1);
+		refreshSelectedVault.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
+		if (acceptToasts) showToast('Staked.', 'success');
 	}
 
 	if (ev.event == 'Redeemed') {
 		completeTransaction(ev.transactionHash);
 		refreshUserStaked.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
+		if (acceptToasts) showToast('Redeemed.', 'success');
 	}
 
-	if (ev.event == 'Approval') { // ERC20
+	if (ev.event == 'Approval') { // ERC20. Is sent on transferFrom
 		completeTransaction(ev.transactionHash);
 		refreshUserBaseAllowance.update(n => n + 1);
+		if (acceptToasts && !get(userBaseAllowance)) showToast('Approved.', 'success');
+	}
+
+	if (ev.event == 'Transfer') { // ERC20
+		completeTransaction(ev.transactionHash);
+		refreshUserBaseBalance.update(n => n + 1);
 	}
 
 	if (ev.event == 'AddMargin') {
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
-		if (acceptToasts) showToast('Margin added.', 'info');
+		if (acceptToasts) showToast('Margin added.', 'success');
 	}
 
 	if (ev.event == 'ClosePosition') {
@@ -59,6 +67,7 @@ function handleEvent() {
 		refreshUserPositions.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
 		refreshUserHistory.update(n => n + 1);
+		if (acceptToasts) showToast('Position closed.', 'success');
 	}
 
 	if (ev.event == 'NewPositionSettled') {
@@ -68,7 +77,7 @@ function handleEvent() {
 }
 
 export function initEventListeners(address, chainId) {
-	const tradingContract = contract();
+	const tradingContract = getContract();
 	if (!tradingContract) return;
 	tradingContract.removeAllListeners();
 	if (!address || !chainId) return;
@@ -81,49 +90,18 @@ export function initEventListeners(address, chainId) {
 	tradingContract.on(tradingContract.filters.ClosePosition(null, address), handleEvent);
 	// todo: other event listeners
 
-	const USDCContract = contract('USDC');
+	const USDCContract = getContract('USDC');
 	if (!USDCContract) return;
 	USDCContract.removeAllListeners();
 	USDCContract.on(USDCContract.filters.Approval(address, tradingContract.address), handleEvent);
+	USDCContract.on(USDCContract.filters.Transfer(address, null), handleEvent);
+	USDCContract.on(USDCContract.filters.Transfer(null, address), handleEvent);
 }
 
-const formatEvent = function(ev) {
-
-	//console.log('Formatting event', ev);
-
-	if (ev.event == 'ClosePosition') {
-
-		const { id, user, vaultId, productId, price, margin, leverage, pnl, feeRebate, protocolFee, wasLiquidated } = ev.args;
-
-		const base = getBaseInfo(vaultId);
-		if (!base) return;
-
-		return {
-			type: 'ClosePosition',
-			id: id.toNumber(),
-			base: base.symbol,
-			product: getProductSymbol(productId),
-			price: formatUnits(price, PRICE_DECIMALS),
-			margin: formatUnits(margin, base.decimals),
-			leverage: formatUnits(leverage, LEVERAGE_DECIMALS),
-			amount: formatBaseAmount(formatUnits(margin, base.decimals) * formatUnits(leverage, LEVERAGE_DECIMALS), vaultId),
-			pnl: formatUnits(pnl, base.decimals),
-			feeRebate: formatUnits(feeRebate, base.decimals),
-			protocolFee: formatUnits(protocolFee, base.decimals),
-			wasLiquidated,
-			txHash: ev.transactionHash,
-			block: ev.blockNumber,
-			productId: productId,
-			vaultId: vaultId
-		};
-
-	}
-
-}
 
 export async function fetchHistoryEvents(address) {
 	if (!address) return;
-	const tradingContract = contract();
+	const tradingContract = getContract();
 	if (!tradingContract) return;
 	const filter = tradingContract.filters.ClosePosition(null, address);
 	const _events = await tradingContract.queryFilter(filter, -170000); // last 170K blocks, eg 30 days
