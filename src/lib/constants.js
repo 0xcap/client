@@ -97,7 +97,9 @@ export const CHAIN_DATA = {
 		},
 		products: {
 			1: 'ETH-USD',
-			2: 'BTC-USD'
+			2: 'BTC-USD',
+			3: 'Gold',
+			4: 'EUR-USD'
 		}
 	},
 	'xx1': { // Ethereum mainnet
