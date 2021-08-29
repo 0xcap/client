@@ -138,11 +138,10 @@
 		<div class:selected={$menuVisible} class='clickable-item menu-icon' on:click={toggleMenu} data-intercept="true">{@html MENU_ICON}</div>
 		{#if $menuVisible}
 			<div class='menu'>
-				<a href='https://docs.cap.finance' target="_blank">Docs</a>
-				<a href='https://github.com/0xcap' target="_blank">Github</a>
 				<a href='https://blog.cap.finance' target="_blank">Blog</a>
 				<a href='https://t.me/capfin' target="_blank">Telegram</a>
 				<a href='https://twitter.com/CapDotFinance' target="_blank">Twitter</a>
+				<a href='https://github.com/0xcap' target="_blank">Github</a>
 				<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x43044f861ec040db59a7e324c40507addb673142' target="_blank">Buy CAP</a>	
 			</div>
 		{/if}

@@ -83,14 +83,14 @@ export const CHAIN_DATA = {
 		explorer: 'https://rinkeby.etherscan.io/',
 		contracts: {
 			TRADING: {
-				address: '0x60A23705Ae6526CF62e8D114E340C28F7C45Cf76',
+				address: '0xb0E43159EB3648da2FbD1BfeB6a1D36AA276A4C7',
 				abi: TRADING_ABI
 			}
 		},
 		bases: {
 			1: {
 				symbol: 'USDC',
-				address: '0x92881bD0F30ec70350BF338d76b5230Fecb5E62E',
+				address: '0x12D93428e69a57694a3c96a5D0d18BBa0D99aD37',
 				decimals: 6,
 				precision: 2
 			}
