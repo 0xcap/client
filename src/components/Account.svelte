@@ -74,7 +74,7 @@
 	<div class='info'>
 		<div class='address'>{shortAddr($selectedAddress)}</div>
 		<div class='view'>
-			<a href={addrLink($selectedAddress)}>View on Etherscan</a>
+			<a href={addrLink($selectedAddress)} target='_blank'>View on Etherscan</a>
 		</div>
 	</div>
 
