@@ -38,6 +38,7 @@
 
 	let submitIsPending = false;
 	async function _submitOrder() {
+		let marginToSubmit;
 		if (closePercent >= 100) {
 			marginToSubmit = data.margin * 1;
 		} else {

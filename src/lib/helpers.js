@@ -20,7 +20,8 @@ export function selectProduct(productId) {
 	selectedProductId.set(productId);
 	localStorage.setItem('selectedProductId', productId);
 	activateProductPrices(productId);
-	location.hash = '/trade/' + get(products)[productId];
+	const productSymbol = get(products)[productId];
+	if (productSymbol) location.hash = '/trade/' + productSymbol;
 }
 
 export function activateProductPrices(productId) {

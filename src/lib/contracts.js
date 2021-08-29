@@ -2,9 +2,11 @@ import { ethers } from 'ethers'
 import { bases } from '../stores/bases'
 import { contracts, contractsReady } from '../stores/contracts'
 import { products } from '../stores/products'
-import { CHAIN_DATA, ERC20_ABI } from './constants'
+import { CHAIN_DATA, ERC20_ABI, DEFAULT_CHAIN_ID } from './constants'
 
 export async function initContracts(chainId, _provider) {
+
+	if (!CHAIN_DATA[chainId]) chainId = DEFAULT_CHAIN_ID;
 
 	let contractObjects = {};
 

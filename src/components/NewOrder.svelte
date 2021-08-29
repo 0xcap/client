@@ -13,7 +13,7 @@
 	import { selectedProductId, selectedProduct } from '../stores/products'
 	import { prices } from '../stores/prices'
 	import { showToast } from '../stores/toasts'
-	import { selectedAddress, userBaseAllowance, isTestnet } from '../stores/wallet'
+	import { selectedAddress, userBaseAllowance, isTestnet, isUnsupported } from '../stores/wallet'
 
 	async function _requestFaucet() {
 		const error = await requestFaucet(null, $selectedAddress);
@@ -147,7 +147,7 @@
 		background-color: var(--blue);
 		color: var(--gray-darkest);
 	}
-	.button-default:hover {
+	.button-default:not(.disabled):hover {
 		background-color: var(--blue-dark);
 	}
 
@@ -189,9 +189,9 @@
 			<div class='label'>Amount</div>
 			<div class='sub-label'>
 				Available: {formatToDisplay($buyingPower)} {$selectedBase.symbol} 
-				{#if isTestnet && $buyingPower*1 < 1000}
+				{#if isTestnet && $buyingPower*1 < 1000 && !$isUnsupported && $selectedAddress}
 					<a on:click={_requestFaucet}>(Faucet)</a>
-				{:else}
+				{:else if $selectedAddress}
 					<a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a>
 				{/if}
 			</div>
@@ -204,6 +204,8 @@
 	<div class='buttons'>
 		{#if !$selectedAddress}
 			<button class='disabled'>Connect a wallet</button>
+		{:else if $isUnsupported}
+			<button class='disabled'>Switch to Rinkeby to trade</button>
 		{:else if $userBaseAllowance == 0}
 			<button class:disabled={approveIsPending} class='button-default' on:click={_approveAllowance}>Approve {$selectedBase.symbol}</button>
 		{:else}

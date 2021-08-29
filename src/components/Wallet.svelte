@@ -11,19 +11,12 @@
 	import { toggleMenu, menuVisible } from '../stores/menu'
 	import { showModal } from '../stores/modals'
 	import { hasPending, checkPendingTransactions } from '../stores/transactions'
-	import { selectedAddress, chainId, userBaseBalance } from '../stores/wallet'
+	import { selectedAddress, chainId, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
 
 	onMount(async () => {
 		await initWallet();
 		await checkPendingTransactions();
 	});
-
-	let network;
-	function setNetworkLabel(_chainId) {
-		if (!_chainId) return;
-		network = CHAIN_DATA[_chainId].label || "Unsupported Network";
-	}
-	$: setNetworkLabel($chainId);	
 
 </script>
 
@@ -41,6 +34,12 @@
 
 	.balance {
 		margin-right: 8px;
+	}
+
+	@media (max-width: 960px) {
+		.balance {
+			display: none;
+		}
 	}
 
 	.clickable-item {
@@ -68,7 +67,7 @@
 	button, .button {
 		background-color: var(--blue);
 		color: var(--gray-darkest);
-		padding: 8px 12px;
+		padding: 8px 16px;
 		border-radius: var(--base-radius);
 		font-weight: 700;
 		cursor: pointer;
@@ -117,8 +116,10 @@
 
 <div class='wallet'>
 
-	{#if network}
-		<div class='network'>{network}</div>
+	{#if $networkLabel}
+		<div class='network'>{$networkLabel}</div>
+	{:else if $isUnsupported}
+		<div class='network'>Unsupported Network</div>
 	{/if}
 
 	{#if $selectedAddress}

@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 
-import { CHAIN_DATA } from './constants'
+import { CHAIN_DATA, DEFAULT_CHAIN_ID } from './constants'
 import { initContracts } from './contracts'
 
 import { showToast } from '../stores/toasts'
@@ -12,7 +12,11 @@ let walletProvider;
 
 function handleChainSwitch(_chainId, _provider) {
 
-	if (!CHAIN_DATA[_chainId] && get(signer)) return showToast('Network not supported.');
+	if (!CHAIN_DATA[_chainId]) {
+		if (get(signer)) showToast('Network not supported.');
+		// Use read only provider, not connected one because it's on the wrong chain
+		_provider = new ethers.providers.JsonRpcProvider(CHAIN_DATA[DEFAULT_CHAIN_ID].network);
+	}
 
 	if (get(chainId) != _chainId) {
 		localStorage.setItem('chainId', _chainId);
@@ -61,6 +65,8 @@ export async function connectWallet() {
 	try {
 		await walletProvider.send("eth_requestAccounts", []);
 		signer.set(walletProvider.getSigner());
+		const network = await walletProvider.getNetwork();
+		if (!CHAIN_DATA[network.chainId]) showToast('Network not supported.');
 	} catch(e) {
 		console.error(e);
 	}

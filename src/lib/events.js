@@ -2,7 +2,7 @@ import { get } from 'svelte/store'
 
 import { getContract } from './helpers'
 
-import { refreshUserStaked } from '../stores/vault'
+import { refreshUserStaked, refreshSelectedVault } from '../stores/vault'
 import { refreshUserPositions } from '../stores/positions'
 import { refreshUserBaseAllowance, refreshUserBaseBalance, userBaseAllowance } from '../stores/wallet'
 import { refreshUserHistory } from '../stores/history'
@@ -33,6 +33,7 @@ function handleEvent() {
 	if (ev.event == 'Staked') {
 		completeTransaction(ev.transactionHash);
 		refreshUserStaked.update(n => n + 1);
+		refreshSelectedVault.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
 		if (acceptToasts) showToast('Staked.', 'success');
 	}

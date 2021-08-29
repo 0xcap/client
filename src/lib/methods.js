@@ -5,6 +5,7 @@ import { getContract, getContractAddress } from './helpers'
 import { formatUnits, parseUnits, formatProduct, formatVault, formatPositions, formatToDisplay } from './utils'
 
 import { bases, selectedBaseId } from '../stores/bases'
+import { hideModal } from '../stores/modals'
 import { showToast } from '../stores/toasts'
 import { addPendingTransaction } from '../stores/transactions'
 
@@ -85,6 +86,8 @@ export async function stake(baseId, amount) {
 			hash: tx.hash,
 			description: `Stake ${amount} ${base.symbol}`
 		});
+		showToast('Stake submitted.', 'info');
+		hideModal();
 	} catch(e) {
 		showToast(e);
 		return e;
@@ -100,6 +103,8 @@ export async function redeem(baseId, amount) {
 			hash: tx.hash,
 			description: `Redeem ${amount} ${base.symbol}`
 		});
+		showToast('Redemption submitted.', 'info');
+		hideModal();
 	} catch(e) {
 		showToast(e);
 		return e;
@@ -148,7 +153,7 @@ export async function submitOrder(baseId, productId, isLong, margin, leverage, p
 			description
 		});
 		showToast('Order submitted.', 'info');
-
+		hideModal();
 	} catch(e) {
 		showToast(e);
 		return e;

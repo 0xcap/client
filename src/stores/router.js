@@ -32,7 +32,7 @@ export function loadRoute(path) {
 }
 
 export function navigateTo(path) {
-	console.log('path', path);
+	//console.log('path', path);
     if (!path || path == '/') {
     	path = '';
     }

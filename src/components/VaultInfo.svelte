@@ -88,7 +88,7 @@
 		<span>Vault ({$selectedBase.symbol})</span>
 	</div>
 
-	<div class='description'>This vault backs trader profits while receiving their losses, funding, and fees, in {$selectedBase.symbol}.</div>
+	<div class='description'>This vault backs trader profits while receiving losses, fees, and interest, in {$selectedBase.symbol}.</div>
 
 	<div class='balance'>
 		<div class='balance-label'>Balance</div>
@@ -122,7 +122,7 @@
 
 		<div class='row sep'>
 			<div class='label'>My Stake <a on:click={() => {showModal('Stake')}} data-intercept="true">(Stake)</a></div>
-			<div class='value'>{formatToDisplay($userStaked)} ({formatToDisplay($userStaked*100/$selectedVault.totalStaked, 4) || 0}%)</div>
+			<div class='value'>{formatToDisplay($userStaked)} ({formatToDisplay($userStaked*100/($selectedVault.totalStaked || "N/A"), 4) || 0}%)</div>
 		</div>
 
 		<div class='row'>

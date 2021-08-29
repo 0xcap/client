@@ -1,6 +1,7 @@
 import { writable, derived } from 'svelte/store'
 import { selectedBaseId } from './bases'
 
+import { CHAIN_DATA } from '../lib/constants'
 import { getBalance, getAllowance } from '../lib/methods'
 
 export const refreshUserBaseBalance = writable(0);
@@ -35,6 +36,14 @@ export const userBaseAllowance = derived([selectedBaseId, selectedAddress, refre
 	set(await getAllowance($selectedBaseId, $selectedAddress) * 1);
 }, 'N/A');
 
+export const networkLabel = derived([chainId], ([$chainId]) => {
+	return CHAIN_DATA[$chainId] && CHAIN_DATA[$chainId].label;
+}, false);
+
 export const isTestnet = derived([chainId], ([$chainId]) => {
 	return $chainId == 4;
+}, false);
+
+export const isUnsupported = derived([chainId, selectedAddress], ([$chainId, $selectedAddress]) => {
+	return $selectedAddress && $chainId && !CHAIN_DATA[$chainId];
 }, false);

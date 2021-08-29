@@ -5,9 +5,10 @@ import { signer, selectedAddress } from './wallet'
 
 import { getUserStaked, getVault } from '../lib/methods'
 
+export const refreshSelectedVault = writable(0);
 export const refreshUserStaked = writable(0);
 
-export const selectedVault = derived([selectedBaseId], async ([$selectedBaseId], set) => {
+export const selectedVault = derived([selectedBaseId, refreshSelectedVault], async ([$selectedBaseId, $refreshSelectedVault], set) => {
 	if (!$selectedBaseId) {
 		set({});
 		return;

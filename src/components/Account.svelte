@@ -53,7 +53,6 @@
 		justify-content: space-between;
 		align-items: center;
 		color: var(--gray-light);
-		font-size: 80%;
 	}
 
 	:global(.transactions-list .description svg) {

@@ -1,5 +1,7 @@
 export const VERSION = '1';
 
+export const DEFAULT_CHAIN_ID = 4; // rinkeby
+
 export const PRICE_DECIMALS = 8;
 export const LEVERAGE_DECIMALS = 6;
 const INFURA_KEY = '8cccc478d2e54cb3bc3ec5524793f636';
@@ -42,7 +44,9 @@ export const ERC20_ABI = [
 
 export const PRODUCT_TO_ID = {
 	'ETH-USD': 1,
-	'BTC-USD': 2
+	'BTC-USD': 2,
+	'Gold': 3,
+	'EUR-USD': 4
 } 
 
 export const CHAIN_DATA = {
@@ -51,30 +55,26 @@ export const CHAIN_DATA = {
 		label: 'Localhost',
 		contracts: {
 			TRADING: {
-				address: '0x82e01223d51Eb87e16A03E24687EDF0F294da6f1',
+				address: '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d',
 				abi: TRADING_ABI
 			}
 		},
 		bases: {
 			1: {
 				symbol: 'USDC',
-				address: '0xCD8a1C3ba11CF5ECfa6267617243239504a98d90',
+				address: '0x5081a39b8A5f0E35a8D959395a630b68B74Dd30f',
 				decimals: 6,
 				precision: 2
 			}
 		},
 		products: {
 			1: 'ETH-USD',
-			2: 'BTC-USD'
+			2: 'BTC-USD',
+			3: 'Gold',
+			4: 'EUR-USD'
 		},
 		network: `http://localhost:8545`,
 		explorer: `http://localhost:8545`
-	},
-	'xx1': { // Ethereum mainnet
-		id: 1,
-		label: 'Mainnet',
-		network: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-		explorer: 'https://etherscan.io/'
 	},
 	4: {
 		id: 4,
@@ -99,6 +99,12 @@ export const CHAIN_DATA = {
 			1: 'ETH-USD',
 			2: 'BTC-USD'
 		}
+	},
+	'xx1': { // Ethereum mainnet
+		id: 1,
+		label: 'Mainnet',
+		network: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+		explorer: 'https://etherscan.io/'
 	},
 	'xx10': {
 		id: 10,

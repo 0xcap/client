@@ -25,7 +25,7 @@
 
 	.modal {
 		width: 460px;
-		max-height: 520px;
+		max-height: 620px;
 		border: 1px solid var(--gray-between);
 		border-radius: var(--base-radius);
 		background-color: rgb(25,25,25);
@@ -53,7 +53,7 @@
 
 	.modal-body {
 		overflow-y: scroll;
-		max-height: 454px;
+		max-height: 554px;
 	}
 
 </style>

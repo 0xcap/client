@@ -29,7 +29,7 @@
 
 	.product-list {
 		overflow-y: scroll;
-		max-height: 220px;
+		max-height: 420px;
 	}
 
 	.product-list a {
