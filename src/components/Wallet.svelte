@@ -60,8 +60,8 @@
 		margin-right: 6px;
 	}
 	:global(.wallet .has-pending svg) {
-		height: 26px;
-		margin-bottom: -3px;
+		height: 22px;
+		margin-bottom: -2px;
 	}
 
 	button, .button {

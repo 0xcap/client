@@ -13,6 +13,7 @@
 
 	import { contractsReady } from './stores/contracts'
 	import { activeModal } from './stores/modals'
+	import { refreshUserPositions } from './stores/positions'
 	import { component, loadRoute, navigateTo } from './stores/router'
 	import { selectedAddress, chainId } from './stores/wallet'
 
@@ -20,6 +21,11 @@
 		loadRoute(location.hash);
 		catchLinks((path) => navigateTo(path));
 		hidePopoversOnClick();
+		
+		// Refresh user positions periodically
+		setInterval(() => {
+			refreshUserPositions.update(n => n + 1);
+		}, 5000);
 	});
 
 	$: initEventListeners($selectedAddress, $chainId);
