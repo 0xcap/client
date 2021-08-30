@@ -42,6 +42,10 @@
 		submitIsPending = false;
 	}
 
+	async function _submitLucky() {
+		_submitOrder(Math.random() >= 0.5); // 1/2 chance of short/long
+	}
+
 	let amountIsFocused = false;
 
 	function checkFocus(address) {
@@ -164,6 +168,38 @@
 		background-color: var(--green-dark);
 	}
 
+	.button-lucky {
+		background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%);
+		border-radius: var(--base-radius);
+		padding: 2px;
+	}
+	.button-lucky:after {
+		content: attr(alt);
+		background-color: #191919;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #fff;
+		padding: 1rem;
+		border-radius: var(--base-radius);
+	}
+	.button-lucky:not(.disabled):hover {
+		animation: slidebg 1s linear infinite;
+	}
+	.button-lucky.disabled {
+		background-image: none;
+		background-color: var(--gray-dark);
+	}
+	.button-lucky.disabled:after {
+		background-color: var(--gray-dark);
+		color: var(--gray-light);
+	}
+	@keyframes slidebg {
+		to {
+			background-position: 512px;
+		}
+	}
+
 </style>
 
 <div class='new-order'>
@@ -212,5 +248,8 @@
 			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
 	</div>
+	{#if $selectedAddress && !$isUnsupported && $userBaseAllowance > 0}
+		<button class:disabled={submitIsPending} class='button-lucky' on:click={() => {_submitLucky()}} alt="I'm feeling lucky" />
+	{/if}
 
 </div>
