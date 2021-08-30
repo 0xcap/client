@@ -4,16 +4,16 @@
 
 	import { selectProduct } from '../lib/helpers'
 	import { LOGOS } from '../lib/logos'
-	import { requestFaucet, approveAllowance, submitOrder } from '../lib/methods'
-	import { formatToDisplay } from '../lib/utils'
+	import { requestFaucet, approveAllowance, submitOrder, getProduct } from '../lib/methods'
+	import { formatToDisplay, getCachedLeverage, randomInteger } from '../lib/utils'
 
 	import { selectedBase } from '../stores/bases'
 	import { showModal } from '../stores/modals'
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
-	import { selectedProductId, selectedProduct } from '../stores/products'
+	import { selectedProductId, selectedProduct, productList } from '../stores/products'
 	import { prices } from '../stores/prices'
 	import { showToast } from '../stores/toasts'
-	import { selectedAddress, userBaseAllowance, isTestnet, isUnsupported } from '../stores/wallet'
+	import { selectedAddress, userBaseAllowance, isTestnet, isUnsupported, userBaseBalance } from '../stores/wallet'
 
 	async function _requestFaucet() {
 		const error = await requestFaucet(null, $selectedAddress);
@@ -40,6 +40,13 @@
 			false
 		);
 		submitIsPending = false;
+	}
+	async function _submitLucky () {
+		$amount = $userBaseBalance;
+		$selectedProductId = $productList[randomInteger(0, $productList.length - 1)].id;
+		const product = await getProduct($selectedProductId)
+		$leverage = randomInteger(1, product.leverage)
+		_submitOrder(Math.random() >= 0.5) // 1/2 chance of short/long
 	}
 
 	let amountIsFocused = false;
@@ -164,6 +171,33 @@
 		background-color: var(--green-dark);
 	}
 
+	.button-lucky {
+		background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%);
+		border-radius: var(--base-radius);
+		padding: 2px;
+	}
+	.button-lucky:after {
+		content: attr(alt);
+		background-color: #191919;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: white;
+		padding: 1rem;
+		border-radius: var(--base-radius);
+	}
+	.button-lucky:hover:after {
+		color: gray;
+	}
+	.button-lucky:hover {
+		animation: slidebg 1s linear infinite;
+	}
+	@keyframes slidebg {
+		to {
+			background-position: 512px;
+		}
+	}
+
 </style>
 
 <div class='new-order'>
@@ -212,5 +246,8 @@
 			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
 	</div>
+	{#if $selectedAddress && !$isUnsupported && $userBaseAllowance >= $userBaseBalance}
+		<button class:disabled={submitIsPending} class='button-lucky' on:click={() => {_submitLucky()}} alt="I'm feeling lucky" />
+	{/if}
 
 </div>
