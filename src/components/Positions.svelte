@@ -19,8 +19,8 @@
 		totalUPL = 0;
 		for (const position of $positions) {
 			const upl = await getUPL(position);
-			upls[position.id] = upl * 1;
-			upls_percent[position.id] = (100 * upl * 1 / position.margin);
+			upls[position.positionId] = upl * 1;
+			upls_percent[position.positionId] = (100 * upl * 1 / position.margin);
 			totalUPL += upl * 1;
 		}
 		totalUPL = totalUPL.toFixed(4);
@@ -229,12 +229,12 @@
 					</div>
 
 					<div class='tools'>
-						<div class={`upl-wrap ${upls[position.id] * 1 > 0 ? 'pos' : 'neg'}`}>
+						<div class={`upl-wrap ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
 							<div class='upl'>
-								{formatPnl(upls[position.id])}
+								{formatPnl(upls[position.positionId])}
 							</div>
 							<div class='upl-percent'>
-								{formatPnl(upls_percent[position.id], true)}%
+								{formatPnl(upls_percent[position.positionId], true)}%
 							</div>
 						</div>
 						<a class='add-margin' on:click={() => {showModal('AddMargin', position)}} data-intercept="true">

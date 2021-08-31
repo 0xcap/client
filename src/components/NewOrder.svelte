@@ -224,8 +224,8 @@
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
 			<div class='sub-label'>
-				Available: {formatToDisplay($buyingPower)} {$selectedBase.symbol} 
-				{#if isTestnet && $buyingPower*1 < 1000 && !$isUnsupported && $selectedAddress}
+				Available: {formatToDisplay($buyingPower)} {$selectedBase.symbol}{#if $isTestnet}(Mock){/if} 
+				{#if $isTestnet && $buyingPower*1 < 1000 && !$isUnsupported && $selectedAddress}
 					<a on:click={_requestFaucet}>(Faucet)</a>
 				{:else if $selectedAddress}
 					<a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a>
