@@ -12,8 +12,8 @@ const TRADING_ABI = [
 	"function getLatestPrice(uint16 productId) view returns(uint256)",
 	"function getVault(uint8 vaultId) view returns(tuple(address base, uint256 cap, uint256 maxOpenInterest, uint256 maxDailyDrawdown, uint256 stakingPeriod, uint256 redemptionPeriod, uint256 protocolFee, uint256 openInterest, uint256 balance, uint256 totalStaked, bool isActive))",
 	"function getProduct(uint16 productId) view returns(tuple(uint256 leverage, uint256 fee, uint256 interest, address feed, uint256 settlementTime, uint256 minTradeDuration, uint256 liquidationThreshold, uint256 liquidationBounty, bool isActive) product)",
-	"function getPosition(uint256 positionId) view returns(tuple(uint8 vaultId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationPrice, uint256 id) position)",
-	"function getUserPositions(address user, uint8 vaultId) view returns(tuple(uint8 vaultId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 id)[] _positions)",
+	"function getPosition(uint256 positionId) view returns(tuple(uint8 vaultId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationPrice, uint256 positionId) position)",
+	"function getUserPositions(address user, uint8 vaultId) view returns(tuple(uint8 vaultId, uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 positionId)[] _positions)",
 	"function getUserStaked(address user, uint8 vaultId) view returns(uint256)",
 
 	"function stake(uint8 vaultId, uint256 amount)",
@@ -22,11 +22,11 @@ const TRADING_ABI = [
 
 	"event Staked(address indexed from, uint8 indexed vaultId, uint256 amount)",
 	"event Redeemed(address indexed to, uint8 indexed vaultId, uint256 amount)",
-	"event NewPosition(uint256 id, address indexed user, uint8 indexed vaultId, uint16 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
-	"event AddMargin(uint256 id, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
-	"event ClosePosition(uint256 id, address indexed user, uint8 indexed vaultId, uint16 indexed productId, uint256 price, uint256 margin, uint256 leverage, int256 pnl, uint256 feeRebate, uint256 protocolFee, bool wasLiquidated)",
-	"event NewPositionSettled(uint256 id, address indexed user, uint256 price)",
-	"event PositionLiquidated(uint256 id, address indexed by, uint256 vaultReward, uint256 liquidatorReward)"
+	"event NewPosition(uint256 positionId, address indexed user, uint8 indexed vaultId, uint16 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
+	"event AddMargin(uint256 positionId, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
+	"event ClosePosition(uint256 positionId, address indexed user, uint8 indexed vaultId, uint16 indexed productId, uint256 price, uint256 margin, uint256 leverage, int256 pnl, uint256 feeRebate, uint256 protocolFee, bool wasLiquidated)",
+	"event NewPositionSettled(uint256 positionId, address indexed user, uint256 price)",
+	"event PositionLiquidated(uint256 positionId, address indexed by, uint256 vaultReward, uint256 liquidatorReward)"
 ];
 
 export const ERC20_ABI = [
@@ -55,14 +55,14 @@ export const CHAIN_DATA = {
 		label: 'Localhost',
 		contracts: {
 			TRADING: {
-				address: '0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25',
+				address: '0x7969c5eD335650692Bc04293B07F5BF2e7A673C0',
 				abi: TRADING_ABI
 			}
 		},
 		bases: {
 			1: {
 				symbol: 'USDC',
-				address: '0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B',
+				address: '0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3',
 				decimals: 6,
 				precision: 2
 			}
@@ -100,7 +100,33 @@ export const CHAIN_DATA = {
 			2: 'BTC-USD',
 			3: 'Gold',
 			4: 'EUR-USD'
-		}
+		},
+		testnet: true
+	},
+	421611: { // Arbitrum rinkeby
+		id: 4,
+		label: 'Arbitrum Rinkeby',
+		network: `https://rinkeby.arbitrum.io/rpc`,
+		explorer: 'https://rinkeby-explorer.arbitrum.io/#/',
+		contracts: {
+			TRADING: {
+				address: '0xEde8C3f9fb1d7F0C63Eb284547c35a45c8D7632c',
+				abi: TRADING_ABI
+			}
+		},
+		bases: {
+			1: {
+				symbol: 'USDC',
+				address: '0x0A1A33aEb6d69966973a568653b6465642E4aD59',
+				decimals: 6,
+				precision: 2
+			}
+		},
+		products: {
+			1: 'ETH-USD',
+			2: 'BTC-USD'
+		},
+		testnet: true
 	},
 	'xx1': { // Ethereum mainnet
 		id: 1,

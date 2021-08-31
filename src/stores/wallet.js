@@ -41,7 +41,7 @@ export const networkLabel = derived([chainId], ([$chainId]) => {
 }, false);
 
 export const isTestnet = derived([chainId], ([$chainId]) => {
-	return $chainId == 4;
+	return CHAIN_DATA[$chainId] && CHAIN_DATA[$chainId].testnet;
 }, false);
 
 export const isUnsupported = derived([chainId, selectedAddress], ([$chainId, $selectedAddress]) => {

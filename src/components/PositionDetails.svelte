@@ -23,7 +23,7 @@
 	$: rows = [
 		{
 			label: 'ID',
-			value: data.id
+			value: data.positionId
 		},
 		{
 			label: 'Vault',

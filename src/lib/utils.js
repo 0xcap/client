@@ -61,7 +61,7 @@ export function formatPositions(positions, baseId) {
 	let formattedPositions = [];
 	for (const p of positions) {
 		formattedPositions.push({
-			id: p.id.toNumber(),
+			positionId: p.positionId && p.positionId.toNumber(),
 			base: base.symbol,
 			product: get(products)[p.productId],
 			timestamp: p.timestamp.toNumber(),
@@ -119,14 +119,14 @@ export function formatEvent(ev) {
 
 	if (ev.event == 'ClosePosition') {
 
-		const { id, user, vaultId, productId, price, margin, leverage, pnl, feeRebate, protocolFee, wasLiquidated } = ev.args;
+		const { positionId, user, vaultId, productId, price, margin, leverage, pnl, feeRebate, protocolFee, wasLiquidated } = ev.args;
 
 		const base = get(bases)[vaultId];
 		if (!base) return;
 
 		return {
 			type: 'ClosePosition',
-			id: id.toNumber(),
+			positionId: positionId && positionId.toNumber(),
 			base: base.symbol,
 			product: get(products)[productId],
 			price: formatUnits(price, PRICE_DECIMALS),

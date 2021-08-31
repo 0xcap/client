@@ -51,7 +51,7 @@
 			!data.isLong,
 			marginToSubmit,
 			1,
-			data.id,
+			data.positionId,
 			false,
 			true
 		);
