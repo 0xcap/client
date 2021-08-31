@@ -128,6 +128,32 @@ export const CHAIN_DATA = {
 		},
 		testnet: true
 	},
+	42161: {
+		id: 42161,
+		label: 'Arbitrum',
+		network: `https://arb1.arbitrum.io/rpc`,
+		explorer: 'https://arbiscan.io/',
+		contracts: {
+			TRADING: {
+				address: '0x5F2fFc7883BD12604e0adf0403f9436D40386Ef4',
+				abi: TRADING_ABI
+			}
+		},
+		bases: {
+			1: {
+				symbol: 'USDC',
+				address: '0xBbfacB66a6F3a73930a8b5483B37b05Be25Bf7fd',
+				decimals: 6,
+				precision: 2
+			}
+		},
+		products: {
+			1: 'ETH-USD',
+			2: 'BTC-USD',
+			4: 'EUR-USD'
+		},
+		testnet: true
+	},
 	'xx1': { // Ethereum mainnet
 		id: 1,
 		label: 'Mainnet',
@@ -138,10 +164,5 @@ export const CHAIN_DATA = {
 		id: 10,
 		label: 'Optimism',
 		network: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
-	},
-	'xx42161': {
-		id: 42161,
-		label: 'Arbitrum',
-		network: `https://arb1.arbitrum.io/rpc`,
 	}
 }
