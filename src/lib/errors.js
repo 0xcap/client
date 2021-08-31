@@ -5,6 +5,7 @@ const ERROR_STRINGS = {
 	'User denied': null,
 	'exceeds balance': "You don't have enough funds in your wallet.",
 	'exceeds allowance': "Please approve enough allowance to complete this transfer.",
+	'gas': "Not enough gas. Try adjusting the gas price or gas limit.",
 	'!cap': 'Stake exceeds vault cap.',
 	'!redemption': "Can't redeem outside redemption period.",
 	'!redeem-amount': "Amount to redeem is higher than stake.",
