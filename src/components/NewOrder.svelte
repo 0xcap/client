@@ -241,7 +241,7 @@
 		{#if !$selectedAddress}
 			<button class='disabled'>Connect a wallet</button>
 		{:else if $isUnsupported}
-			<button class='disabled'>Switch to Rinkeby/Arbitrum to trade</button>
+			<button class='disabled'>Switch to Arbitrum or Rinkeby to trade</button>
 		{:else if $userBaseAllowance == 0}
 			<button class:disabled={approveIsPending} class='button-default' on:click={_approveAllowance}>Approve {$selectedBase.symbol}</button>
 		{:else}
