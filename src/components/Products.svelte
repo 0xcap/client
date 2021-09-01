@@ -102,7 +102,7 @@
 
 </style>
 
-<Modal title='Products'>
+<Modal title='Products' doneButton={true}>
 
 	<div class='product-list no-scrollbar'>
 

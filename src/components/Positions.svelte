@@ -160,6 +160,7 @@
 	.upl-percent {
 		margin-top: 10px;
 		font-size: 80%;
+		display: none;
 	}
 
 	.pos {

@@ -5,6 +5,7 @@
 	import { hideModal } from '../stores/modals'
 
 	export let title;
+	export let doneButton = false;
 
 </script>
 
@@ -39,9 +40,24 @@
 		padding: var(--base-padding);
 		border-bottom: 1px solid var(--gray-dark);
 	}
+	.modal-header.flatter {
+		padding: 16px var(--base-padding);
+	}
 
 	.modal-close {
 		cursor: pointer;
+	}
+
+	.done-button {
+		background-color: var(--blue);
+		color: var(--gray-darkest);
+		padding: 8px 16px;
+		border-radius: 12px;
+		font-weight: 700;
+		cursor: pointer;
+	}
+	.done-button:hover {
+		background-color: var(--blue-dark);
 	}
 
 	:global(.modal-close svg) {
@@ -62,9 +78,13 @@
 
 	<div class='modal' data-intercept="true">
 
-		<div class='modal-header'>
+		<div class:flatter={doneButton} class='modal-header'>
 			<div class='modal-title'>{title}</div>
+			{#if doneButton}
+			<a class='done-button' on:click={hideModal}>Done</a>
+			{:else}
 			<span class='modal-close' on:click={hideModal}>{@html CANCEL_ICON}</span>
+			{/if}
 		</div>
 
 		<div class='modal-body no-scrollbar'>

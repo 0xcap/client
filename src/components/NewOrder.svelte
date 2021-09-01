@@ -71,7 +71,7 @@
 		padding: 12px;
 		background-color: var(--black-almost);
 		border-radius: var(--base-radius);
-		box-shadow: rgba(0,200,5,0.1) 0px 12px 28px 0;
+		box-shadow: rgba(0,200,5,0.05) 0px 5px 18px 0;
 	}
 
 	.input-row {
@@ -241,7 +241,7 @@
 		{#if !$selectedAddress}
 			<button class='disabled'>Connect a wallet</button>
 		{:else if $isUnsupported}
-			<button class='disabled'>Switch to Rinkeby to trade</button>
+			<button class='disabled'>Switch to Arbitrum or Rinkeby to trade</button>
 		{:else if $userBaseAllowance == 0}
 			<button class:disabled={approveIsPending} class='button-default' on:click={_approveAllowance}>Approve {$selectedBase.symbol}</button>
 		{:else}
