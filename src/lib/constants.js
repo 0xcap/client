@@ -80,7 +80,7 @@ export const CHAIN_DATA = {
 		id: 4,
 		label: 'Rinkeby',
 		network: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-		explorer: 'https://rinkeby.etherscan.io/',
+		explorer: 'https://rinkeby.etherscan.io',
 		contracts: {
 			TRADING: {
 				address: '0xEde8C3f9fb1d7F0C63Eb284547c35a45c8D7632c',
@@ -107,7 +107,7 @@ export const CHAIN_DATA = {
 		id: 4,
 		label: 'Arbitrum Rinkeby',
 		network: `https://rinkeby.arbitrum.io/rpc`,
-		explorer: 'https://rinkeby-explorer.arbitrum.io/#/',
+		explorer: 'https://rinkeby-explorer.arbitrum.io/#',
 		contracts: {
 			TRADING: {
 				address: '0xEde8C3f9fb1d7F0C63Eb284547c35a45c8D7632c',
@@ -132,7 +132,7 @@ export const CHAIN_DATA = {
 		id: 42161,
 		label: 'Arbitrum',
 		network: `https://arb1.arbitrum.io/rpc`,
-		explorer: 'https://arbiscan.io/',
+		explorer: 'https://arbiscan.io',
 		contracts: {
 			TRADING: {
 				address: '0x5F2fFc7883BD12604e0adf0403f9436D40386Ef4',
@@ -158,7 +158,7 @@ export const CHAIN_DATA = {
 		id: 1,
 		label: 'Mainnet',
 		network: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-		explorer: 'https://etherscan.io/'
+		explorer: 'https://etherscan.io'
 	},
 	'xx10': {
 		id: 10,

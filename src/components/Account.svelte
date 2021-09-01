@@ -53,6 +53,7 @@
 		justify-content: space-between;
 		align-items: center;
 		color: var(--gray-light);
+		padding: 2px 0;
 	}
 
 	:global(.transactions-list .description svg) {
@@ -64,7 +65,6 @@
 	:global(.transactions-list .link svg) {
 		fill: var(--blue);
 		height: 12px;
-		margin-bottom: -3px;
 	}
 
 </style>
