@@ -2,42 +2,28 @@
 
 	import { onMount } from 'svelte'
 
+	import { BASE_SYMBOL } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
 	import { LOGOS } from '../lib/logos'
-	import { requestFaucet, approveAllowance, submitOrder } from '../lib/methods'
+	import { openPosition } from '../lib/methods'
 	import { formatToDisplay } from '../lib/utils'
 
-	import { selectedBase } from '../stores/bases'
 	import { showModal } from '../stores/modals'
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
 	import { selectedProductId, selectedProduct } from '../stores/products'
 	import { prices } from '../stores/prices'
 	import { showToast } from '../stores/toasts'
-	import { selectedAddress, userBaseAllowance, isTestnet, isUnsupported } from '../stores/wallet'
-
-	async function _requestFaucet() {
-		const error = await requestFaucet(null, $selectedAddress);
-	}
-
-	let approveIsPending = false;
-	async function _approveAllowance() {
-		approveIsPending = true;
-		const error = await approveAllowance();
-		if (error) approveIsPending = false;
-	}
+	import { selectedAddress, isTestnet, isUnsupported } from '../stores/wallet'
 
 	let submitIsPending = false;
 	async function _submitOrder(isLong) {
 		if (!$amount) return showToast('Amount is required.');
 		submitIsPending = true;
-		const error = await submitOrder(
-			null,
+		const error = await openPosition(
 			$selectedProductId,
 			isLong,
-			$margin * 1,
 			$leverage * 1,
-			0,
-			false
+			$margin * 1
 		);
 		submitIsPending = false;
 	}
@@ -224,10 +210,8 @@
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
 			<div class='sub-label'>
-				Available: {formatToDisplay($buyingPower)} {$selectedBase.symbol}{#if $isTestnet}(Mock){/if} 
-				{#if $isTestnet && $buyingPower*1 < 1000 && !$isUnsupported && $selectedAddress}
-					<a on:click={_requestFaucet}>(Faucet)</a>
-				{:else if $selectedAddress}
+				Available: {formatToDisplay($buyingPower)} {BASE_SYMBOL}
+				{#if $selectedAddress}
 					<a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a>
 				{/if}
 			</div>
@@ -242,13 +226,11 @@
 			<button class='disabled'>Connect a wallet</button>
 		{:else if $isUnsupported}
 			<button class='disabled'>Switch to Arbitrum or Rinkeby to trade</button>
-		{:else if $userBaseAllowance == 0}
-			<button class:disabled={approveIsPending} class='button-default' on:click={_approveAllowance}>Approve {$selectedBase.symbol}</button>
 		{:else}
 			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
 	</div>
-	{#if $selectedAddress && !$isUnsupported && $userBaseAllowance > 0}
+	{#if $selectedAddress && !$isUnsupported}
 		<button class:disabled={submitIsPending} class='button-lucky' on:click={() => {_submitLucky()}} alt="I'm feeling lucky" />
 	{/if}
 

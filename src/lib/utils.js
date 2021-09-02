@@ -1,10 +1,9 @@
 import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 
-import { CHAIN_DATA, LEVERAGE_DECIMALS, PRICE_DECIMALS } from './constants'
+import { CHAIN_DATA, LEVERAGE_DECIMALS, PRICE_DECIMALS, BASE_SYMBOL } from './constants'
 import { activateProductPrices } from './helpers'
 
-import { bases, selectedBaseId } from '../stores/bases'
 import { hideMenu } from '../stores/menu'
 import { hideModal } from '../stores/modals'
 import { products, selectedProductId } from '../stores/products'
@@ -13,14 +12,12 @@ import { chainId } from '../stores/wallet'
 
 
 export function formatUnits(number, units) {
-  if (!units) units = 6; // usdc
-  return ethers.utils.formatUnits(number || 0, units);
+  return ethers.utils.formatUnits(number || 0, units || 18);
 }
 
 export function parseUnits(number, units) {
-  if (!units) units = 6; // usdc
   if (typeof(number) == 'number') number = number.toString();
-  return ethers.utils.parseUnits(number, units);
+  return ethers.utils.parseUnits(number, units || 18);
 }
 
 export function intify(number) {
@@ -36,14 +33,15 @@ export function shortAddr(_address) {
 export function formatToDisplay(amount, precision) {
 	if (isNaN(amount)) return 0;
 	if (precision) return (amount * 1).toFixed(precision);
+	if ((amount * 1).toFixed(6)*1 == Math.round(amount * 1)) return Math.round(amount);
 	if (amount * 1 >= 1000 || amount * 1 <= -1000) {
 		return Math.round(amount*1).toLocaleString();
 	} else if (amount * 1 >= 100 || amount * 1 <= -100) {
 		return (amount * 1).toFixed(2);
 	} else if (amount * 1 >= 10 || amount * 1 <= -10) {
-		return (amount * 1).toFixed(4);
+		return (amount * 1).toFixed(3);
 	} else {
-		return (amount * 1).toFixed(6);
+		return (amount * 1).toFixed(4);
 	}
 }
 
@@ -56,24 +54,20 @@ export function formatPnl(pnl, isPercent) {
 	return string;
 }
 
-export function formatPositions(positions, baseId) {
-	const base = get(bases)[baseId];
+export function formatPositions(positions) {
 	let formattedPositions = [];
 	for (const p of positions) {
 		formattedPositions.push({
 			positionId: p.positionId && p.positionId.toNumber(),
-			base: base.symbol,
 			product: get(products)[p.productId],
 			timestamp: p.timestamp.toNumber(),
 			isLong: p.isLong,
 			isSettling: p.isSettling,
-			margin: formatUnits(p.margin, base.decimals),
-			leverage: formatUnits(p.leverage, LEVERAGE_DECIMALS),
-			amount: formatUnits(p.margin, base.decimals) * formatUnits(p.leverage, LEVERAGE_DECIMALS),
+			margin: formatUnits(p.margin),
+			leverage: formatUnits(p.leverage),
+			amount: formatUnits(p.margin) * formatUnits(p.leverage),
 			price: formatUnits(p.price, PRICE_DECIMALS),
-			liquidationPrice: formatUnits(p.liquidationPrice, PRICE_DECIMALS),
-			productId: p.productId,
-			baseId: baseId
+			productId: p.productId
 		});
 		activateProductPrices(p.productId);
 	}
@@ -81,12 +75,9 @@ export function formatPositions(positions, baseId) {
 	return formattedPositions;
 }
 
-export function formatVault(v, baseId) {
-	const base = get(bases)[baseId];
-	if (!base) return;
+export function formatVault(v) {
 	return {
-		id: baseId,
-		symbol: base.symbol,
+		symbol: BASE_SYMBOL,
 		cap: formatUnits(v.cap),
 		maxOpenInterest: formatUnits(v.maxOpenInterest),
 		maxDailyDrawdown: formatUnits(v.maxDailyDrawdown, 2),
@@ -95,7 +86,7 @@ export function formatVault(v, baseId) {
 		protocolFee: formatUnits(v.protocolFee,2),
 		openInterest: formatUnits(v.openInterest),
 		balance: formatUnits(v.balance),
-		totalStaked: formatUnits(v.totalStaked),
+		staked: formatUnits(v.staked),
 		isActive: v.isActive
 	}
 }
@@ -119,28 +110,22 @@ export function formatEvent(ev) {
 
 	if (ev.event == 'ClosePosition') {
 
-		const { positionId, user, vaultId, productId, price, margin, leverage, pnl, feeRebate, protocolFee, wasLiquidated } = ev.args;
-
-		const base = get(bases)[vaultId];
-		if (!base) return;
+		const { positionId, user, productId, price, margin, leverage, pnl, protocolFee, wasLiquidated } = ev.args;
 
 		return {
 			type: 'ClosePosition',
 			positionId: positionId && positionId.toNumber(),
-			base: base.symbol,
 			product: get(products)[productId],
 			price: formatUnits(price, PRICE_DECIMALS),
-			margin: formatUnits(margin, base.decimals),
-			leverage: formatUnits(leverage, LEVERAGE_DECIMALS),
-			amount: formatUnits(margin, base.decimals) * formatUnits(leverage, LEVERAGE_DECIMALS),
-			pnl: formatUnits(pnl, base.decimals),
-			feeRebate: formatUnits(feeRebate, base.decimals),
-			protocolFee: formatUnits(protocolFee, base.decimals),
+			margin: formatUnits(margin),
+			leverage: formatUnits(leverage),
+			amount: formatUnits(margin) * formatUnits(leverage),
+			pnl: formatUnits(pnl),
+			protocolFee: formatUnits(protocolFee),
 			wasLiquidated,
 			txHash: ev.transactionHash,
 			block: ev.blockNumber,
-			productId: productId,
-			vaultId: vaultId
+			productId: productId
 		};
 
 	}

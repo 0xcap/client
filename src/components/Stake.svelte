@@ -15,7 +15,7 @@
 	let submitIsPending = false;
 	async function _stake() {
 		submitIsPending = true;
-		const error = await stake(null, amount);
+		const error = await stake(amount);
 		submitIsPending = false;
 	}
 

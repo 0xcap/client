@@ -1,19 +1,17 @@
 import { get } from 'svelte/store'
 import { getProduct } from './methods'
-import { contracts } from '../stores/contracts'
+import { contract } from '../stores/contracts'
 import { activeProducts } from '../stores/prices'
 import { selectedProductId, products } from '../stores/products'
 import { signer } from '../stores/wallet'
 
-export function getContract(name, withSigner) {
-  if (!name) name = 'TRADING';
-  if (withSigner) return get(contracts)[name].connect(get(signer));
-  return get(contracts)[name];
+export function getContract(withSigner) {
+  if (withSigner) return get(contract).connect(get(signer));
+  return get(contract);
 }
 
 export function getContractAddress(name) {
-  if (!name) name = 'TRADING';
-  return get(contracts)[name].address;
+  return get(contract).address;
 }
 
 export function selectProduct(productId) {

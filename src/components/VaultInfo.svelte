@@ -1,10 +1,10 @@
 <script>
 
-	import { LOGOS_BASE } from '../lib/logos'
+	import { BASE_SYMBOL } from '../lib/constants'
+	import { LOGOS } from '../lib/logos'
 	import { formatToDisplay } from '../lib/utils'
 
 	import { selectedVault, userStaked } from '../stores/vault'
-	import { selectedBaseId, selectedBase } from '../stores/bases'
 	import { showModal } from '../stores/modals'
 
 </script>
@@ -84,24 +84,24 @@
 <div class='vault'>
 
 	<div class='title'>
-		<img src={LOGOS_BASE[$selectedBaseId]} alt={`${$selectedBase.symbol} logo`}>
-		<span>Vault ({$selectedBase.symbol})</span>
+		<img src={LOGOS[1]} alt={`${BASE_SYMBOL} logo`}>
+		<span>Vault ({BASE_SYMBOL})</span>
 	</div>
 
-	<div class='description'>This vault backs trader profits while receiving losses, fees, and interest, in {$selectedBase.symbol}.</div>
+	<div class='description'>This vault backs trader profits while receiving losses, fees, and interest, in {BASE_SYMBOL}.</div>
 
 	<div class='balance'>
 		<div class='balance-label'>Balance</div>
-		<div class='balance-value'>{$selectedVault.balance || 0}</div>
+		<div class='balance-value'>{formatToDisplay($selectedVault.balance || 0)}</div>
 	</div>
 
 	<div class='details'>
 		<div class='row'>
 			<div class='label'>Total Staked</div>
-			<div class='value'>{formatToDisplay($selectedVault.totalStaked) || 0} ({formatToDisplay($selectedVault.totalStaked*100/$selectedVault.cap || 0, 2)}%)</div>
+			<div class='value'>{formatToDisplay($selectedVault.staked) || 0} ({formatToDisplay($selectedVault.staked*100/$selectedVault.cap || 0, 2)}%)</div>
 		</div>
 		<div class='stake-meter'>
-			<div class='stake-progress' style={`width: ${$selectedVault.totalStaked*100/$selectedVault.cap || 0}%`}></div>
+			<div class='stake-progress' style={`width: ${$selectedVault.staked*100/$selectedVault.cap || 0}%`}></div>
 		</div>
 		<div class='row'>
 			<div class='label'>Max Stake Capacity</div>
@@ -122,12 +122,12 @@
 
 		<div class='row sep'>
 			<div class='label'>My Stake <a on:click={() => {showModal('Stake')}} data-intercept="true">(Stake)</a></div>
-			<div class='value'>{formatToDisplay($userStaked)} ({formatToDisplay($userStaked*100/($selectedVault.totalStaked || "N/A"), 4) || 0}%)</div>
+			<div class='value'>{formatToDisplay($userStaked)} ({formatToDisplay($userStaked*100/($selectedVault.staked || "N/A"), 4) || 0}%)</div>
 		</div>
 
 		<div class='row'>
 			<div class='label'>My Balance <a on:click={() => {showModal('Redeem')}} data-intercept="true">(Redeem)</a></div>
-			<div class='value'>~{formatToDisplay($selectedVault.balance * $userStaked/$selectedVault.totalStaked || 0)}</div>
+			<div class='value'>~{formatToDisplay($selectedVault.balance * $userStaked/$selectedVault.staked || 0)}</div>
 		</div>
 
 	</div>

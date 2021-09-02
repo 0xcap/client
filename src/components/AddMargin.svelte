@@ -2,7 +2,7 @@
 
 	import { PRICE_DECIMALS } from '../lib/constants'
 	import { calculateLiquidationPrice } from '../lib/helpers'
-	import { submitOrder } from '../lib/methods'
+	import { addMargin } from '../lib/methods'
 	import { formatToDisplay, intify } from '../lib/utils'
 	
 	import Modal from './Modal.svelte'
@@ -40,15 +40,10 @@
 	let submitIsPending = false;
 	async function _submitOrder() {
 		submitIsPending = true;
-		const error = await submitOrder(
-			data.baseId,
-			data.productId,
-			data.isLong,
-			margin,
-			1,
+		const error = await addMargin(
 			data.positionId,
-			false,
-			false
+			margin,
+			data.productId
 		);
 		submitIsPending = false;
 	}

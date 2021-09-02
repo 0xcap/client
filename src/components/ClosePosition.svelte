@@ -1,6 +1,6 @@
 <script>
 
-	import { submitOrder } from '../lib/methods'
+	import { closePosition } from '../lib/methods'
 	import { formatToDisplay, intify } from '../lib/utils'
 
 	import Modal from './Modal.svelte'
@@ -45,15 +45,11 @@
 			marginToSubmit = (amount*1)/(data.leverage*1);
 		}
 		submitIsPending = true;
-		await submitOrder(
-			data.baseId,
-			data.productId,
-			!data.isLong,
-			marginToSubmit,
-			1,
+		await closePosition(
 			data.positionId,
+			marginToSubmit,
 			false,
-			true
+			data.productId
 		);
 		submitIsPending = false;
 	}

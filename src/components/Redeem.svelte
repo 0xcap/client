@@ -15,7 +15,7 @@
 	let submitIsPending = false;
 	async function _redeem() {
 		submitIsPending = true;
-		const error = await redeem(null, amount);
+		const error = await redeem(amount);
 		submitIsPending = false;
 	}
 

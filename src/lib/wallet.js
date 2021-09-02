@@ -16,6 +16,7 @@ function handleChainSwitch(_chainId, _provider) {
 		if (get(signer)) showToast('Network not supported.');
 		// Use read only provider, not connected one because it's on the wrong chain
 		_provider = new ethers.providers.JsonRpcProvider(CHAIN_DATA[DEFAULT_CHAIN_ID].network);
+		provider.set(_provider);
 	}
 
 	if (get(chainId) != _chainId) {

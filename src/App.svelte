@@ -11,7 +11,7 @@
 	import { initEventListeners } from './lib/events'
 	import { catchLinks, hidePopoversOnClick } from './lib/utils'
 
-	import { contractsReady } from './stores/contracts'
+	import { contractReady } from './stores/contracts'
 	import { activeModal } from './stores/modals'
 	import { refreshUserPositions } from './stores/positions'
 	import { component, loadRoute, navigateTo } from './stores/router'
@@ -165,7 +165,7 @@
 	<div class='radial-gradient'></div>
 	<Header />
 	<div class='nav'><Nav /></div>
-	{#if $contractsReady}
+	{#if $contractReady}
 	<main>
 		<svelte:component this={$component}/>
 	</main>

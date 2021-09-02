@@ -4,7 +4,7 @@ import { getContract } from './helpers'
 
 import { refreshUserStaked, refreshSelectedVault } from '../stores/vault'
 import { refreshUserPositions } from '../stores/positions'
-import { refreshUserBaseAllowance, refreshUserBaseBalance, userBaseAllowance } from '../stores/wallet'
+import { refreshUserBaseBalance, userBaseAllowance } from '../stores/wallet'
 import { refreshUserHistory } from '../stores/history'
 import { showToast } from '../stores/toasts'
 
@@ -45,17 +45,6 @@ function handleEvent() {
 		if (acceptToasts) showToast('Redeemed.', 'success');
 	}
 
-	if (ev.event == 'Approval') { // ERC20. Is sent on transferFrom
-		completeTransaction(ev.transactionHash);
-		refreshUserBaseAllowance.update(n => n + 1);
-		if (acceptToasts && !get(userBaseAllowance)) showToast('Approved.', 'success');
-	}
-
-	if (ev.event == 'Transfer') { // ERC20
-		completeTransaction(ev.transactionHash);
-		refreshUserBaseBalance.update(n => n + 1);
-	}
-
 	if (ev.event == 'AddMargin') {
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
@@ -88,14 +77,7 @@ export function initEventListeners(address, chainId) {
 	tradingContract.on(tradingContract.filters.NewPositionSettled(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.AddMargin(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.ClosePosition(null, address), handleEvent);
-	// todo: other event listeners
 
-	const USDCContract = getContract('USDC');
-	if (!USDCContract) return;
-	USDCContract.removeAllListeners();
-	USDCContract.on(USDCContract.filters.Approval(address, tradingContract.address), handleEvent);
-	USDCContract.on(USDCContract.filters.Transfer(address, null), handleEvent);
-	USDCContract.on(USDCContract.filters.Transfer(null, address), handleEvent);
 }
 
 

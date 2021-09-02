@@ -2,12 +2,11 @@
 
 	import { onMount } from 'svelte'
 
-	import { CHAIN_DATA } from '../lib/constants'
+	import { CHAIN_DATA, BASE_SYMBOL } from '../lib/constants'
 	import { SPINNER_ICON, MENU_ICON } from '../lib/icons'
 	import { initWallet, connectWallet } from '../lib/wallet'
 	import { formatToDisplay, shortAddr } from '../lib/utils'
 
-	import { selectedBase } from '../stores/bases'
 	import { toggleMenu, menuVisible } from '../stores/menu'
 	import { showModal } from '../stores/modals'
 	import { hasPending, checkPendingTransactions } from '../stores/transactions'
@@ -124,7 +123,7 @@
 
 	{#if $selectedAddress}
 		<div class='balance'>
-			{formatToDisplay($userBaseBalance)} {$selectedBase.symbol}
+			{formatToDisplay($userBaseBalance)} {BASE_SYMBOL}
 		</div>
 		<div class='clickable-item address-wrap' on:click={() => {showModal('Account')}} data-intercept="true">
 			{#if $hasPending}<div class='has-pending'>{@html SPINNER_ICON}</div>{/if}
