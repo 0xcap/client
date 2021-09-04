@@ -7,7 +7,7 @@
 	import { initWallet, connectWallet } from '../lib/wallet'
 	import { formatToDisplay, shortAddr } from '../lib/utils'
 
-	import { toggleMenu, menuVisible } from '../stores/menu'
+	import { toggleMenu, menuVisible, hideMenu } from '../stores/menu'
 	import { showModal } from '../stores/modals'
 	import { hasPending, checkPendingTransactions } from '../stores/transactions'
 	import { selectedAddress, chainId, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
@@ -47,7 +47,8 @@
 		border-radius: var(--base-radius);
 		cursor: pointer;
 		background-color: var(--black-almost);
-		padding: 8px 12px;
+		padding: 0 12px;
+		height: 36px;
 		border: 1px solid transparent;
 	}
 	.clickable-item:hover, .clickable-item.selected {
@@ -59,8 +60,8 @@
 		margin-right: 6px;
 	}
 	:global(.wallet .has-pending svg) {
-		height: 22px;
-		margin-bottom: -2px;
+		height: 24px;
+		margin-bottom: -3px;
 	}
 
 	button, .button {
@@ -137,11 +138,12 @@
 		<div class:selected={$menuVisible} class='clickable-item menu-icon' on:click={toggleMenu} data-intercept="true">{@html MENU_ICON}</div>
 		{#if $menuVisible}
 			<div class='menu'>
-				<a href='https://t.me/capfin' target="_blank">Telegram</a>
-				<a href='https://twitter.com/CapDotFinance' target="_blank">Twitter</a>
-				<a href='https://blog.cap.finance' target="_blank">Blog</a>
-				<a href='https://github.com/0xcap' target="_blank">Github</a>
-				<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x43044f861ec040db59a7e324c40507addb673142' target="_blank">Buy CAP</a>	
+				<a href='https://t.me/capfin' target="_blank" on:click={hideMenu}>Telegram</a>
+				<a href='https://twitter.com/CapDotFinance' target="_blank" on:click={hideMenu}>Twitter</a>
+				<a href='https://blog.cap.finance' target="_blank" on:click={hideMenu}>Blog</a>
+				<a href='https://github.com/0xcap' target="_blank" on:click={hideMenu}>Github</a>
+				<a href='#/vault' on:click={hideMenu}>Vault</a>
+				<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x43044f861ec040db59a7e324c40507addb673142' target="_blank" on:click={hideMenu}>Buy CAP</a>	
 			</div>
 		{/if}
 	</div>

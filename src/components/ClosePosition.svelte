@@ -1,5 +1,6 @@
 <script>
 
+	import { BASE_SYMBOL } from '../lib/constants'
 	import { closePosition } from '../lib/methods'
 	import { formatToDisplay, intify } from '../lib/utils'
 
@@ -67,15 +68,18 @@
 		},
 		{
 			label: 'Current Amount',
-			value: formatToDisplay(data.amount)
+			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
+			dim: true
 		},
 		{
 			label: 'Close %',
-			value: `${formatToDisplay(closePercent, 2)}%`
+			value: `${formatToDisplay(closePercent, 2)}%`,
+			isEmpty: closePercent == 0
 		},
 		{
-			label: 'Amount After Close',
-			value: formatToDisplay(newAmount)
+			label: 'Amount after Close',
+			value: `${formatToDisplay(newAmount)} ${BASE_SYMBOL}`,
+			isEmpty: newAmount * 1 == data.amount * 1
 		},
 	];
 

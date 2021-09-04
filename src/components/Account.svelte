@@ -14,11 +14,11 @@
 
 	.info {
 		padding: var(--base-padding);
-		border-bottom: 1px solid var(--gray-between);
+		border-bottom: 1px solid rgb(30,30,30);
 	}
 
 	.address {
-		font-size: 22px;
+		font-size: 24px;
 		font-weight: 700;
 		margin-bottom: 10px;
 	}
@@ -45,7 +45,6 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: 12px;
-		padding: 4px 0;
 	}
 
 	.row {
@@ -86,7 +85,7 @@
 
 			<div class='header'>
 				<span>Transactions</span>
-				<a on:click={clearTransactions}>(Clear)</a>
+				<a on:click={clearTransactions}>Clear</a>
 			</div>
 
 			<div class='transactions-list no-scrollbar'>

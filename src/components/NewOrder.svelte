@@ -36,10 +36,6 @@
 		}
 	}
 
-	async function _submitLucky() {
-		_submitOrder(Math.random() >= 0.5); // 1/2 chance of short/long
-	}
-
 	let amountIsFocused = false;
 
 	function checkFocus(address) {
@@ -52,6 +48,7 @@
 		// Activates prices
 		selectProduct($selectedProductId);
 		checkFocus($selectedAddress);
+
 	});
 
 </script>
@@ -65,7 +62,10 @@
 		padding: 12px;
 		background-color: var(--black-almost);
 		border-radius: var(--base-radius);
-		box-shadow: rgba(0,200,5,0.05) 0px 5px 18px 0;
+	}
+
+	.product-row {
+		cursor: pointer !important;
 	}
 
 	.input-row {
@@ -76,11 +76,15 @@
 		border-radius: 14px;
 		padding: var(--base-padding);
 		background-color: var(--gray-darkest);
-		cursor: pointer;
+		cursor: text;
 	}
 
 	.input-row:hover, .input-row.focused {
-		border-color: var(--gray);
+		border-color: rgb(55,55,55);
+	}
+
+	.label {
+		font-weight: 600;
 	}
 
 	.sub-label {
@@ -92,21 +96,19 @@
 	.product-wrap {
 		display: flex;
 		align-items: center;
-		font-size: 22px;
-		font-weight: 700;
+		font-size: 115%;
+		font-weight: 800;
 	}
 
 	.product-wrap img {
-		width: 24px;
-		height: 24px;
-		border-radius: 24px;
-	}
-
-	.product-wrap span {
-		margin-left: 8px;
+		width: 32px;
+		height: 32px;
+		border-radius: 32px;
+		margin-right: 10px;
 	}
 
 	.product-wrap .leverage {
+		margin-left: 3px;
 		font-weight: 400;
 	}
 
@@ -117,7 +119,7 @@
 
 	input {
 		font-size: 22px;
-		font-weight: 700;
+		font-weight: 600;
 		text-align: right;
 	}
 
@@ -125,7 +127,7 @@
 		position: absolute;
 		bottom: -17px;
 		right: 0;
-		color: rgba(60,60,60);
+		color: rgba(70,70,70);
 		font-size: 80%;
 	}
 
@@ -139,8 +141,8 @@
 		padding: var(--base-padding);
 		border-radius: 14px;
 		color: var(--gray-darkest);
-		font-size: 20px;
-		font-weight: 700;
+		font-weight: 650;
+		font-size: 115%;
 	}
 
 	button.disabled {
@@ -171,43 +173,11 @@
 		background-color: var(--green-dark);
 	}
 
-	.button-lucky {
-		background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%);
-		border-radius: var(--base-radius);
-		padding: 2px;
-	}
-	.button-lucky:after {
-		content: attr(alt);
-		background-color: #191919;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #fff;
-		padding: 1rem;
-		border-radius: var(--base-radius);
-	}
-	.button-lucky:not(.disabled):hover {
-		animation: slidebg 1s linear infinite;
-	}
-	.button-lucky.disabled {
-		background-image: none;
-		background-color: var(--gray-dark);
-	}
-	.button-lucky.disabled:after {
-		background-color: var(--gray-dark);
-		color: var(--gray-light);
-	}
-	@keyframes slidebg {
-		to {
-			background-position: 512px;
-		}
-	}
-
 </style>
 
 <div class='new-order'>
 
-	<div class='input-row' on:click={() => {showModal('Products')}} data-intercept="true">
+	<div class='input-row product-row' on:click={() => {showModal('Products')}} data-intercept="true">
 		<div class='label-wrap'>
 			<div class='label'>Product</div>
 			<div class='sub-label'title='Price provided by Chainlink'>
@@ -216,9 +186,7 @@
 		</div>
 		<div class='product-wrap'>
 			{#if $selectedProduct.symbol}
-				<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}>
-				<span>{$selectedProduct.symbol}</span>
-				<span class='leverage'>{$leverage}x</span>
+				<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol}</span> <span class='leverage'>{$leverage}x</span>
 			{/if}
 		</div>
 	</div>
@@ -234,7 +202,7 @@
 			</div>
 		</div>
 		<div class='input-wrap'>
-			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
+			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal">
 			{#if $margin > 0}<div class='input-label'>Margin: {formatToDisplay($margin)} {BASE_SYMBOL}</div>{/if}
 		</div>
 	</label>
@@ -248,8 +216,5 @@
 			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
 	</div>
-	{#if $selectedAddress && !$isUnsupported}
-		<button class:disabled={submitIsPending} class='button-lucky' on:click={() => {_submitLucky()}} alt="I'm feeling lucky" />
-	{/if}
 
 </div>

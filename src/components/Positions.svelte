@@ -75,12 +75,16 @@
 		justify-content: space-between;
 	}
 
+	.header .title {
+		font-weight: 700;
+	}
+
 	.positions-list {
 		border-radius: var(--base-radius);
 		overflow: hidden;
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 4px;
+		grid-gap: 5px;
 	}
 
 	.position {
@@ -89,11 +93,11 @@
 		justify-content: space-between;
 		background-color: var(--black-almost);
 		overflow: hidden;
-		height: 80px;
-		font-size: 20px;
+		height: 86px;
+		font-size: 115%;
 	}
 	.position:hover {
-		background-color: var(--gray-between);
+		background-color: rgba(23,23,23,0.65);
 	}
 
 	.details {
@@ -105,7 +109,7 @@
 
 	.direction {
 		width: 10px;
-		height: 80px;
+		height: 86px;
 		margin-right: var(--base-padding);
 	}
 
@@ -124,22 +128,20 @@
 	}
 
 	.product img {
-		width: 20px;
-		height: 20px;
-		border-radius: 20px;
-	}
-
-	.product span {
-		margin-left: 8px;
+		width: 24px;
+		height: 24px;
+		border-radius: 24px;
+		margin-right: 8px;
 	}
 
 	.product .leverage {
+		margin-left: 3px;
 		font-weight: 400;
 	}
 
 	.entry {
 		color: var(--gray-light);
-		margin-top: 10px;
+		margin-top: 8px;
 		font-size: 80%;
 	}
 
@@ -154,7 +156,7 @@
 	}
 
 	.upl-wrap {
-		margin-right: 24px;
+		margin-right: 20px;
 		text-align: right;
 	}
 
@@ -204,7 +206,7 @@
 	{:else}
 
 		<div class='header'>
-			<div class='title'>Positions {#if count > 0}({count}){/if}</div>
+			<div class='title'>Positions</div>
 			{#if count > 1}
 				<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{formatPnl(totalUPL)}</div>
 			{/if}
