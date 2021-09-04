@@ -46,7 +46,7 @@ export const CHAIN_DATA = {
 		id: 31337,
 		label: 'Localhost',
 		contract: {
-			address: '0x70e0bA845a1A0F2DA3359C97E0285013525FFC49',
+			address: '0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650',
 			abi: TRADING_ABI
 		},
 		products: {
@@ -64,7 +64,7 @@ export const CHAIN_DATA = {
 		network: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
 		explorer: 'https://rinkeby.etherscan.io',
 		contract: {
-			address: '0xA1EF84C48349fc6020Ea768F396f6FEfA73cCa3F',
+			address: '0x519910A6236253587E2c09e00d61A6945b108224',
 			abi: TRADING_ABI
 		},
 		products: {
