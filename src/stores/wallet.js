@@ -1,11 +1,9 @@
 import { writable, derived } from 'svelte/store'
-import { selectedBaseId } from './bases'
 
 import { CHAIN_DATA } from '../lib/constants'
-import { getBalance, getAllowance } from '../lib/methods'
+import { getBalance } from '../lib/methods'
 
 export const refreshUserBaseBalance = writable(0);
-export const refreshUserBaseAllowance = writable(0);
 
 export const provider = writable(null);
 
@@ -20,21 +18,13 @@ export const selectedAddress = derived([signer], async([$signer], set) => {
 	set(address);
 });
 
-export const userBaseBalance = derived([selectedBaseId, selectedAddress, refreshUserBaseBalance], async ([$selectedBaseId, $selectedAddress, $refreshUserBaseBalance], set) => {
-	if (!$selectedBaseId || !$selectedAddress) {
+export const userBaseBalance = derived([selectedAddress, refreshUserBaseBalance], async ([$selectedAddress, $refreshUserBaseBalance], set) => {
+	if (!$selectedAddress) {
 		set(0);
 		return;
 	}
-	set(await getBalance($selectedBaseId, $selectedAddress) * 1);
+	set(await getBalance($selectedAddress) * 1);
 }, 0);
-
-export const userBaseAllowance = derived([selectedBaseId, selectedAddress, refreshUserBaseAllowance], async ([$selectedBaseId, $selectedAddress, $refreshUserBaseAllowance], set) => {
-	if (!$selectedBaseId || !$selectedAddress) {
-		set('N/A');
-		return;
-	}
-	set(await getAllowance($selectedBaseId, $selectedAddress) * 1);
-}, 'N/A');
 
 export const networkLabel = derived([chainId], ([$chainId]) => {
 	return CHAIN_DATA[$chainId] && CHAIN_DATA[$chainId].label;
@@ -42,6 +32,10 @@ export const networkLabel = derived([chainId], ([$chainId]) => {
 
 export const isTestnet = derived([chainId], ([$chainId]) => {
 	return CHAIN_DATA[$chainId] && CHAIN_DATA[$chainId].testnet;
+}, false);
+
+export const isUnderMaintenance = derived([chainId], ([$chainId]) => {
+	return CHAIN_DATA[$chainId] && CHAIN_DATA[$chainId].underMaintenance;
 }, false);
 
 export const isUnsupported = derived([chainId, selectedAddress], ([$chainId, $selectedAddress]) => {

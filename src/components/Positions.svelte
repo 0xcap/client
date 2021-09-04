@@ -4,6 +4,7 @@
 	import { positions } from '../stores/positions'
 	import { prices } from '../stores/prices'
 
+	import { BASE_SYMBOL } from '../lib/constants'
 	import { LOGOS } from '../lib/logos'
 	import { PLUS_ICON } from '../lib/icons'
 	import { getProduct } from '../lib/methods'
@@ -221,10 +222,10 @@
 							<div class='product'>
 								<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
 								<span>{position.product}</span>
-								<span class='leverage'>{intify(position.leverage)}x</span>
+								<span class='leverage'>{formatToDisplay(position.leverage)}x</span>
 							</div>
 							<div class='entry'>
-								{formatToDisplay(position.amount)} {position.base} at {formatToDisplay(position.price)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
+								{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
 							</div>
 						</div>
 					</div>
@@ -235,7 +236,7 @@
 								{formatPnl(upls[position.positionId])}
 							</div>
 							<div class='upl-percent'>
-								{formatPnl(upls_percent[position.positionId], true)}%
+								{formatPnl(upls_percent[position.positionId], undefined, true)}%
 							</div>
 						</div>
 						<a class='add-margin' on:click={() => {showModal('AddMargin', position)}} data-intercept="true">

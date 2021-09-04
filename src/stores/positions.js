@@ -1,15 +1,24 @@
 import { writable, derived } from 'svelte/store'
-import { getUserPositions } from '../lib/methods'
+import { fetchPositionIds } from '../lib/events'
+import { getPositions } from '../lib/methods'
 
-import { selectedBaseId } from './bases'
 import { selectedAddress } from './wallet'
 
 export const refreshUserPositions = writable(0);
+export const refreshUserPositionIds = writable(0);
 
-export const positions = derived([selectedBaseId, selectedAddress, refreshUserPositions], async ([$selectedBaseId, $selectedAddress, $refreshUserPositions], set) => {
-	if (!$selectedBaseId || !$selectedAddress) {
+export const activePositionIds = derived([selectedAddress, refreshUserPositionIds], async ([$selectedAddress, $refreshUserPositionIds], set) => {
+	if (!$selectedAddress) {
 		set([]);
 		return;
 	}
-	set(await getUserPositions($selectedBaseId, $selectedAddress));
+	set(await fetchPositionIds($selectedAddress));
+},[]);
+
+export const positions = derived([selectedAddress, activePositionIds, refreshUserPositions], async ([$selectedAddress, $activePositionIds, $refreshUserPositions], set) => {
+	if (!$selectedAddress || !$activePositionIds.length) {
+		set([]);
+		return;
+	}
+	set(await getPositions($activePositionIds));
 },[]);

@@ -26,10 +26,6 @@
 			value: data.positionId
 		},
 		{
-			label: 'Vault',
-			value: data.base
-		},
-		{
 			label: 'Product',
 			value: data.product
 		},
@@ -47,11 +43,11 @@
 		},
 		{
 			label: 'Margin',
-			value: data.margin
+			value: formatToDisplay(data.margin)
 		},
 		{
 			label: 'Leverage',
-			value: data.leverage
+			value: formatToDisplay(data.leverage)
 		},
 		{
 			label: 'Amount',

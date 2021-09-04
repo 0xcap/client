@@ -1,10 +1,9 @@
 import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 
-import { CHAIN_DATA, LEVERAGE_DECIMALS, PRICE_DECIMALS } from './constants'
+import { CHAIN_DATA, LEVERAGE_DECIMALS, PRICE_DECIMALS, BASE_SYMBOL } from './constants'
 import { activateProductPrices } from './helpers'
 
-import { bases, selectedBaseId } from '../stores/bases'
 import { hideMenu } from '../stores/menu'
 import { hideModal } from '../stores/modals'
 import { products, selectedProductId } from '../stores/products'
@@ -13,14 +12,14 @@ import { chainId } from '../stores/wallet'
 
 
 export function formatUnits(number, units) {
-  if (!units) units = 6; // usdc
-  return ethers.utils.formatUnits(number || 0, units);
+  return ethers.utils.formatUnits(number || 0, units || 8);
 }
 
 export function parseUnits(number, units) {
-  if (!units) units = 6; // usdc
-  if (typeof(number) == 'number') number = number.toString();
-  return ethers.utils.parseUnits(number, units);
+  if (typeof(number) == 'number') {
+  	number = number.toFixed(units || 8);
+  }
+  return ethers.utils.parseUnits(number, units || 8);
 }
 
 export function intify(number) {
@@ -36,74 +35,89 @@ export function shortAddr(_address) {
 export function formatToDisplay(amount, precision) {
 	if (isNaN(amount)) return 0;
 	if (precision) return (amount * 1).toFixed(precision);
+	if ((amount * 1).toFixed(6)*1 == Math.round(amount * 1)) return Math.round(amount);
 	if (amount * 1 >= 1000 || amount * 1 <= -1000) {
 		return Math.round(amount*1).toLocaleString();
 	} else if (amount * 1 >= 100 || amount * 1 <= -100) {
 		return (amount * 1).toFixed(2);
 	} else if (amount * 1 >= 10 || amount * 1 <= -10) {
-		return (amount * 1).toFixed(4);
+		return (amount * 1).toFixed(3);
 	} else {
-		return (amount * 1).toFixed(6);
+		return (amount * 1).toFixed(4);
 	}
 }
 
-export function formatPnl(pnl, isPercent) {
+export function formatPnl(pnl, pnlIsNegative, isPercent) {
 	let string = '';
-	if (pnl * 1 > 0) {
+	if (pnlIsNegative == undefined) {
+		pnlIsNegative = pnl < 0;
+	}
+	if (!pnlIsNegative) {
 		string += '+';
 	}
 	string += formatToDisplay(pnl, isPercent ? 2 : null) || 0;
 	return string;
 }
 
-export function formatPositions(positions, baseId) {
-	const base = get(bases)[baseId];
+export function formatPositions(positions, positionIds) {
 	let formattedPositions = [];
+	let i = 0;
 	for (const p of positions) {
+		if (!p.productId) continue;
 		formattedPositions.push({
-			positionId: p.positionId && p.positionId.toNumber(),
-			base: base.symbol,
+			positionId: positionIds[i],
 			product: get(products)[p.productId],
 			timestamp: p.timestamp.toNumber(),
 			isLong: p.isLong,
 			isSettling: p.isSettling,
-			margin: formatUnits(p.margin, base.decimals),
-			leverage: formatUnits(p.leverage, LEVERAGE_DECIMALS),
-			amount: formatUnits(p.margin, base.decimals) * formatUnits(p.leverage, LEVERAGE_DECIMALS),
+			margin: formatUnits(p.margin),
+			leverage: formatUnits(p.leverage),
+			amount: formatUnits(p.margin) * formatUnits(p.leverage),
 			price: formatUnits(p.price, PRICE_DECIMALS),
-			liquidationPrice: formatUnits(p.liquidationPrice, PRICE_DECIMALS),
-			productId: p.productId,
-			baseId: baseId
+			productId: p.productId
 		});
 		activateProductPrices(p.productId);
+		i++;
 	}
 	formattedPositions.reverse();
 	return formattedPositions;
 }
 
-export function formatVault(v, baseId) {
-	const base = get(bases)[baseId];
-	if (!base) return;
+export function formatStakes(stakes, stakeIds) {
+	let formattedStakes = [];
+	let i = 0;
+	for (const s of stakes) {
+		if (!s.timestamp) continue;
+		formattedStakes.push({
+			stakeId: stakeIds[i],
+			amount: formatUnits(s.amount),
+			timestamp: s.timestamp
+		});
+		i++;
+	}
+	formattedStakes.reverse();
+	return formattedStakes;
+}
+
+export function formatVault(v) {
 	return {
-		id: baseId,
-		symbol: base.symbol,
+		symbol: BASE_SYMBOL,
 		cap: formatUnits(v.cap),
-		maxOpenInterest: formatUnits(v.maxOpenInterest),
-		maxDailyDrawdown: formatUnits(v.maxDailyDrawdown, 2),
+		balance: formatUnits(v.balance),
+		staked: formatUnits(v.staked),
 		stakingPeriod: v.stakingPeriod,
 		redemptionPeriod: v.redemptionPeriod,
-		protocolFee: formatUnits(v.protocolFee,2),
-		openInterest: formatUnits(v.openInterest),
-		balance: formatUnits(v.balance),
-		totalStaked: formatUnits(v.totalStaked),
-		isActive: v.isActive
+		maxDailyDrawdown: formatUnits(v.maxDailyDrawdown, 2)
 	}
 }
 
 export function formatProduct(p, productId) {
 	return {
 		symbol: get(products)[productId],
-		leverage: formatUnits(p.leverage, LEVERAGE_DECIMALS),
+		maxLeverage: formatUnits(p.maxLeverage),
+		maxExposure: formatUnits(p.maxExposure),
+		openInterestLong: formatUnits(p.openInterestLong),
+		openInterestShort: formatUnits(p.openInterestShort),
 		fee: formatUnits(p.fee, 2),
 		interest: formatUnits(p.interest, 2),
 		feed: p.feed,
@@ -119,29 +133,68 @@ export function formatEvent(ev) {
 
 	if (ev.event == 'ClosePosition') {
 
-		const { positionId, user, vaultId, productId, price, margin, leverage, pnl, feeRebate, protocolFee, wasLiquidated } = ev.args;
-
-		const base = get(bases)[vaultId];
-		if (!base) return;
+		const { positionId, user, productId, price, margin, leverage, pnl, pnlIsNegative, protocolFee, isFullClose, wasLiquidated } = ev.args;
 
 		return {
 			type: 'ClosePosition',
 			positionId: positionId && positionId.toNumber(),
-			base: base.symbol,
 			product: get(products)[productId],
 			price: formatUnits(price, PRICE_DECIMALS),
-			margin: formatUnits(margin, base.decimals),
-			leverage: formatUnits(leverage, LEVERAGE_DECIMALS),
-			amount: formatUnits(margin, base.decimals) * formatUnits(leverage, LEVERAGE_DECIMALS),
-			pnl: formatUnits(pnl, base.decimals),
-			feeRebate: formatUnits(feeRebate, base.decimals),
-			protocolFee: formatUnits(protocolFee, base.decimals),
+			margin: formatUnits(margin),
+			leverage: formatUnits(leverage),
+			amount: formatUnits(margin) * formatUnits(leverage),
+			pnl: formatUnits(pnl),
+			pnlIsNegative,
+			protocolFee: formatUnits(protocolFee),
+			isFullClose,
 			wasLiquidated,
 			txHash: ev.transactionHash,
 			block: ev.blockNumber,
-			productId: productId,
-			vaultId: vaultId
+			productId: productId
 		};
+
+	} else if (ev.event == 'NewPosition') {
+
+		const { positionId, user, productId, price, margin, leverage, isLong } = ev.args;
+
+		return {
+			type: 'NewPosition',
+			positionId: positionId && positionId.toNumber(),
+			product: get(products)[productId],
+			price: formatUnits(price, PRICE_DECIMALS),
+			margin: formatUnits(margin),
+			leverage: formatUnits(leverage),
+			amount: formatUnits(margin) * formatUnits(leverage),
+			isLong,
+			txHash: ev.transactionHash,
+			block: ev.blockNumber,
+			productId: productId
+		}
+
+	} else if (ev.event == 'Staked') {
+
+		const { stakeId, from, amount } = ev.args;
+
+		return {
+			type: 'Staked',
+			stakeId: stakeId && stakeId.toNumber(),
+			amount: formatUnits(amount),
+			txHash: ev.transactionHash,
+			block: ev.blockNumber
+		}
+
+	} else if (ev.event == 'Redeemed') {
+
+		const { stakeId, from, amount, isFullRedeem } = ev.args;
+
+		return {
+			type: 'Redeemed',
+			stakeId: stakeId && stakeId.toNumber(),
+			amount: formatUnits(amount),
+			isFullRedeem,
+			txHash: ev.transactionHash,
+			block: ev.blockNumber
+		}
 
 	}
 

@@ -4,7 +4,7 @@
 	import DataList from './DataList.svelte'
 
 	import { EXTERNAL_ICON } from '../lib/icons'
-	import { txLink, formatToDisplay } from '../lib/utils'
+	import { txLink, formatToDisplay, formatPnl } from '../lib/utils'
 
 	export let data;
 
@@ -15,24 +15,20 @@
 			value: data.positionId
 		},
 		{
-			label: 'Vault',
-			value: data.base
-		},
-		{
 			label: 'Product',
 			value: data.product
 		},
 		{
 			label: 'Price',
-			value: data.price
+			value: formatToDisplay(data.price)
 		},
 		{
 			label: 'Margin',
-			value: data.margin
+			value: formatToDisplay(data.margin)
 		},
 		{
 			label: 'Leverage',
-			value: data.leverage
+			value: formatToDisplay(data.leverage)
 		},
 		{
 			label: 'Amount',
@@ -40,11 +36,7 @@
 		},
 		{
 			label: 'Profit or Loss',
-			value: `${data.pnl * 1 > 0 ? '+' : ''}${data.pnl}`
-		},
-		{
-			label: 'Fee Rebate',
-			value: data.feeRebate
+			value: `${formatPnl(data.pnl, data.pnlIsNegative)}`
 		},
 		{
 			label: 'Protocol Fee',

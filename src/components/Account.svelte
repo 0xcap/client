@@ -59,7 +59,7 @@
 	:global(.transactions-list .description svg) {
 		height: 16px;
 		margin-left: 6px;
-		margin-bottom: -4px;
+		margin-bottom: -2px;
 	}
 
 	:global(.transactions-list .link svg) {

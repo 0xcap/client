@@ -1,6 +1,7 @@
 <script>
 
-	import { formatToDisplay, intify, formatPnl } from '../lib/utils'
+	import { BASE_SYMBOL } from '../lib/constants'
+	import { formatToDisplay, formatPnl } from '../lib/utils'
 
 	import { history } from '../stores/history'
 	import { showModal } from '../stores/modals'
@@ -109,15 +110,15 @@
 				<div class='info'>
 					<div class='product'>
 						<span>{event.product}</span>
-						<span class='leverage'>{intify(event.leverage)}x</span>
+						<span class='leverage'>{formatToDisplay(event.leverage)}x</span>
 					</div>
 					<div class='close'>
-						Closed {formatToDisplay(event.amount)} {event.base} at {event.price}
+						Closed {formatToDisplay(event.amount)} {BASE_SYMBOL} at {formatToDisplay(event.price)}
 					</div>
 				</div>
 
-				<div class={`pnl ${event.pnl * 1 > 0 ? 'pos' : 'neg'}`}>
-					{formatPnl(event.pnl || 0)}
+				<div class={`pnl ${event.pnlIsNegative ? 'neg' : 'pos'}`}>
+					{formatPnl(event.pnl || 0, event.pnlIsNegative)}
 				</div>
 	
 			</div>
