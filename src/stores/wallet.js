@@ -34,6 +34,10 @@ export const isTestnet = derived([chainId], ([$chainId]) => {
 	return CHAIN_DATA[$chainId] && CHAIN_DATA[$chainId].testnet;
 }, false);
 
+export const isUnderMaintenance = derived([chainId], ([$chainId]) => {
+	return CHAIN_DATA[$chainId] && CHAIN_DATA[$chainId].underMaintenance;
+}, false);
+
 export const isUnsupported = derived([chainId, selectedAddress], ([$chainId, $selectedAddress]) => {
 	return $selectedAddress && $chainId && !CHAIN_DATA[$chainId];
 }, false);

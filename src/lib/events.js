@@ -161,7 +161,7 @@ export async function fetchStakeIds(address) {
 	}
 
 	const filter_staked = tradingContract.filters.Staked(null, address);
-	const _events_staked = await tradingContract.queryFilter(filter_staked, -510000); // last 510K blocks, eg 90 days
+	const _events_staked = await tradingContract.queryFilter(filter_staked); // last 510K blocks, eg 90 days
 
 	let new_stake_ids = {};
 	for (let ev of _events_staked) {

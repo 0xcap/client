@@ -17,7 +17,10 @@
 
 	let submitIsPending = false;
 	async function _submitOrder(isLong) {
-		if (!$amount) return showToast('Amount is required.');
+		if (!$amount) {
+			checkFocus($selectedAddress);
+			return showToast('Amount is required.');
+		}
 		submitIsPending = true;
 		const error = await openPosition(
 			$selectedProductId,
@@ -26,6 +29,11 @@
 			$margin * 1
 		);
 		submitIsPending = false;
+		if (error) {
+			checkFocus($selectedAddress);
+		} else {
+			amount.set();
+		}
 	}
 
 	async function _submitLucky() {

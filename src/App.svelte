@@ -15,7 +15,7 @@
 	import { activeModal } from './stores/modals'
 	import { refreshUserPositions } from './stores/positions'
 	import { component, loadRoute, navigateTo } from './stores/router'
-	import { selectedAddress, chainId } from './stores/wallet'
+	import { selectedAddress, chainId, isUnderMaintenance } from './stores/wallet'
 
 	onMount(async () => {
 		loadRoute(location.hash);
@@ -155,6 +155,12 @@
 		}
 	}
 
+	.maintenance {
+		padding: 20px;
+		text-align: center;
+		line-height: 1.55;
+	}
+
 </style>
 
 {#if $activeModal && $activeModal.name == 'Account'}
@@ -165,10 +171,14 @@
 	<div class='radial-gradient'></div>
 	<Header />
 	<div class='nav'><Nav /></div>
-	{#if $contractReady}
-	<main>
-		<svelte:component this={$component}/>
-	</main>
+	{#if $isUnderMaintenance}
+		<div class='maintenance'>Cap is under maintenance on this Ethereum network. Try Rinkeby.</div>
+	{:else}
+		{#if $contractReady}
+		<main>
+			<svelte:component this={$component}/>
+		</main>
+		{/if}
 	{/if}
 	<Footer />
 </div>

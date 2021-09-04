@@ -89,7 +89,8 @@ export const CHAIN_DATA = {
 			2: 'BTC-USD',
 			4: 'EUR-USD'
 		},
-		testnet: true
+		testnet: true,
+		underMaintenance: true
 	},
 	'xx1': { // Ethereum mainnet
 		id: 1,

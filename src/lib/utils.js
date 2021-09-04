@@ -63,29 +63,31 @@ export function formatPositions(positions, positionIds) {
 	let formattedPositions = [];
 	let i = 0;
 	for (const p of positions) {
-			formattedPositions.push({
-				positionId: positionIds[i],
-				product: get(products)[p.productId],
-				timestamp: p.timestamp.toNumber(),
-				isLong: p.isLong,
-				isSettling: p.isSettling,
-				margin: formatUnits(p.margin),
-				leverage: formatUnits(p.leverage),
-				amount: formatUnits(p.margin) * formatUnits(p.leverage),
-				price: formatUnits(p.price, PRICE_DECIMALS),
-				productId: p.productId
-			});
-			activateProductPrices(p.productId);
-			i++;
-		}
-		formattedPositions.reverse();
-		return formattedPositions;
+		if (!p.productId) continue;
+		formattedPositions.push({
+			positionId: positionIds[i],
+			product: get(products)[p.productId],
+			timestamp: p.timestamp.toNumber(),
+			isLong: p.isLong,
+			isSettling: p.isSettling,
+			margin: formatUnits(p.margin),
+			leverage: formatUnits(p.leverage),
+			amount: formatUnits(p.margin) * formatUnits(p.leverage),
+			price: formatUnits(p.price, PRICE_DECIMALS),
+			productId: p.productId
+		});
+		activateProductPrices(p.productId);
+		i++;
+	}
+	formattedPositions.reverse();
+	return formattedPositions;
 }
 
 export function formatStakes(stakes, stakeIds) {
 	let formattedStakes = [];
 	let i = 0;
 	for (const s of stakes) {
+		if (!s.timestamp) continue;
 		formattedStakes.push({
 			stakeId: stakeIds[i],
 			amount: formatUnits(s.amount),
