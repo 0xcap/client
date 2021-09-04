@@ -36,7 +36,7 @@
 		},
 		{
 			label: 'Profit or Loss',
-			value: `${formatPnl(data.pnl)}`
+			value: `${formatPnl(data.pnl, data.pnlIsNegative)}`
 		},
 		{
 			label: 'Protocol Fee',

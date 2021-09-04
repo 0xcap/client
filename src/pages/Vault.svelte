@@ -17,7 +17,7 @@
 		<Stake />
 	{/if}
 	{#if $activeModal && $activeModal.name == 'Redeem'}
-		<Redeem />
+		<Redeem  data={$activeModal.data} />
 	{/if}
 	<VaultInfo />
 </div>

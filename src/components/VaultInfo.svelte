@@ -4,7 +4,7 @@
 	import { LOGOS } from '../lib/logos'
 	import { formatToDisplay } from '../lib/utils'
 
-	import { selectedVault, userStaked } from '../stores/vault'
+	import { selectedVault, stakes, userStaked } from '../stores/vault'
 	import { showModal } from '../stores/modals'
 
 </script>
@@ -108,14 +108,6 @@
 			<div class='value'>{formatToDisplay($selectedVault.cap)}</div>
 		</div>
 		<div class='row'>
-			<div class='label'>Open Interest</div>
-			<div class='value'>{formatToDisplay($selectedVault.openInterest)}</div>
-		</div>
-		<div class='row'>
-			<div class='label'>Max Open Interest</div>
-			<div class='value'>{formatToDisplay($selectedVault.maxOpenInterest)}</div>
-		</div>
-		<div class='row'>
 			<div class='label'>Max Daily Drawdown</div>
 			<div class='value'>{formatToDisplay($selectedVault.maxDailyDrawdown, 2)}%</div>
 		</div>
@@ -125,10 +117,26 @@
 			<div class='value'>{formatToDisplay($userStaked)} ({formatToDisplay($userStaked*100/($selectedVault.staked || "N/A"), 4) || 0}%)</div>
 		</div>
 
-		<div class='row'>
-			<div class='label'>My Balance <a on:click={() => {showModal('Redeem')}} data-intercept="true">(Redeem)</a></div>
-			<div class='value'>~{formatToDisplay($selectedVault.balance * $userStaked/$selectedVault.staked || 0)}</div>
-		</div>
+	</div>
+
+	<div class='stakes-list'>
+
+		{#each $stakes as stake}
+			
+			<div class='stake'>
+
+				<div>
+					Stake: {formatToDisplay(stake.amount)} | Worth: {formatToDisplay($selectedVault.balance * stake.amount/$selectedVault.staked || 0)}
+				</div>
+
+				<div class='tools'>
+					<a on:click={() => {showModal('Redeem', stake)}} data-intercept="true">(Redeem)</a>
+				</div>
+
+			</div>
+
+		{/each}
+
 
 	</div>
 

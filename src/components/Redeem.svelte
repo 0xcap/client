@@ -7,6 +7,8 @@
 	import DataList from './DataList.svelte'
 	import ModalButton from './ModalButton.svelte'
 
+	export let data;
+
 	let amount;
 
 	let canSubmit;
@@ -15,22 +17,12 @@
 	let submitIsPending = false;
 	async function _redeem() {
 		submitIsPending = true;
-		const error = await redeem(amount);
+		const error = await redeem(data.stakeId, amount);
 		submitIsPending = false;
 	}
 
-	let next_period_date;
-	let redemption_in_hours;
-
-	function getNextRedemptionTime(staking_period, redemption_period) {
-		const now = Date.now() / 1000;
-		const seconds_since_last_period = now % staking_period;
-		const seconds_till_next_period = staking_period - seconds_since_last_period;
-		next_period_date = new Date((now + seconds_till_next_period)*1000).toLocaleString();
-		redemption_in_hours = parseInt(redemption_period / 3600);
-	}
-
-	$: getNextRedemptionTime($selectedVault.stakingPeriod, $selectedVault.redemptionPeriod);
+	let next_redemption_time = new Date((data.timestamp * 1 + $selectedVault.stakingPeriod * 1)*1000).toLocaleString();
+	let redemption_in_hours = parseInt($selectedVault.redemptionPeriod / 3600);
 
 	let rows;
 	$: rows = [
@@ -55,7 +47,7 @@
 <Modal title='Redeem'>
 	<DataList data={rows} bind:value={amount} />
 	<div class='details'>
-		You can redeem your stake, plus profits or losses, during the next redemption period ({redemption_in_hours} hours starting {next_period_date}).
+		You can redeem this stake, plus profits or losses, during {redemption_in_hours} hours starting {next_redemption_time}.
 	</div>
 	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} label='Redeem' action={_redeem} />
 </Modal>

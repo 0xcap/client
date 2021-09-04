@@ -124,7 +124,7 @@
 			<div class='value'>{$leverage}x</div>
 		</div>
 		<div class='range'>
-			<input type=range bind:value={$leverage} min=1 max={$selectedProduct.leverage * 1 || 100}> 
+			<input type=range bind:value={$leverage} min=1 max={$selectedProduct.maxLeverage * 1 || 100}> 
 		</div>
 	</div>
 

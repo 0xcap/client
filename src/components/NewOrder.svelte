@@ -103,6 +103,7 @@
 	}
 
 	.input-wrap {
+		position: relative;
 		flex: 1 1 auto;
 	}
 
@@ -110,6 +111,14 @@
 		font-size: 22px;
 		font-weight: 700;
 		text-align: right;
+	}
+
+	.input-label {
+		position: absolute;
+		bottom: -17px;
+		right: 0;
+		color: rgba(60,60,60);
+		font-size: 80%;
 	}
 
 	.buttons {
@@ -218,6 +227,7 @@
 		</div>
 		<div class='input-wrap'>
 			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
+			{#if $margin > 0}<div class='input-label'>Margin: {formatToDisplay($margin)} {BASE_SYMBOL}</div>{/if}
 		</div>
 	</label>
 
@@ -225,7 +235,7 @@
 		{#if !$selectedAddress}
 			<button class='disabled'>Connect a wallet</button>
 		{:else if $isUnsupported}
-			<button class='disabled'>Switch to Arbitrum or Rinkeby to trade</button>
+			<button class='disabled'>Switch to Rinkeby to trade</button>
 		{:else}
 			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}

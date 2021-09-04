@@ -1,8 +1,8 @@
 import { get } from 'svelte/store'
 
-import { PRICE_DECIMALS, BASE_SYMBOL } from './constants'
+import { PRICE_DECIMALS, BASE_SYMBOL, ADDRESS_ZERO } from './constants'
 import { getContract, getContractAddress } from './helpers'
-import { formatUnits, parseUnits, formatProduct, formatVault, formatPositions, formatToDisplay } from './utils'
+import { formatUnits, parseUnits, formatProduct, formatVault, formatPositions, formatStakes, formatToDisplay } from './utils'
 
 import { hideModal } from '../stores/modals'
 import { showToast } from '../stores/toasts'
@@ -10,6 +10,11 @@ import { addPendingTransaction } from '../stores/transactions'
 import { provider } from '../stores/wallet'
 
 let productCache = {};
+
+export async function getBalance(address) {
+	return formatUnits(await get(provider).getBalance(address), 18);
+}
+
 export async function getProduct(productId) {
 	if (productCache[productId]) return productCache[productId];
 	const product = formatProduct(await getContract().getProduct(productId), productId);
@@ -17,21 +22,19 @@ export async function getProduct(productId) {
 	return product;
 }
 
-export async function getBalance(address) {
-	return formatUnits(await get(provider).getBalance(address));
-}
-
 export async function getVault() {
 	return formatVault(await getContract().getVault());
 }
 
-export async function getUserStaked(address) {
-	return formatUnits(await getContract().getUserStaked(address));
+export async function getStake(stakeId) {
+	return formatStake(await getContract().getStake(stakeId));
+}
+export async function getUserStaked(stakeId) {
 }
 
 export async function stake(amount) {
 	try {
-		const tx = await getContract(true).stake({value: parseUnits(amount)});
+		const tx = await getContract(true).stake({value: parseUnits(amount, 18)});
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Stake ${amount} ${BASE_SYMBOL}`
@@ -44,9 +47,9 @@ export async function stake(amount) {
 	}
 }
 
-export async function redeem(amount) {
+export async function redeem(stakeId, amount) {
 	try {
-		const tx = await getContract(true).redeem({value: parseUnits(amount)});
+		const tx = await getContract(true).redeem(stakeId, parseUnits(amount));
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Redeem ${amount} ${BASE_SYMBOL}`
@@ -60,17 +63,22 @@ export async function redeem(amount) {
 }
 
 export async function getLatestPrice(productId) {
-	return formatUnits(await getContract().getLatestPrice(productId), PRICE_DECIMALS);
+	return formatUnits(await getContract().getLatestPrice(ADDRESS_ZERO, productId), PRICE_DECIMALS);
 }
 
-export async function getUserPositions(address) {
-	return formatPositions(await getContract().getUserPositions(address));
+export async function getPositions(positionIds) {
+	return formatPositions(await getContract().getPositions(positionIds), positionIds);
+}
+
+export async function getStakes(stakeIds) {
+	return formatStakes(await getContract().getStakes(stakeIds), stakeIds);
 }
 
 export async function openPosition(productId, isLong, leverage, margin) {
 	const product = await getProduct(productId);
+	const amount = margin * leverage;
 	try {
-		const tx = await getContract(true).openPosition(productId, isLong, parseUnits(leverage), {value: parseUnits(margin)});
+		const tx = await getContract(true).openPosition(productId, isLong, parseUnits(leverage), {value: parseUnits(margin, 18)});
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `New position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
@@ -86,7 +94,7 @@ export async function openPosition(productId, isLong, leverage, margin) {
 export async function addMargin(positionId, margin, productId) {
 	const product = await getProduct(productId);
 	try {
-		const tx = await getContract(true).addMargin(positionId, {value: parseUnits(margin)});
+		const tx = await getContract(true).addMargin(positionId, {value: parseUnits(margin, 18)});
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Add margin ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol}`

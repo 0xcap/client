@@ -29,7 +29,7 @@
 	}
 
 	function setMaxAmount(_entire) {
-		amount = data.margin * data.leverage;
+		amount = formatToDisplay(data.margin * data.leverage);
 		calculateAmounts();
 	}
 

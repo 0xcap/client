@@ -2,10 +2,10 @@ import { get } from 'svelte/store'
 
 import { getContract } from './helpers'
 
-import { refreshUserStaked, refreshSelectedVault } from '../stores/vault'
-import { refreshUserPositions } from '../stores/positions'
-import { refreshUserBaseBalance, userBaseAllowance } from '../stores/wallet'
-import { refreshUserHistory } from '../stores/history'
+import { refreshUserStakes, refreshUserStakeIds, refreshSelectedVault } from '../stores/vault'
+import { refreshUserPositions, refreshUserPositionIds } from '../stores/positions'
+import { refreshUserBaseBalance, userBaseAllowance, selectedAddress } from '../stores/wallet'
+import { refreshUserHistory, history } from '../stores/history'
 import { showToast } from '../stores/toasts'
 
 import { completeTransaction } from '../stores/transactions'
@@ -18,7 +18,7 @@ setTimeout(() => {
 	acceptToasts = true;
 }, 4000);
 
-function handleEvent() {
+async function handleEvent() {
 
 	const ev = arguments[arguments.length - 1];
 
@@ -26,13 +26,39 @@ function handleEvent() {
 	
 	if (ev.event == 'NewPosition') {
 		completeTransaction(ev.transactionHash);
-		refreshUserPositions.update(n => n + 1);
+		refreshUserPositionIds.update(n => n + 1);
+		refreshUserBaseBalance.update(n => n + 1);
 		if (acceptToasts) showToast('Position opened.', 'success');
+	}
+
+	if (ev.event == 'AddMargin') {
+		completeTransaction(ev.transactionHash);
+		refreshUserPositions.update(n => n + 1);
+		refreshUserBaseBalance.update(n => n + 1);
+		if (acceptToasts) showToast('Margin added.', 'success');
+	}
+
+	if (ev.event == 'ClosePosition') {
+		completeTransaction(ev.transactionHash);
+		refreshUserBaseBalance.update(n => n + 1);
+		if (ev.args.isFullClose) {
+			refreshUserPositionIds.update(n => n + 1);
+		} else {
+			refreshUserPositions.update(n => n + 1);
+		}
+
+		refreshUserHistory.update(n => n + 1);
+		
+		if (acceptToasts) showToast('Position closed.', 'success');
+	}
+
+	if (ev.event == 'NewPositionSettled') {
+		refreshUserPositions.update(n => n + 1);
 	}
 
 	if (ev.event == 'Staked') {
 		completeTransaction(ev.transactionHash);
-		refreshUserStaked.update(n => n + 1);
+		refreshUserStakeIds.update(n => n + 1);
 		refreshSelectedVault.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
 		if (acceptToasts) showToast('Staked.', 'success');
@@ -40,27 +66,15 @@ function handleEvent() {
 
 	if (ev.event == 'Redeemed') {
 		completeTransaction(ev.transactionHash);
-		refreshUserStaked.update(n => n + 1);
 		refreshUserBaseBalance.update(n => n + 1);
+		refreshSelectedVault.update(n => n + 1);
+		console.log('ev redeemed', ev);
+		if (ev.args.isFullRedeem) {
+			refreshUserStakeIds.update(n => n + 1);
+		} else {
+			refreshUserStakes.update(n => n + 1);
+		}
 		if (acceptToasts) showToast('Redeemed.', 'success');
-	}
-
-	if (ev.event == 'AddMargin') {
-		completeTransaction(ev.transactionHash);
-		refreshUserPositions.update(n => n + 1);
-		if (acceptToasts) showToast('Margin added.', 'success');
-	}
-
-	if (ev.event == 'ClosePosition') {
-		completeTransaction(ev.transactionHash);
-		refreshUserPositions.update(n => n + 1);
-		refreshUserBaseBalance.update(n => n + 1);
-		refreshUserHistory.update(n => n + 1);
-		if (acceptToasts) showToast('Position closed.', 'success');
-	}
-
-	if (ev.event == 'NewPositionSettled') {
-		refreshUserPositions.update(n => n + 1);
 	}
 
 }
@@ -71,8 +85,8 @@ export function initEventListeners(address, chainId) {
 	tradingContract.removeAllListeners();
 	if (!address || !chainId) return;
 	
-	tradingContract.on(tradingContract.filters.Staked(address), handleEvent);
-	tradingContract.on(tradingContract.filters.Redeemed(address), handleEvent);
+	tradingContract.on(tradingContract.filters.Staked(null, address), handleEvent);
+	tradingContract.on(tradingContract.filters.Redeemed(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.NewPosition(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.NewPositionSettled(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.AddMargin(null, address), handleEvent);
@@ -80,21 +94,81 @@ export function initEventListeners(address, chainId) {
 
 }
 
+let history_cache = {timestamp: 0, items: []};
 
-export async function fetchHistoryEvents(address) {
+export async function fetchPositionIds(address) {
+
+	// get past NewPosition and ClosePosition events and determine which position ids are still active for this user
+	// populate history using closeposition events
+
 	if (!address) return;
 	const tradingContract = getContract();
 	if (!tradingContract) return;
-	const filter = tradingContract.filters.ClosePosition(null, address);
-	const _events = await tradingContract.queryFilter(filter, -170000); // last 170K blocks, eg 30 days
-	let formattedEvents = [];
-	let i = 0;
-	for (const ev of _events) {
-		i++;
-		formattedEvents.unshift(formatEvent(ev));
-		if (i == 100) break; // 100 first events only
+
+	const filter_new = tradingContract.filters.NewPosition(null, address);
+	const _events_new = await tradingContract.queryFilter(filter_new, -510000); // last 510K blocks, eg 90 days
+
+	let formattedHistoryEvents = await fetchHistoryEvents(address);
+	let full_close_ids = {};
+	for (const ev of formattedHistoryEvents) {
+		if (ev.isFullClose) full_close_ids[ev.positionId] = true;
 	}
-	//console.log('formattedEvents', formattedEvents);
+
+	history_cache.timestamp = Date.now();
+	history_cache.items = formattedHistoryEvents;
+
+	let new_position_ids = {};
+	for (let ev of _events_new) {
+		ev = formatEvent(ev);
+		if (!full_close_ids[ev.positionId]) new_position_ids[ev.positionId] = true;
+	}
+
+	return Object.keys(new_position_ids);
+
+}
+
+export async function fetchHistoryEvents(address) {
+	if (!address) return [];
+
+	if (history_cache.timestamp > Date.now() - 3*1000) {
+		return history_cache.items;
+	}
+
+	const tradingContract = getContract();
+	if (!tradingContract) return [];
+	const filter = tradingContract.filters.ClosePosition(null, address);
+	const _events = await tradingContract.queryFilter(filter, -510000); // last 90 days
+	let formattedEvents = [];
+	for (const ev of _events) {
+		formattedEvents.unshift(formatEvent(ev));
+	}
 	return formattedEvents;
-	// possibly use graph protocol for more efficient queries later
+}
+
+export async function fetchStakeIds(address) {
+
+	if (!address) return;
+	const tradingContract = getContract();
+	if (!tradingContract) return;
+
+	const filter_redeemed = tradingContract.filters.Redeemed(null, address);
+	const _events_redeemed = await tradingContract.queryFilter(filter_redeemed, -510000); // last 510K blocks, eg 90 days
+
+	let full_redeemed_ids = {};
+	for (let ev of _events_redeemed) {
+		ev = formatEvent(ev);
+		if (ev.isFullRedeem) full_redeemed_ids[ev.stakeId] = true;
+	}
+
+	const filter_staked = tradingContract.filters.Staked(null, address);
+	const _events_staked = await tradingContract.queryFilter(filter_staked, -510000); // last 510K blocks, eg 90 days
+
+	let new_stake_ids = {};
+	for (let ev of _events_staked) {
+		ev = formatEvent(ev);
+		if (!full_redeemed_ids[ev.stakeId]) new_stake_ids[ev.stakeId] = true;
+	}
+
+	return Object.keys(new_stake_ids);
+
 }

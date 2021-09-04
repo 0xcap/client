@@ -2,6 +2,8 @@ export const VERSION = '1';
 
 export const BASE_SYMBOL = 'ETH';
 
+export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
+
 export const DEFAULT_CHAIN_ID = 4; // rinkeby
 
 export const PRICE_DECIMALS = 8;
@@ -11,24 +13,23 @@ const INFURA_KEY = '8cccc478d2e54cb3bc3ec5524793f636';
 // ABIS
 const TRADING_ABI = [
 
-	"function getLatestPrice(uint16 productId) view returns(uint256)",
-	"function getVault() view returns(tuple(uint256 cap, uint256 maxOpenInterest, uint256 openInterest, uint256 balance, uint256 staked, uint256 maxDailyDrawdown, uint256 lastCheckpointBalance, uint256 lastCheckpointTime, uint256 protocolFee, uint256 stakingPeriod, uint256 redemptionPeriod, bool isActive))",
-	"function getProduct(uint16 productId) view returns(tuple(uint256 leverage, address feed, uint256 fee, uint256 interest, uint256 settlementTime, uint256 minTradeDuration, uint256 liquidationThreshold, uint256 liquidationBounty, bool isActive))",
-	"function getPosition(uint256 positionId) view returns(tuple(uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 margin, uint256 leverage, uint256 price, uint256 liquidationPrice, uint256 positionId))",
-	"function getUserPositions(address user) view returns(tuple(uint16 productId, address owner, uint64 timestamp, bool isLong, bool isSettling, uint256 leverage, uint256 price, uint256 positionId, uint256 margin)[] _positions)",
-	"function getUserStaked(address user) view returns(uint256)",
+	"function getLatestPrice(address feed, uint16 productId) view returns(uint256)",
+	"function getVault() view returns(tuple(uint96 cap, uint96 balance, uint64 staked, uint80 lastCheckpointBalance, uint80 lastCheckpointTime, uint32 stakingPeriod, uint32 redemptionPeriod, uint32 maxDailyDrawdown))",
+	"function getProduct(uint16 productId) view returns(tuple(address feed, uint64 maxLeverage, uint16 fee, bool isActive, uint64 maxExposure, uint56 openInterestLong, uint56 openInterestShort, uint16 interest, uint16 settlementTime, uint16 minTradeDuration, uint16 liquidationThreshold, uint16 liquidationBounty))",
+	"function getPositions(uint256[] calldata positionIds) view returns(tuple(uint64 productId, uint64 leverage, uint64 price, uint64 margin, address owner, uint80 timestamp, bool isLong, bool isSettling)[] _positions)",
+	"function getStakes(uint256[] calldata stakeIds) view returns(tuple(uint64 amount, uint32 timestamp, address owner)[] _stakes)",
 
 	"function stake() payable",
-	"function redeem() payable",
+	"function redeem(uint256 stakeId, uint256 amount)",
 	"function openPosition(uint16 productId, bool isLong, uint256 leverage) payable",
 	"function addMargin(uint256 positionId) payable",
 	"function closePosition(uint256 positionId, uint256 margin, bool releaseMargin)",
 
-	"event Staked(address indexed from, uint256 amount)",
-	"event Redeemed(address indexed to, uint256 amount)",
-	"event NewPosition(uint256 positionId, address indexed user, uint16 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
+	"event Staked(uint256 stakeId, address indexed from, uint256 amount)",
+	"event Redeemed(uint256 stakeId, address indexed to, uint256 amount, bool isFullRedeem)",
+	"event NewPosition(uint256 positionId, address indexed user, uint64 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
 	"event AddMargin(uint256 positionId, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
-	"event ClosePosition(uint256 positionId, address indexed user, uint16 indexed productId, uint256 price, uint256 margin, uint256 leverage, int256 pnl, uint256 protocolFee, bool wasLiquidated)",
+	"event ClosePosition(uint256 positionId, address indexed user, uint64 indexed productId, uint256 price, uint256 margin, uint256 leverage, uint256 pnl, bool pnlIsNegative, uint256 protocolFee, bool isFullClose, bool wasLiquidated)",
 	"event NewPositionSettled(uint256 positionId, address indexed user, uint256 price)",
 	"event PositionLiquidated(uint256 positionId, address indexed by, uint256 vaultReward, uint256 liquidatorReward)"
 ];
@@ -45,7 +46,7 @@ export const CHAIN_DATA = {
 		id: 31337,
 		label: 'Localhost',
 		contract: {
-			address: '0xF32D39ff9f6Aa7a7A64d7a4F00a54826Ef791a55',
+			address: '0x70e0bA845a1A0F2DA3359C97E0285013525FFC49',
 			abi: TRADING_ABI
 		},
 		products: {
@@ -62,19 +63,9 @@ export const CHAIN_DATA = {
 		label: 'Rinkeby',
 		network: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
 		explorer: 'https://rinkeby.etherscan.io',
-		contracts: {
-			TRADING: {
-				address: '0xEde8C3f9fb1d7F0C63Eb284547c35a45c8D7632c',
-				abi: TRADING_ABI
-			}
-		},
-		bases: {
-			1: {
-				symbol: 'USDC',
-				address: '0x0A1A33aEb6d69966973a568653b6465642E4aD59',
-				decimals: 6,
-				precision: 2
-			}
+		contract: {
+			address: '0xA1EF84C48349fc6020Ea768F396f6FEfA73cCa3F',
+			abi: TRADING_ABI
 		},
 		products: {
 			1: 'ETH-USD',
@@ -84,49 +75,14 @@ export const CHAIN_DATA = {
 		},
 		testnet: true
 	},
-	421611: { // Arbitrum rinkeby
-		id: 4,
-		label: 'Arbitrum Rinkeby',
-		network: `https://rinkeby.arbitrum.io/rpc`,
-		explorer: 'https://rinkeby-explorer.arbitrum.io/#',
-		contracts: {
-			TRADING: {
-				address: '0xEde8C3f9fb1d7F0C63Eb284547c35a45c8D7632c',
-				abi: TRADING_ABI
-			}
-		},
-		bases: {
-			1: {
-				symbol: 'USDC',
-				address: '0x0A1A33aEb6d69966973a568653b6465642E4aD59',
-				decimals: 6,
-				precision: 2
-			}
-		},
-		products: {
-			1: 'ETH-USD',
-			2: 'BTC-USD'
-		},
-		testnet: true
-	},
 	42161: {
 		id: 42161,
 		label: 'Arbitrum',
 		network: `https://arb1.arbitrum.io/rpc`,
 		explorer: 'https://arbiscan.io',
-		contracts: {
-			TRADING: {
-				address: '0x5F2fFc7883BD12604e0adf0403f9436D40386Ef4',
-				abi: TRADING_ABI
-			}
-		},
-		bases: {
-			1: {
-				symbol: 'USDC',
-				address: '0xBbfacB66a6F3a73930a8b5483B37b05Be25Bf7fd',
-				decimals: 6,
-				precision: 2
-			}
+		contract: {
+			address: '0x5F2fFc7883BD12604e0adf0403f9436D40386Ef4',
+			abi: TRADING_ABI
 		},
 		products: {
 			1: 'ETH-USD',

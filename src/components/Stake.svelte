@@ -18,16 +18,6 @@
 		const error = await stake(amount);
 		submitIsPending = false;
 	}
-
-	let next_period_date;
-	function getNextRedemptionTime(staking_period) {
-		const now = Date.now() / 1000;
-		const seconds_since_last_period = now % staking_period;
-		const seconds_till_next_period = staking_period - seconds_since_last_period;
-		next_period_date = new Date((now + seconds_till_next_period)*1000).toLocaleString();
-	}
-
-	$: getNextRedemptionTime($selectedVault.stakingPeriod);
 	
 	let rows;
 	$: rows = [
@@ -52,7 +42,7 @@
 <Modal title='Stake'>
 	<DataList data={rows} bind:value={amount} />
 	<div class='details'>
-		Your stake will be locked until the next redemption period ({next_period_date}).
+		Your stake will be locked for {parseInt($selectedVault.stakingPeriod / (3600 * 24))} days.
 	</div>
 	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} label='Stake' action={_stake} />
 </Modal>

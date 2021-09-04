@@ -117,8 +117,8 @@
 					</div>
 				</div>
 
-				<div class={`pnl ${event.pnl * 1 > 0 ? 'pos' : 'neg'}`}>
-					{formatPnl(event.pnl || 0)}
+				<div class={`pnl ${event.pnlIsNegative ? 'neg' : 'pos'}`}>
+					{formatPnl(event.pnl || 0, event.pnlIsNegative)}
 				</div>
 	
 			</div>
