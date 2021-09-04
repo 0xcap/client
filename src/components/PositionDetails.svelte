@@ -69,6 +69,6 @@
 
 </style>
 
-<Modal title='Position Details'>
+<Modal title='Position'>
 	<DataList data={rows} />
 </Modal>

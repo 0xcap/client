@@ -1,6 +1,6 @@
 <script>
 
-	import { PRICE_DECIMALS } from '../lib/constants'
+	import { BASE_SYMBOL, PRICE_DECIMALS } from '../lib/constants'
 	import { calculateLiquidationPrice } from '../lib/helpers'
 	import { addMargin } from '../lib/methods'
 	import { formatToDisplay, intify } from '../lib/utils'
@@ -57,21 +57,29 @@
 		},
 		{
 			label: 'Current Margin',
-			value: formatToDisplay(data.margin)
+			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
+			dim: true
+		},
+		{
+			label: 'Current Leverage',
+			value: `${formatToDisplay(data.leverage)}x`,
+			dim: true
 		},
 		{
 			label: 'New Margin',
-			value: formatToDisplay(newMargin),
-			hasError: !(newMargin*1)
+			value: `${formatToDisplay(newMargin)} ${BASE_SYMBOL}`,
+			isEmpty: !(newMargin*1)
 		},
 		{
 			label: 'New Leverage',
-			value: formatToDisplay(intify(newLeverage)),
+			value: `${formatToDisplay(newLeverage)}x`,
+			isEmpty: !(newLeverage*1),
 			hasError: newLeverage * 1 < 1
 		},
 		{
 			label: 'New Liquidation Price',
 			value: formatToDisplay(newLiquidationPrice),
+			isEmpty: !(newLiquidationPrice*1),
 			hasError: newLiquidationPrice * 1 <= 0
 		},
 	];

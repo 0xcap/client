@@ -26,8 +26,7 @@
 
 	.modal {
 		width: 460px;
-		max-height: 620px;
-		border: 1px solid var(--gray-between);
+		border: 1px solid rgb(30,30,30);
 		border-radius: var(--base-radius);
 		background-color: rgb(25,25,25);
 		overflow: hidden;
@@ -38,10 +37,14 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: var(--base-padding);
-		border-bottom: 1px solid var(--gray-dark);
+		background-color: rgb(30,30,30);
 	}
 	.modal-header.flatter {
 		padding: 16px var(--base-padding);
+	}
+
+	.modal-title {
+		font-weight: 600;
 	}
 
 	.modal-close {
@@ -69,7 +72,7 @@
 
 	.modal-body {
 		overflow-y: scroll;
-		max-height: 554px;
+		max-height: 80vh;
 	}
 
 </style>

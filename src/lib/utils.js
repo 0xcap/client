@@ -54,6 +54,8 @@ export function formatPnl(pnl, pnlIsNegative, isPercent) {
 	}
 	if (!pnlIsNegative) {
 		string += '+';
+	} else if (pnl > 0) {
+		string += '-';
 	}
 	string += formatToDisplay(pnl, isPercent ? 2 : null) || 0;
 	return string;

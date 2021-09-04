@@ -8,7 +8,7 @@
 <style>
 
 	.button-wrap {
-		border-top: 1px solid var(--gray-dark);
+		border-top: 1px solid rgb(30,30,30);
 		padding: var(--base-padding);
 	}
 
@@ -16,10 +16,9 @@
 		background-color: var(--blue);
 		color: var(--gray-darkest);
 		padding: var(--base-padding);
-		border-radius: var(--base-radius);
-		font-size: 20px;
-		font-weight: 700;
-		cursor: pointer;
+		border-radius: 14px;
+		font-weight: 650;
+		font-size: 115%;
 	}
 	button:hover {
 		background-color: var(--blue-dark);

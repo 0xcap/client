@@ -2,6 +2,8 @@
 
 	import { onMount } from 'svelte'
 
+	import { BASE_SYMBOL } from '../lib/constants'
+
 	export let data;
 	export let value = '';
 
@@ -21,7 +23,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-bottom: 1px solid var(--gray-between);
+		border-bottom: 1px solid rgb(30,30,30);
 		padding: var(--base-padding);
 	}
 
@@ -30,7 +32,11 @@
 	}
 
 	.input-row {
-		border-bottom: 1px solid var(--gray-dark);
+		border-bottom: 2px solid rgb(55,55,55);
+	}
+
+	.input-row .label {
+		font-weight: 600;
 	}
 
 	.input-row.focused {
@@ -57,6 +63,10 @@
 		color: var(--orange);
 	}
 
+	.dim {
+		color: var(--gray-light);
+	}
+
 	:global(.row .value svg) {
 		fill: var(--blue);
 		height: 16px;
@@ -77,13 +87,21 @@
 					{/if}
 				</div>
 				<div class='value input-wrap'>
-					<input id='amount' type=number bind:value={value} min=0 max=10000000 on:keyup={row.onKeyUp} on:focus={() => {amountIsFocused = true}} on:blur={() => {amountIsFocused = false}}> 
+					<input id='amount' type=number bind:value={value} min=0 max=10000000 on:keyup={row.onKeyUp} on:focus={() => {amountIsFocused = true}} on:blur={() => {amountIsFocused = false}} placeholder={`0 ${BASE_SYMBOL}`}> 
 				</div>
 			</div>
 		{:else}
 			<div class='row'>
 				<div class='label'>{row.label}</div>
-				<div class:error={row.hasError} class='value'>{#if row.renderHTML} {@html row.value}{:else}{row.value}{/if}</div>
+				<div class:error={!row.isEmpty && row.hasError} class:dim={row.dim} class='value'>
+					{#if row.renderHTML}
+						{@html row.value}
+					{:else if row.isEmpty}
+						-
+					{:else}
+						{row.value}
+					{/if}
+				</div>
 			</div>
 		{/if}
 	{/each}

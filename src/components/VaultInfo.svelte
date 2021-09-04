@@ -20,7 +20,6 @@
 	.vault-info {
 		background-color: var(--black-almost);
 		border-radius: var(--base-radius);
-		box-shadow: rgba(88,201,242,0.1) 0px 12px 28px 0;
 		padding: var(--base-padding);
 		display:  grid;
 		grid-auto-flow: row;

@@ -4,7 +4,6 @@
 	
 	import Toasts from './components/Toasts.svelte'
 	import Header from './components/Header.svelte'
-	import Nav from './components/Nav.svelte'
 	import Footer from './components/Footer.svelte'
 	import Account from './components/Account.svelte'
 
@@ -33,7 +32,15 @@
 </script>
 
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap');
+
+	@font-face {
+	  font-family: 'Inter var';
+	  font-style: normal;
+	  font-weight: 100 900;
+	  font-display: swap;
+	  src: url('fonts/Inter-roman.var.woff2?v=3.19') format('woff2');
+	  font-named-instance: 'Regular';
+	}
 
 	:global(:root) {
 		--black-almost: rgba(23,23,23,0.55);
@@ -50,18 +57,28 @@
 		--green-dark: rgb(0,180,5);
 		--pink: rgb(225,80,221);
 		--orange: rgb(253,167,20);
-		--base-padding: 22px;
+		--base-padding: 20px;
 		--semi-padding: 16px;
 		--base-radius: 18px;
 		--container-width: 580px;
+	}
+	@supports (font-variation-settings: normal) {
+	  :global(:root) {
+	  	font-family: 'Inter var', sans-serif;
+	  }
 	}
 
 	:global(html) {
 		background-color: var(--gray-darkest);
 		color: #fff;
-		font-family: 'Ubuntu Mono';
-		font-size: 18px;
+		font-family: 'Inter var';
+		font-feature-settings: 'ss01','ss02','ss03','cv01','tnum';
+		font-size: 16.5px;
 		height: 100%;
+		font-variant: none;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		-webkit-tap-highlight-color: transparent;
 	}
 
 	:global(body) {
@@ -121,7 +138,7 @@
 	.grid {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 40px;
+		grid-gap: 50px;
 	}
 
 	.radial-gradient {
@@ -145,16 +162,6 @@
 		box-sizing: border-box;
 	}
 
-	.nav {
-		display: none;
-	}
-
-	@media (max-width: 960px) {
-		.nav {
-			display: block;
-		}
-	}
-
 	.maintenance {
 		padding: 20px;
 		text-align: center;
@@ -170,7 +177,6 @@
 <div class='grid'>
 	<div class='radial-gradient'></div>
 	<Header />
-	<div class='nav'><Nav /></div>
 	{#if $isUnderMaintenance}
 		<div class='maintenance'>Cap is under maintenance on this Ethereum network. Try Rinkeby.</div>
 	{:else}
