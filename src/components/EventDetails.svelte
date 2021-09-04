@@ -3,6 +3,7 @@
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 
+	import { BASE_SYMBOL } from '../lib/constants'
 	import { EXTERNAL_ICON } from '../lib/icons'
 	import { txLink, formatToDisplay, formatPnl } from '../lib/utils'
 
@@ -24,15 +25,15 @@
 		},
 		{
 			label: 'Margin',
-			value: formatToDisplay(data.margin)
+			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`
 		},
 		{
 			label: 'Leverage',
-			value: formatToDisplay(data.leverage)
+			value: `${formatToDisplay(data.leverage)}x`
 		},
 		{
 			label: 'Amount',
-			value: formatToDisplay(data.amount)
+			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`
 		},
 		{
 			label: 'Profit or Loss',

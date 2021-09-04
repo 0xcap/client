@@ -5,7 +5,7 @@
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 
-	import { PRICE_DECIMALS } from '../lib/constants'
+	import { BASE_SYMBOL, PRICE_DECIMALS } from '../lib/constants'
 	import { calculateLiquidationPrice } from '../lib/helpers'
 	import { getProduct } from '../lib/methods'
 	import { formatUnits, formatToDisplay } from '../lib/utils'
@@ -43,15 +43,15 @@
 		},
 		{
 			label: 'Margin',
-			value: formatToDisplay(data.margin)
+			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`
 		},
 		{
 			label: 'Leverage',
-			value: formatToDisplay(data.leverage)
+			value: `${formatToDisplay(data.leverage)}x`
 		},
 		{
 			label: 'Amount',
-			value: formatToDisplay(data.amount)
+			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`
 		},
 		{
 			label: 'Has Settled',
