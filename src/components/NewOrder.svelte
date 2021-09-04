@@ -48,6 +48,7 @@
 		// Activates prices
 		selectProduct($selectedProductId);
 		checkFocus($selectedAddress);
+
 	});
 
 </script>
@@ -201,7 +202,7 @@
 			</div>
 		</div>
 		<div class='input-wrap'>
-			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder='0.0' autocomplete="off" autocorrect="off" inputmode="decimal">
+			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal">
 			{#if $margin > 0}<div class='input-label'>Margin: {formatToDisplay($margin)} {BASE_SYMBOL}</div>{/if}
 		</div>
 	</label>

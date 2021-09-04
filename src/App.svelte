@@ -45,7 +45,7 @@
 	:global(:root) {
 		--black-almost: rgba(23,23,23,0.55);
 		--gray-darkest: rgb(30,30,30);
-		--gray-between: rgba(40,40,40);
+		--gray-between: rgb(40,40,40);
 		--gray-dark: rgb(55,55,55);
 		--gray: rgb(80,80,80);
 		--gray-light: rgb(125,125,125);

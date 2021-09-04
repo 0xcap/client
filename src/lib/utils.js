@@ -219,6 +219,8 @@ export function getCachedLeverage(productId) {
 			cl = JSON.parse(cl);
 			return cl[productId] * 1;
 		} catch(e) {}
+	} else {
+		return null;
 	}
 }
 

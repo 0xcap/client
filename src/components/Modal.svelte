@@ -36,11 +36,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: var(--base-padding);
+		padding: 0 var(--base-padding);
+		height: 62px;
 		background-color: rgb(30,30,30);
-	}
-	.modal-header.flatter {
-		padding: 16px var(--base-padding);
 	}
 
 	.modal-title {
@@ -54,9 +52,9 @@
 	.done-button {
 		background-color: var(--blue);
 		color: var(--gray-darkest);
-		padding: 8px 16px;
-		border-radius: 12px;
-		font-weight: 700;
+		padding: 6px 14px;
+		border-radius: 14px;
+		font-weight: 650;
 		cursor: pointer;
 	}
 	.done-button:hover {
@@ -81,7 +79,7 @@
 
 	<div class='modal' data-intercept="true">
 
-		<div class:flatter={doneButton} class='modal-header'>
+		<div class='modal-header'>
 			<div class='modal-title'>{title}</div>
 			{#if doneButton}
 			<a class='done-button' on:click={hideModal}>Done</a>

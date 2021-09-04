@@ -32,21 +32,24 @@
 		max-height: 420px;
 	}
 
-	.product-list a {
+	.row {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: var(--base-padding);
-		font-size: 20px;
-		color: inherit;
+		border-bottom: 1px solid rgb(30,30,30);
+		font-size: 115%;
+		font-weight: 700;
+		cursor: pointer;
 	}
-
-	.product-list a:hover, .product-list a.selected {
-		background-color: var(--gray-between);
+	.row:hover, .row.selected {
+		background-color: rgb(30,30,30);
 	}
-
-	.product-list a.selected {
-		cursor: default;
+	.row.selected {
+		cursor: default !important;
+	}
+	.row:last-child {
+		border-bottom: none;
 	}
 
 	.product-wrap {
@@ -55,27 +58,41 @@
 	}
 
 	.product-wrap img {
-		width: 24px;
-		height: 24px;
-		border-radius: 24px;
-		margin-right: 8px;
+		width: 32px;
+		height: 32px;
+		border-radius: 32px;
+		margin-right: 12px;
 	}
 
-	.leverage-container {
-		border-top: 1px solid var(--gray-dark);
+	.price {
+		font-weight: 400;
+	}
+	.price.empty {
+		color: var(--gray);
+	}
+
+	.bottom-container {
+		border-top: 1px solid rgb(30,30,30);
+	}
+
+	.leverage-select {
 		padding: var(--base-padding);
 		padding-bottom: 0;
+		font-size: 115%;
 	}
 
-	.row {
+	.leverage-select .header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding-bottom: var(--base-padding);
-		font-size: 20px;
+		margin-bottom: var(--base-padding);
 	}
 
-	.value {
+	.leverage-select .header .label {
+		color: var(--gray-light);
+	}
+
+	.leverage-select .header .value {
 		font-weight: 700;
 	}
 
@@ -90,7 +107,7 @@
 	}
 
 	.border-top {
-		border-top: 1px solid var(--gray-dark);
+		border-top: 1px solid rgb(30,30,30);
 	}
 
 	:global(.details svg) {
@@ -107,33 +124,42 @@
 	<div class='product-list no-scrollbar'>
 
 		{#each $productList as product}
-			<a class:selected={product.id == $selectedProductId} on:click={() => {selectProduct(product.id)}}>
+
+			<div class='row' class:selected={product.id == $selectedProductId} on:click={() => {selectProduct(product.id)}}>
+
 				<div class='product-wrap'>
 					<img src={LOGOS[product.id]} alt={`${product.symbol} logo`}>
 					<span>{product.symbol}</span>
 				</div>
-				<div>{formatToDisplay($prices[product.id], product.id) || ''}</div>
-			</a>
+
+				<div class:empty={!$prices[product.id]} class='price'>{formatToDisplay($prices[product.id], product.id) || 'Tap for price'}</div>
+
+			</div>
+
 		{/each}
 
 	</div>
 
-	<div class='leverage-container'>
-		<div class='row'>
-			<div class='label'>Leverage</div>
-			<div class='value'>{$leverage}x</div>
-		</div>
-		<div class='range'>
-			<input type=range bind:value={$leverage} min=1 max={$selectedProduct.maxLeverage * 1 || 100}> 
-		</div>
-	</div>
+	<div class='bottom-container'>
 
-	<div class='details'>
-		{$selectedProduct.fee}% fee | -{funding}% 8h funding
-	</div>
+		<div class='leverage-select'>
+			<div class='header'>
+				<div class='label'>Leverage</div>
+				<div class='value'>{$leverage}x</div>
+			</div>
+			<div class='range'>
+				<input type=range bind:value={$leverage} min=1 max={$selectedProduct.maxLeverage * 1 || 100}> 
+			</div>
+		</div>
 
-	<div class='details border-top'>
-		Prices provided by {@html CHAINLINK_FULL_ICON}
+		<div class='details'>
+			{$selectedProduct.fee}% fee | -{funding}% 8h funding
+		</div>
+
+		<div class='details border-top'>
+			Prices provided by {@html CHAINLINK_FULL_ICON}
+		</div>
+
 	</div>
 
 </Modal>

@@ -8,7 +8,7 @@ export const DEFAULT_CHAIN_ID = 4; // rinkeby
 
 export const PRICE_DECIMALS = 8;
 export const LEVERAGE_DECIMALS = 18;
-const INFURA_KEY = '8cccc478d2e54cb3bc3ec5524793f636';
+const INFURA_KEY = '344f83ae728540b7a0af85fe96b0b146';
 
 // ABIS
 const TRADING_ABI = [

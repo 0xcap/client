@@ -34,27 +34,31 @@
 		justify-content: space-between;
 	}
 
+	.header .title {
+		font-weight: 700;
+	}
+
 	.history-list {
 		border-radius: var(--base-radius);
 		overflow: hidden;
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 4px;
+		grid-gap: 5px;
 	}
 
 	.item {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background-color: var(--gray-between);
+		background-color: rgba(40,40,40,0.55);
 		overflow: hidden;
-		height: 66px;
-		font-size: 20px;
+		height: 75px;
+		font-size: 115%;
 		cursor: pointer;
 		padding: 0 var(--base-padding);
 	}
 	.item:hover {
-		background-color: var(--gray-dark);
+		background-color: rgba(40,40,40,0.85);
 	}
 
 	.info {
@@ -67,7 +71,7 @@
 	}
 
 	.product .leverage {
-		margin-left: 8px;
+		margin-left: 3px;
 		font-weight: 400;
 	}
 

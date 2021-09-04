@@ -62,6 +62,6 @@
 <style>
 </style>
 
-<Modal title='Event Details'>
+<Modal title='Trade'>
 	<DataList data={rows} />
 </Modal>
