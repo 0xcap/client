@@ -1,4 +1,6 @@
 <script>
+	import { fade, fly } from 'svelte/transition'
+
 	import { toasts, hideToast } from '../stores/toasts'
 	import { CANCEL_ICON } from '../lib/icons'
 </script>
@@ -68,7 +70,7 @@
 <div class='toast-container'>
 	<div class='toast-wrapper'>
 		{#each $toasts as toast}
-			<div class={`toast ${toast.type || 'error'}`} data-intercept="true">
+			<div transition:fly="{{ x: 100, duration: 250 }}" class={`toast ${toast.type || 'error'}`} data-intercept="true">
 				<div class='body'>
 					<div class='title'>{toast.type}</div>
 					<div class='text'>{toast.message}</div>
