@@ -79,12 +79,12 @@
 		},
 		{
 			label: 'Current Leverage',
-			value: `${formatToDisplay(data.leverage)}x`,
+			value: `${formatToDisplay(data.leverage)}×`,
 			dim: true
 		},
 		{
 			label: 'New Leverage',
-			value: `${formatToDisplay(newLeverage)}x`,
+			value: `${formatToDisplay(newLeverage)}×`,
 			isEmpty: !(newLeverage*1),
 			hasError: newLeverage * 1 < 1
 		},

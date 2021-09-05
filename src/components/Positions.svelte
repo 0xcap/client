@@ -225,7 +225,7 @@
 							<div class='product'>
 								<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
 								<span>{position.product}</span>
-								<span class='leverage'>{formatToDisplay(position.leverage)}x</span>
+								<span class='leverage'>{formatToDisplay(position.leverage)}×</span>
 							</div>
 							<div class='entry'>
 								{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}

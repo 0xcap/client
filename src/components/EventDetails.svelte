@@ -36,7 +36,7 @@
 		},
 		{
 			label: 'Leverage',
-			value: `${formatToDisplay(data.leverage)}x`
+			value: `${formatToDisplay(data.leverage)}×`
 		},
 		{
 			label: 'Amount',

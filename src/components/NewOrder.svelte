@@ -195,7 +195,7 @@
 		</div>
 		<div class='product-wrap'>
 			{#if $selectedProduct.symbol}
-				<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol}</span> <span class='leverage'>{$leverage}x</span>
+				<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol}</span> <span class='leverage'>{$leverage}×</span>
 			{/if}
 		</div>
 	</div>
