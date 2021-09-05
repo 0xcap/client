@@ -60,19 +60,16 @@
 		{
 			type: 'input',
 			label: 'Amount to Close',
-			onKeyUp: calculateAmounts,
-			labelTool: {
-				text: '(Max)', 
-				action: setMaxAmount
-			}
+			onKeyUp: calculateAmounts
 		},
 		{
 			label: 'Current Amount',
 			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-			dim: true
+			dim: true,
+			onclick: setMaxAmount
 		},
 		{
-			label: 'Close %',
+			label: 'Close Percent',
 			value: `${formatToDisplay(closePercent, 2)}%`,
 			isEmpty: closePercent == 0
 		},

@@ -48,7 +48,6 @@
 		// Activates prices
 		selectProduct($selectedProductId);
 		checkFocus($selectedAddress);
-
 	});
 
 </script>
@@ -62,6 +61,14 @@
 		padding: 12px;
 		background-color: var(--black-almost);
 		border-radius: var(--base-radius);
+	}
+
+	.new-order.disabled {
+		pointer-events: none;
+	}
+
+	.new-order.disabled .input-row {
+		opacity: 0.6;
 	}
 
 	.product-row {
@@ -146,7 +153,7 @@
 	}
 
 	button.disabled {
-		background-color: var(--gray-dark);
+		background-color: var(--gray-darkest);
 		color: var(--gray-light);
 		pointer-events: none;
 		cursor: default;
@@ -175,7 +182,7 @@
 
 </style>
 
-<div class='new-order'>
+<div class='new-order' class:disabled={submitIsPending}>
 
 	<div class='input-row product-row' on:click={() => {showModal('Products')}} data-intercept="true">
 		<div class='label-wrap'>
@@ -195,14 +202,11 @@
 		<div class='label-wrap'>
 			<div class='label'>Amount</div>
 			<div class='sub-label'>
-				Available: {formatToDisplay($buyingPower)} {BASE_SYMBOL}
-				{#if $selectedAddress}
-					<a on:click={() => {amount.set($buyingPower*1)}}>(Max)</a>
-				{/if}
+				Available: <a on:click={() => {amount.set($buyingPower*1)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
 			</div>
 		</div>
 		<div class='input-wrap'>
-			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal">
+			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
 			{#if $margin > 0}<div class='input-label'>Margin: {formatToDisplay($margin)} {BASE_SYMBOL}</div>{/if}
 		</div>
 	</label>

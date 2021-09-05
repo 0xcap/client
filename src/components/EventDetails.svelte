@@ -20,8 +20,12 @@
 			value: data.product
 		},
 		{
-			label: 'Price',
+			label: 'Close Price',
 			value: formatToDisplay(data.price)
+		},
+		{
+			label: 'Entry Price',
+			value: formatToDisplay(data.entryPrice)
 		},
 		{
 			label: 'Margin',
@@ -38,10 +42,6 @@
 		{
 			label: 'Profit or Loss',
 			value: `${formatPnl(data.pnl, data.pnlIsNegative)}`
-		},
-		{
-			label: 'Protocol Fee',
-			value: data.protocolFee
 		},
 		{
 			label: 'Was Liquidated',

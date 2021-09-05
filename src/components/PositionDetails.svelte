@@ -26,10 +26,6 @@
 			value: data.positionId
 		},
 		{
-			label: 'Product',
-			value: data.product
-		},
-		{
 			label: 'Submitted',
 			value: new Date(data.timestamp * 1000).toLocaleString()
 		},
@@ -39,7 +35,7 @@
 		},
 		{
 			label: 'Price',
-			value: data.price
+			value: formatToDisplay(data.price)
 		},
 		{
 			label: 'Margin',
@@ -59,7 +55,7 @@
 		},
 		{
 			label: 'Liquidation Price',
-			value: liquidationPrice
+			value: formatToDisplay(liquidationPrice)
 		}
 	];
 
@@ -69,6 +65,6 @@
 
 </style>
 
-<Modal title='Position'>
+<Modal title={`${data.product} Position`}>
 	<DataList data={rows} />
 </Modal>

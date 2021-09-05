@@ -237,9 +237,11 @@
 							<div class='upl'>
 								{formatPnl(upls[position.positionId])}
 							</div>
+							<!--
 							<div class='upl-percent'>
 								{formatPnl(upls_percent[position.positionId], undefined, true)}%
 							</div>
+							-->
 						</div>
 						<a class='add-margin' on:click={() => {showModal('AddMargin', position)}} data-intercept="true">
 							{@html PLUS_ICON}

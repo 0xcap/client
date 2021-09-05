@@ -29,7 +29,7 @@ const TRADING_ABI = [
 	"event Redeemed(uint256 stakeId, address indexed to, uint256 amount, bool isFullRedeem)",
 	"event NewPosition(uint256 positionId, address indexed user, uint64 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
 	"event AddMargin(uint256 positionId, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
-	"event ClosePosition(uint256 positionId, address indexed user, uint64 indexed productId, uint256 price, uint256 margin, uint256 leverage, uint256 pnl, bool pnlIsNegative, uint256 protocolFee, bool isFullClose, bool wasLiquidated)",
+	"event ClosePosition(uint256 positionId, address indexed user, uint64 indexed productId, uint256 price, uint256 entryPrice, uint256 margin, uint256 leverage, uint256 pnl, bool pnlIsNegative, bool isFullClose, bool wasLiquidated)",
 	"event NewPositionSettled(uint256 positionId, address indexed user, uint256 price)",
 	"event PositionLiquidated(uint256 positionId, address indexed by, uint256 vaultReward, uint256 liquidatorReward)"
 ];
@@ -46,7 +46,7 @@ export const CHAIN_DATA = {
 		id: 31337,
 		label: 'Localhost',
 		contract: {
-			address: '0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650',
+			address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
 			abi: TRADING_ABI
 		},
 		products: {

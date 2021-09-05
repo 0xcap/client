@@ -131,7 +131,7 @@
 
 	.product-list {
 		overflow-y: scroll;
-		height: 300px;
+		height: 45vh;
 	}
 
 	.no-results {
@@ -184,7 +184,7 @@
 	.bottom-container {
 		border-top: 2px solid rgb(55,55,55);
 		overflow-y: scroll;
-		max-height: 300px;
+		max-height: 30vh;
 	}
 
 	.header-row {
@@ -266,7 +266,7 @@
 
 	</div>
 
-	<div class='bottom-container'>
+	<div class='bottom-container no-scrollbar'>
 
 		<div class='header-row'>
 			<div class='label'>Selected Product</div>
