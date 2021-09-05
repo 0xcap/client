@@ -91,13 +91,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background-color: var(--black-almost);
+		background-color: rgba(23,23,23,0.4);
 		overflow: hidden;
 		height: 86px;
 		font-size: 115%;
 	}
 	.position:hover {
-		background-color: rgba(23,23,23,0.65);
+		background-color: rgba(23,23,23,0.55);
 	}
 
 	.details {

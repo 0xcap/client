@@ -50,15 +50,14 @@
 	}
 
 	.done-button {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-		padding: 6px 14px;
+		background-color: rgb(50,50,50);
+		padding: 6px 10px;
 		border-radius: 14px;
 		font-weight: 650;
 		cursor: pointer;
 	}
 	.done-button:hover {
-		background-color: var(--blue-dark);
+		background-color: rgb(40,40,40);
 	}
 
 	:global(.modal-close svg) {
@@ -82,7 +81,7 @@
 		<div class='modal-header'>
 			<div class='modal-title'>{title}</div>
 			{#if doneButton}
-			<a class='done-button' on:click={hideModal}>Done</a>
+			<span class='done-button' on:click={hideModal}>Done</span>
 			{:else}
 			<span class='modal-close' on:click={hideModal}>{@html CANCEL_ICON}</span>
 			{/if}

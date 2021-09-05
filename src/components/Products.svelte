@@ -114,7 +114,7 @@
 	}
 
 	.search-row.focused {
-		border-color: var(--blue);
+
 	}
 
 	.search-row .clear {
@@ -154,7 +154,7 @@
 		background-color: rgb(30,30,30);
 	}
 	.row.selected {
-		background-color: rgb(40,40,40);
+		background-color: rgb(30,30,30);
 		cursor: default !important;
 	}
 	.row:last-child {
@@ -175,13 +175,14 @@
 
 	.price {
 		font-weight: 400;
+		color: var(--gray-light);
 	}
 	.price.empty {
-		color: var(--gray);
+		color: var(--gray-light);
 	}
 
 	.bottom-container {
-		border-top: 1px solid rgb(50,50,50);
+		border-top: 2px solid rgb(55,55,55);
 		overflow-y: scroll;
 		max-height: 300px;
 	}
@@ -236,7 +237,7 @@
 <Modal title='Products' doneButton={true}>
 
 	<div class='search-row' class:focused={searchIsFocused}>
-		<input id='search' type='text' bind:value={query} min=0 max=10000000 on:focus={() => {searchIsFocused = true}} on:blur={() => {searchIsFocused = false}} placeholder="Search for a product...">
+		<input id='search' type='text' bind:value={query} min=0 max=10000000 on:focus={() => {searchIsFocused = true}} on:blur={() => {searchIsFocused = false}} placeholder="Search...">
 		{#if query}<span class='clear' on:click={() => {query = undefined}} data-intercept="true">{@html CANCEL_ICON}</span>{/if}
 	</div>
 
