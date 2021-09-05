@@ -42,8 +42,8 @@ export function formatToDisplay(amount, precision) {
 		return (amount * 1).toFixed(2);
 	} else if (amount * 1 >= 10 || amount * 1 <= -10) {
 		return (amount * 1).toFixed(3);
-	}  else if (amount * 1 >= 0.1 || amount * 1 <= -0.1) {
-		return (amount * 1).toFixed(4);
+	} else if (amount * 1 >= 0.1 || amount * 1 <= -0.1) {
+		return (amount * 1).toFixed(5);
 	} else {
 		return (amount * 1).toFixed(6);
 	}

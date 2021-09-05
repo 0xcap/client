@@ -15,7 +15,7 @@ const TRADING_ABI = [
 
 	"function getLatestPrice(address feed, uint16 productId) view returns(uint256)",
 	"function getVault() view returns(tuple(uint96 cap, uint96 balance, uint64 staked, uint80 lastCheckpointBalance, uint80 lastCheckpointTime, uint32 stakingPeriod, uint32 redemptionPeriod, uint32 maxDailyDrawdown))",
-	"function getProduct(uint16 productId) view returns(tuple(address feed, uint64 maxLeverage, uint16 fee, bool isActive, uint64 maxExposure, uint56 openInterestLong, uint56 openInterestShort, uint16 interest, uint16 settlementTime, uint16 minTradeDuration, uint16 liquidationThreshold, uint16 liquidationBounty))",
+	"function getProduct(uint16 productId) view returns(tuple(address feed, uint64 maxLeverage, uint16 fee, bool isActive, uint64 maxExposure, uint48 openInterestLong, uint48 openInterestShort, uint16 interest, uint32 settlementTime, uint16 minTradeDuration, uint16 liquidationThreshold, uint16 liquidationBounty))",
 	"function getPositions(uint256[] calldata positionIds) view returns(tuple(uint64 productId, uint64 leverage, uint64 price, uint64 margin, address owner, uint80 timestamp, bool isLong, bool isSettling)[] _positions)",
 	"function getStakes(uint256[] calldata stakeIds) view returns(tuple(uint64 amount, uint32 timestamp, address owner)[] _stakes)",
 
@@ -37,9 +37,17 @@ const TRADING_ABI = [
 export const PRODUCT_TO_ID = {
 	'ETH-USD': 1,
 	'BTC-USD': 2,
-	'Gold': 3,
-	'EUR-USD': 4
-} 
+	'LINK-USD': 3,
+	'XRP-USD': 4,
+	'Gold': 5,
+	'Silver': 6,
+	'Oil': 7,
+	'EUR-USD': 8,
+	'GBP-USD': 9,
+	'JPY-USD': 10,
+	'CHF-USD': 11,
+	'AUD-USD': 12
+};
 
 export const CHAIN_DATA = {
 	31337: { // Hardhat local node
@@ -64,14 +72,22 @@ export const CHAIN_DATA = {
 		network: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
 		explorer: 'https://rinkeby.etherscan.io',
 		contract: {
-			address: '0x519910A6236253587E2c09e00d61A6945b108224',
+			address: '0x91e434e892381D30bd01E008F539fe8b76217973',
 			abi: TRADING_ABI
 		},
 		products: {
 			1: 'ETH-USD',
 			2: 'BTC-USD',
-			3: 'Gold',
-			4: 'EUR-USD'
+			3: 'LINK-USD',
+			4: 'XRP-USD',
+			5: 'Gold',
+			6: 'Silver',
+			7: 'Oil',
+			8: 'EUR-USD',
+			9: 'GBP-USD',
+			10: 'JPY-USD',
+			11: 'CHF-USD',
+			12: 'AUD-USD'
 		},
 		testnet: true
 	},

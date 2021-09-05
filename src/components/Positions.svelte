@@ -228,7 +228,7 @@
 								<span class='leverage'>{formatToDisplay(position.leverage)}×</span>
 							</div>
 							<div class='entry'>
-								{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
+								{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}{#if position.isSettling}<span title='Price settles at the next oracle price change' class='settling'>&#8226;</span>{/if}
 							</div>
 						</div>
 					</div>

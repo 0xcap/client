@@ -264,7 +264,7 @@
 						<span>{product.symbol}</span>
 					</div>
 
-					<div class:empty={!$prices[product.id]} class='price'>{formatToDisplay($prices[product.id], product.id) || 'Tap for price'}</div>
+					<div class:empty={!$prices[product.id]} class='price'>{formatToDisplay($prices[product.id]) || 'Tap for price'}</div>
 
 				</div>
 

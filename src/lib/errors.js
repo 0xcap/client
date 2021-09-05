@@ -15,7 +15,7 @@ const ERROR_STRINGS = {
 	'!product-active': "Product is paused.",
 	'!max-leverage': "Leverage is too high.",
 	'!price': "Price is unavailable.",
-	'!settling': "Position price is still settling.",
+	'!settling': "Position price is still settling. It settles at the next oracle price change.",
 	'!duration': "Can't close before minimum hold time is up.",
 	'!max-open-interest': "Trade exceeds max open interest on the vault.",
 	'!low-leverage': "Leverage would be too low. Try adding less margin.",
