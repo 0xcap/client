@@ -3,6 +3,7 @@
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 
+	import { BASE_SYMBOL } from '../lib/constants'
 	import { EXTERNAL_ICON } from '../lib/icons'
 	import { txLink, formatToDisplay, formatPnl } from '../lib/utils'
 
@@ -19,28 +20,33 @@
 			value: data.product
 		},
 		{
-			label: 'Price',
-			value: formatToDisplay(data.price)
+			label: 'Close Price',
+			value: formatToDisplay(data.price),
+			helper: 'Price includes fees.'
+		},
+		{
+			label: 'Entry Price',
+			value: formatToDisplay(data.entryPrice),
+			helper: 'Price includes fees.'
 		},
 		{
 			label: 'Margin',
-			value: formatToDisplay(data.margin)
+			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
+			helper: 'Real balance used from your wallet.'
 		},
 		{
 			label: 'Leverage',
-			value: formatToDisplay(data.leverage)
+			value: `${formatToDisplay(data.leverage)}×`
 		},
 		{
 			label: 'Amount',
-			value: formatToDisplay(data.amount)
+			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
+			helper: 'Amount includes leverage.'
 		},
 		{
 			label: 'Profit or Loss',
-			value: `${formatPnl(data.pnl, data.pnlIsNegative)}`
-		},
-		{
-			label: 'Protocol Fee',
-			value: data.protocolFee
+			value: `${formatPnl(data.pnl, data.pnlIsNegative)}`,
+			helper: 'P/L includes interest charged.'
 		},
 		{
 			label: 'Was Liquidated',

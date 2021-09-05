@@ -2,6 +2,8 @@
 
 	import { onMount } from 'svelte'
 
+	import Helper from './Helper.svelte'
+
 	import { BASE_SYMBOL } from '../lib/constants'
 
 	export let data;
@@ -37,6 +39,7 @@
 
 	.input-row .label {
 		font-weight: 600;
+		color: #fff !important;
 	}
 
 	.input-row.focused {
@@ -55,16 +58,17 @@
 		color: var(--gray-light);
 	}
 
-	.label-tool {
-		font-size: 80%;
-	}
-
 	.error {
 		color: var(--orange);
 	}
 
 	.dim {
 		color: var(--gray-light);
+	}
+
+	.clickable {
+		color: var(--blue);
+		cursor: pointer;
 	}
 
 	:global(.row .value svg) {
@@ -80,20 +84,15 @@
 	{#each data as row}
 		{#if row.type == 'input'}
 			<div class='row input-row' class:focused={amountIsFocused}>
-				<div class='label'>
-					<span>{row.label}</span>
-					{#if row.labelTool}
-					<a class='label-tool' on:click={row.labelTool.action}>{row.labelTool.text}</a>
-					{/if}
-				</div>
+				<div class='label'>{row.label}</div>
 				<div class='value input-wrap'>
 					<input id='amount' type=number bind:value={value} min=0 max=10000000 on:keyup={row.onKeyUp} on:focus={() => {amountIsFocused = true}} on:blur={() => {amountIsFocused = false}} placeholder={`0 ${BASE_SYMBOL}`}> 
 				</div>
 			</div>
 		{:else}
 			<div class='row'>
-				<div class='label'>{row.label}</div>
-				<div class:error={!row.isEmpty && row.hasError} class:dim={row.dim} class='value'>
+				<div class='label'>{row.label}{#if row.helper}<Helper text={row.helper} direction='right' />{/if}</div>
+				<div class:error={!row.isEmpty && row.hasError} class:dim={row.dim} class:clickable={Boolean(row.onclick)} on:click={row.onclick} class='value'>
 					{#if row.renderHTML}
 						{@html row.value}
 					{:else if row.isEmpty}

@@ -17,40 +17,49 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: 16px;
-		max-width: 240px;
+		max-width: 280px;
 	}
 	.toast {
-		background-color: var(--gray-darkest);
-		border-radius: 12px;
+		background-color: rgb(23,23,23);
+		border-radius: 8px;
 		display: flex;
 		justify-content: space-between;
-		border: 2px solid transparent;
+		padding: 16px;
 	}
-	.toast.error {
-		color: var(--red);
-		border-color: var(--red);
-		fill: var(--red);;
+
+	.body {
+		padding-right: var(--base-padding);
 	}
-	.toast.success {
-		color: var(--green);
-		border-color: var(--green);
-		fill: var(--green);;
-	}
-	.toast.info {
-		color: var(--blue);
-		border-color: var(--blue);
-		fill: var(--blue);;
+
+	.title {
+		font-weight: 700;
+		text-transform: capitalize;
+		margin-bottom: 4px;
 	}
 	.text {
-		line-height: 1.35;
-		font-size: 95%;
+		line-height: 1.45;
+		word-break: break-word
 	}
-	.text, .close {
-		padding: 12px;
+
+	.toast.error {
+		border: 2px solid var(--red);
+		color: var(--red);
+		fill: var(--red);
 	}
+	.toast.success {
+		border: 2px solid var(--green);
+		color: var(--green);
+		fill: var(--green);;
+	}
+	.toast.transaction {
+		border: 2px solid var(--blue);
+		color: var(--blue);
+		fill: var(--blue);;
+	}
+
 	:global(.toast-wrapper .close svg) {
-		height: 12px;
-		width:  12px;
+		height: 14px;
+		width:  14px;
 		margin-bottom: -2px;
 		fill: inherit;
 	}
@@ -60,7 +69,10 @@
 	<div class='toast-wrapper'>
 		{#each $toasts as toast}
 			<div class={`toast ${toast.type || 'error'}`} data-intercept="true">
-				<div class='text'>{toast.message}</div>
+				<div class='body'>
+					<div class='title'>{toast.type}</div>
+					<div class='text'>{toast.message}</div>
+				</div>
 				<a class='close' on:click={() => {hideToast(toast.id)}}>{@html CANCEL_ICON}</a>
 			</div>
 		{/each}

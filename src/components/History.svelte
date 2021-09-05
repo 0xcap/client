@@ -114,7 +114,7 @@
 				<div class='info'>
 					<div class='product'>
 						<span>{event.product}</span>
-						<span class='leverage'>{formatToDisplay(event.leverage)}x</span>
+						<span class='leverage'>{formatToDisplay(event.leverage)}×</span>
 					</div>
 					<div class='close'>
 						Closed {formatToDisplay(event.amount)} {BASE_SYMBOL} at {formatToDisplay(event.price)}

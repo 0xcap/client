@@ -42,13 +42,16 @@ export function formatToDisplay(amount, precision) {
 		return (amount * 1).toFixed(2);
 	} else if (amount * 1 >= 10 || amount * 1 <= -10) {
 		return (amount * 1).toFixed(3);
+	} else if (amount * 1 >= 0.1 || amount * 1 <= -0.1) {
+		return (amount * 1).toFixed(5);
 	} else {
-		return (amount * 1).toFixed(4);
+		return (amount * 1).toFixed(6);
 	}
 }
 
 export function formatPnl(pnl, pnlIsNegative, isPercent) {
 	let string = '';
+	if (pnl == undefined) return string;
 	if (pnlIsNegative == undefined) {
 		pnlIsNegative = pnl < 0;
 	}
@@ -65,7 +68,10 @@ export function formatPositions(positions, positionIds) {
 	let formattedPositions = [];
 	let i = 0;
 	for (const p of positions) {
-		if (!p.productId) continue;
+		if (!p.productId || !p.productId.toNumber()) {
+			i++;
+			continue;
+		}
 		formattedPositions.push({
 			positionId: positionIds[i],
 			product: get(products)[p.productId],
@@ -135,19 +141,19 @@ export function formatEvent(ev) {
 
 	if (ev.event == 'ClosePosition') {
 
-		const { positionId, user, productId, price, margin, leverage, pnl, pnlIsNegative, protocolFee, isFullClose, wasLiquidated } = ev.args;
+		const { positionId, user, productId, price, entryPrice, margin, leverage, pnl, pnlIsNegative, isFullClose, wasLiquidated } = ev.args;
 
 		return {
 			type: 'ClosePosition',
 			positionId: positionId && positionId.toNumber(),
 			product: get(products)[productId],
 			price: formatUnits(price, PRICE_DECIMALS),
+			entryPrice: formatUnits(entryPrice, PRICE_DECIMALS),
 			margin: formatUnits(margin),
 			leverage: formatUnits(leverage),
 			amount: formatUnits(margin) * formatUnits(leverage),
 			pnl: formatUnits(pnl),
 			pnlIsNegative,
-			protocolFee: formatUnits(protocolFee),
 			isFullClose,
 			wasLiquidated,
 			txHash: ev.transactionHash,
@@ -275,6 +281,8 @@ export function hidePopoversOnClick() {
           return true;
       }
       
+      if (ev.target && ev.target.getAttribute('data-intercept')) return true;
+
       let interceptor = null;
       for (let n = ev.target; n.parentNode; n = n.parentNode) {
           if (n.getAttribute('data-intercept')) {

@@ -12,6 +12,7 @@
 	import EventDetails from '../components/EventDetails.svelte'
 
 	import { activeModal } from '../stores/modals'
+	import { isUnsupported } from '../stores/wallet'
 
 </script>
 
@@ -41,6 +42,8 @@
 
 <div class='trade'>
 	<NewOrder />
-	<Positions />
-	<History />
+	{#if !$isUnsupported}
+		<Positions />
+		<History />
+	{/if}
 </div>

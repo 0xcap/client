@@ -1,5 +1,7 @@
 <script>
 
+	import Helper from './Helper.svelte'
+
 	import { showModal } from '../stores/modals'
 	import { positions } from '../stores/positions'
 	import { prices } from '../stores/prices'
@@ -91,13 +93,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background-color: var(--black-almost);
-		overflow: hidden;
+		background-color: rgba(23,23,23,0.4);
 		height: 86px;
 		font-size: 115%;
 	}
 	.position:hover {
-		background-color: rgba(23,23,23,0.65);
+		background-color: rgba(23,23,23,0.55);
 	}
 
 	.details {
@@ -135,7 +136,7 @@
 	}
 
 	.product .leverage {
-		margin-left: 3px;
+		margin-left: 4px;
 		font-weight: 400;
 	}
 
@@ -224,10 +225,10 @@
 							<div class='product'>
 								<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
 								<span>{position.product}</span>
-								<span class='leverage'>{formatToDisplay(position.leverage)}x</span>
+								<span class='leverage'>{formatToDisplay(position.leverage)}×</span>
 							</div>
 							<div class='entry'>
-								{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}{#if position.isSettling}<span title='Price is settling' class='settling'>&#8226;</span>{/if}
+								{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}{#if position.isSettling}<span title='Price settles at the next oracle price change' class='settling'>&#8226;</span>{/if}
 							</div>
 						</div>
 					</div>
@@ -237,9 +238,11 @@
 							<div class='upl'>
 								{formatPnl(upls[position.positionId])}
 							</div>
+							<!--
 							<div class='upl-percent'>
 								{formatPnl(upls_percent[position.positionId], undefined, true)}%
 							</div>
+							-->
 						</div>
 						<a class='add-margin' on:click={() => {showModal('AddMargin', position)}} data-intercept="true">
 							{@html PLUS_ICON}

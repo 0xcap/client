@@ -5,7 +5,7 @@
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 
-	import { PRICE_DECIMALS } from '../lib/constants'
+	import { BASE_SYMBOL, PRICE_DECIMALS } from '../lib/constants'
 	import { calculateLiquidationPrice } from '../lib/helpers'
 	import { getProduct } from '../lib/methods'
 	import { formatUnits, formatToDisplay } from '../lib/utils'
@@ -26,10 +26,6 @@
 			value: data.positionId
 		},
 		{
-			label: 'Product',
-			value: data.product
-		},
-		{
 			label: 'Submitted',
 			value: new Date(data.timestamp * 1000).toLocaleString()
 		},
@@ -39,19 +35,22 @@
 		},
 		{
 			label: 'Price',
-			value: data.price
+			value: formatToDisplay(data.price),
+			helper: 'Price includes fees.'
 		},
 		{
 			label: 'Margin',
-			value: formatToDisplay(data.margin)
+			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
+			helper: 'Real balance used from your wallet.'
 		},
 		{
 			label: 'Leverage',
-			value: formatToDisplay(data.leverage)
+			value: `${formatToDisplay(data.leverage)}×`
 		},
 		{
 			label: 'Amount',
-			value: formatToDisplay(data.amount)
+			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
+			helper: 'Amount includes leverage.'
 		},
 		{
 			label: 'Has Settled',
@@ -59,7 +58,7 @@
 		},
 		{
 			label: 'Liquidation Price',
-			value: liquidationPrice
+			value: formatToDisplay(liquidationPrice)
 		}
 	];
 
@@ -69,6 +68,6 @@
 
 </style>
 
-<Modal title='Position'>
+<Modal title={`${data.product} Position`}>
 	<DataList data={rows} />
 </Modal>
