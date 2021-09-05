@@ -27,7 +27,6 @@
 		height: 24px;
 		fill: rgb(70,70,70);
 		margin-left: 8px;
-		margin-bottom: -2px;
 	}
 
 </style>

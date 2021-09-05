@@ -39,7 +39,7 @@ export async function stake(amount) {
 			hash: tx.hash,
 			description: `Stake ${amount} ${BASE_SYMBOL}`
 		});
-		showToast('Stake submitted.', 'info');
+		showToast(`Stake ${amount} ${BASE_SYMBOL} submitted.`, 'transaction');
 		hideModal();
 	} catch(e) {
 		showToast(e);
@@ -54,7 +54,7 @@ export async function redeem(stakeId, amount) {
 			hash: tx.hash,
 			description: `Redeem ${amount} ${BASE_SYMBOL}`
 		});
-		showToast('Redemption submitted.', 'info');
+		showToast(`Redeem ${amount} ${BASE_SYMBOL} submitted.`, 'transaction');
 		hideModal();
 	} catch(e) {
 		showToast(e);
@@ -81,9 +81,9 @@ export async function openPosition(productId, isLong, leverage, margin) {
 		const tx = await getContract(true).openPosition(productId, isLong, parseUnits(leverage), {value: parseUnits(margin, 18)});
 		addPendingTransaction({
 			hash: tx.hash,
-			description: `New position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
+			description: `Open position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
 		});
-		showToast('Order to open position submitted.', 'info');
+		showToast(`Order to open ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
 		hideModal();
 	} catch(e) {
 		showToast(e);
@@ -99,7 +99,7 @@ export async function addMargin(positionId, margin, productId) {
 			hash: tx.hash,
 			description: `Add margin ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol}`
 		});
-		showToast('Order to add margin submitted.', 'info');
+		showToast(`Order to add ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
 		hideModal();
 	} catch(e) {
 		showToast(e);
@@ -115,7 +115,7 @@ export async function closePosition(positionId, margin, releaseMargin, productId
 			hash: tx.hash,
 			description: `Close position ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol}`
 		});
-		showToast('Order to close position submitted.', 'info');
+		showToast(`Order to close ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
 		hideModal();
 	} catch(e) {
 		showToast(e);
