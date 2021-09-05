@@ -29,7 +29,6 @@
 		border: 1px solid rgb(30,30,30);
 		border-radius: var(--base-radius);
 		background-color: rgb(25,25,25);
-		overflow: hidden;
 	}
 
 	.modal-header {

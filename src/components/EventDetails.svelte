@@ -21,15 +21,18 @@
 		},
 		{
 			label: 'Close Price',
-			value: formatToDisplay(data.price)
+			value: formatToDisplay(data.price),
+			helper: 'Price includes fees.'
 		},
 		{
 			label: 'Entry Price',
-			value: formatToDisplay(data.entryPrice)
+			value: formatToDisplay(data.entryPrice),
+			helper: 'Price includes fees.'
 		},
 		{
 			label: 'Margin',
-			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`
+			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
+			helper: 'Real balance used from your wallet.'
 		},
 		{
 			label: 'Leverage',
@@ -37,11 +40,13 @@
 		},
 		{
 			label: 'Amount',
-			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`
+			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
+			helper: 'Amount includes leverage.'
 		},
 		{
 			label: 'Profit or Loss',
-			value: `${formatPnl(data.pnl, data.pnlIsNegative)}`
+			value: `${formatPnl(data.pnl, data.pnlIsNegative)}`,
+			helper: 'P/L includes interest charged.'
 		},
 		{
 			label: 'Was Liquidated',

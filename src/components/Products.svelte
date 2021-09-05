@@ -2,6 +2,7 @@
 
 	import { onMount, onDestroy } from 'svelte'
 
+	import Helper from './Helper.svelte'
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 		
@@ -55,17 +56,20 @@
 		{
 			label: 'Fee',
 			value: `${$selectedProduct.fee}%`,
-			dim: true
+			dim: true,
+			helper: 'Fee to open or close a position.'
 		},
 		{
-			label: 'Funding (8h)',
-			value: `-${(($selectedProduct.interest * 1) / 360 / 3).toFixed(4) || 0}%`,
-			dim: true
+			label: 'Interest (1yr)',
+			value: `${$selectedProduct.interest || 0}%`,
+			dim: true,
+			helper: 'Interest is charged in real-time on open positions.'
 		},
 		{
 			label: 'Max Exposure',
 			value: `${formatToDisplay($selectedProduct.maxExposure)} ${BASE_SYMBOL}`,
-			dim: true
+			dim: true,
+			helper: 'Maximum long vs short imbalance allowed.'
 		},
 		{
 			label: 'Open Interest Long',
@@ -80,22 +84,26 @@
 		{
 			label: 'Settlement Time',
 			value: `${parseInt($selectedProduct.settlementTime/60)}min`,
-			dim: true
+			dim: true,
+			helper: 'Price settles at the next oracle price change or after this time has passed.'
 		},
 		{
 			label: 'Minimum Trade Duration',
 			value: `${parseInt($selectedProduct.minTradeDuration/60)}min`,
-			dim: true
+			dim: true,
+			helper: 'Minimum time required to hold your position.'
 		},
 		{
 			label: 'Liquidation Threshold',
-			value: `${$selectedProduct.liquidationThreshold}%`,
-			dim: true
+			value: `-${$selectedProduct.liquidationThreshold}%`,
+			dim: true,
+			helper: 'Positions are liquidated when they reach this loss.'
 		},
 		{
 			label: 'Liquidation Bounty',
 			value: `${$selectedProduct.liquidationBounty}%`,
-			dim: true
+			dim: true,
+			helper: 'Liquidator bots receive this amount.'
 		}
 	];
 
@@ -275,7 +283,7 @@
 
 		<div class='leverage-select'>
 			<div class='header-row'>
-				<div class='label'>Leverage</div>
+				<div class='label'>Leverage<Helper text='Profit or loss multiplier.' direction='right' /></div>
 				<div class='value' on:click={toggleRange}>{@html EDIT_ICON} {$leverage}x</div>
 			</div>
 			<div class:hidden={!rangeShown} class='range'>

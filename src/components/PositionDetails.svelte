@@ -35,11 +35,13 @@
 		},
 		{
 			label: 'Price',
-			value: formatToDisplay(data.price)
+			value: formatToDisplay(data.price),
+			helper: 'Price includes fees.'
 		},
 		{
 			label: 'Margin',
-			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`
+			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
+			helper: 'Real balance used from your wallet.'
 		},
 		{
 			label: 'Leverage',
@@ -47,7 +49,8 @@
 		},
 		{
 			label: 'Amount',
-			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`
+			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
+			helper: 'Amount includes leverage.'
 		},
 		{
 			label: 'Has Settled',

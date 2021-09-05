@@ -7,7 +7,7 @@ import { formatUnits, parseUnits, formatProduct, formatVault, formatPositions, f
 import { hideModal } from '../stores/modals'
 import { showToast } from '../stores/toasts'
 import { addPendingTransaction } from '../stores/transactions'
-import { provider } from '../stores/wallet'
+import { provider, isUnsupported } from '../stores/wallet'
 
 let productCache = {};
 
@@ -33,6 +33,7 @@ export async function getUserStaked(stakeId) {
 }
 
 export async function stake(amount) {
+	if (get(isUnsupported)) return;
 	try {
 		const tx = await getContract(true).stake({value: parseUnits(amount, 18)});
 		addPendingTransaction({
@@ -75,6 +76,7 @@ export async function getStakes(stakeIds) {
 }
 
 export async function openPosition(productId, isLong, leverage, margin) {
+	if (get(isUnsupported)) return;
 	const product = await getProduct(productId);
 	const amount = margin * leverage;
 	try {

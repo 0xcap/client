@@ -29,7 +29,7 @@ const TRADING_ABI = [
 	"event Redeemed(uint256 stakeId, address indexed to, uint256 amount, bool isFullRedeem)",
 	"event NewPosition(uint256 positionId, address indexed user, uint64 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
 	"event AddMargin(uint256 positionId, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
-	"event ClosePosition(uint256 positionId, address indexed user, uint64 indexed productId, uint256 price, uint256 entryPrice, uint256 margin, uint256 leverage, uint256 pnl, bool pnlIsNegative, bool isFullClose, bool wasLiquidated)",
+	"event ClosePosition(uint256 positionId, address indexed user, bool indexed isFullClose, uint64 indexed productId, uint256 price, uint256 entryPrice, uint256 margin, uint256 leverage, uint256 pnl, bool pnlIsNegative, bool wasLiquidated)",
 	"event NewPositionSettled(uint256 positionId, address indexed user, uint256 price)",
 	"event PositionLiquidated(uint256 positionId, address indexed by, uint256 vaultReward, uint256 liquidatorReward)"
 ];

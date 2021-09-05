@@ -1,5 +1,7 @@
 <script>
 
+	import Helper from './Helper.svelte'
+
 	import { showModal } from '../stores/modals'
 	import { positions } from '../stores/positions'
 	import { prices } from '../stores/prices'
@@ -92,7 +94,6 @@
 		align-items: center;
 		justify-content: space-between;
 		background-color: rgba(23,23,23,0.4);
-		overflow: hidden;
 		height: 86px;
 		font-size: 115%;
 	}
@@ -135,7 +136,7 @@
 	}
 
 	.product .leverage {
-		margin-left: 3px;
+		margin-left: 4px;
 		font-weight: 400;
 	}
 

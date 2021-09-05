@@ -38,6 +38,7 @@
 	}
 	.text {
 		line-height: 1.45;
+		word-break: break-word
 	}
 
 	.toast.error {

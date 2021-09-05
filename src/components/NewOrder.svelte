@@ -2,6 +2,8 @@
 
 	import { onMount } from 'svelte'
 
+	import Helper from './Helper.svelte'
+
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
 	import { LOGOS } from '../lib/logos'
@@ -125,7 +127,7 @@
 	}
 
 	input {
-		font-size: 22px;
+		font-size: 115%;
 		font-weight: 600;
 		text-align: right;
 	}
@@ -200,7 +202,7 @@
 
 	<label class='input-row' class:focused={amountIsFocused} for='amount'>
 		<div class='label-wrap'>
-			<div class='label'>Amount</div>
+			<div class='label'>Amount<Helper direction='top' text='Amount including leverage.' /></div>
 			<div class='sub-label'>
 				Available: <a on:click={() => {amount.set($buyingPower*1)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
 			</div>
