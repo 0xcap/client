@@ -19,7 +19,7 @@
 	async function _submitOrder(isLong) {
 		if (!$amount) {
 			checkFocus($selectedAddress);
-			return showToast('Amount is required.');
+			return;
 		}
 		submitIsPending = true;
 		const error = await openPosition(

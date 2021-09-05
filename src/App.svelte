@@ -100,7 +100,7 @@
 	    margin: 0;
 	}
 
-	:global(input[type='number'],input[type='range']) {
+	:global(input[type='number'],input[type='range'],input[type='text']) {
 		appearance: textfield;
 		font-family: inherit;
 		font-size: inherit;

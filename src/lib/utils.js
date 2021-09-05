@@ -275,6 +275,8 @@ export function hidePopoversOnClick() {
           return true;
       }
       
+      if (ev.target && ev.target.getAttribute('data-intercept')) return true;
+
       let interceptor = null;
       for (let n = ev.target; n.parentNode; n = n.parentNode) {
           if (n.getAttribute('data-intercept')) {
