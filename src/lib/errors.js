@@ -16,7 +16,7 @@ const ERROR_STRINGS = {
 	'!price': "Price is unavailable.",
 	'!position': "This position is no longer available.",
 	'!settling': "Position price is still settling. It settles at the next oracle price change.",
-	'!owner': "You're not authorized to update this."
+	'!owner': "You're not authorized to update this.",
 	'!duration': "You can't close before minimum hold time is up.",
 	'!exposure-long': "There are too many longs on this product right now. Try again later.",
 	'!exposure-short': "There are too many shorts on this product right now. Try again later.",
