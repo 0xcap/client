@@ -49,6 +49,7 @@
 		await closePosition(
 			data.positionId,
 			marginToSubmit,
+			amount,
 			false,
 			data.productId
 		);

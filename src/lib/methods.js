@@ -109,15 +109,15 @@ export async function addMargin(positionId, margin, productId) {
 	}
 }
 
-export async function closePosition(positionId, margin, releaseMargin, productId) {
+export async function closePosition(positionId, margin, amount, releaseMargin, productId) {
 	const product = await getProduct(productId);
 	try {
 		const tx = await getContract(true).closePosition(positionId, parseUnits(margin), releaseMargin || false);
 		addPendingTransaction({
 			hash: tx.hash,
-			description: `Close position ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol}`
+			description: `Close position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
 		});
-		showToast(`Order to close ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
+		showToast(`Order to close ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
 		hideModal();
 	} catch(e) {
 		showToast(e);
