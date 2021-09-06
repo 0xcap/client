@@ -203,14 +203,14 @@
 
 	<label class='input-row' class:focused={amountIsFocused} for='amount'>
 		<div class='label-wrap'>
-			<div class='label'>Amount<Helper direction='top' text='Amount including leverage.' /></div>
+			<div class='label'>Amount<Helper direction='top' text='Enter an amount including leverage.' /></div>
 			<div class='sub-label'>
 				Available: <a on:click={() => {amount.set($buyingPower*1)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
 			</div>
 		</div>
 		<div class='input-wrap'>
 			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
-			{#if $margin > 0}<div class='input-label'>Margin: {formatToDisplay($margin)} {BASE_SYMBOL}</div>{/if}
+			{#if $margin > 0}<div class='input-label'><Helper direction='top' text='Actual balance used from your wallet.' /> Margin: {formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>{/if}
 		</div>
 	</label>
 

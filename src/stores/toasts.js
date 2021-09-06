@@ -11,11 +11,10 @@ export function showToast(data, type) {
 	if (!type) type = 'error';
 	if (!message) return;
 	toasts.update((x) => {
-		x.unshift({message, type, id: lastToastId});
+		x.unshift({message: message + " " + lastToastId, type, id: lastToastId});
 		return x;
 	});
 	let _id = lastToastId;
-	clearTimeout(timers[_id]);
 	timers[_id] = setTimeout(() => {hideToast(_id)}, 10*1000);
 	lastToastId++;
 }

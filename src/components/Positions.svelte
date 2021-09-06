@@ -217,7 +217,7 @@
 	}
 
 	.add-margin:hover {
-		fill: var(--blue);
+		fill: #fff;
 	}
 
 	.close:hover {

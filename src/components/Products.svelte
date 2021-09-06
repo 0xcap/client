@@ -257,7 +257,7 @@
 
 			{#each _productListDisplayed as product}
 
-				<div class='row' class:selected={product.id == $selectedProductId} on:click={() => {selectProduct(product.id)}} data-intercept="true">
+				<div class='row' class:selected={product.id == $selectedProductId} on:click={() => {selectProduct(product.id, true)}} data-intercept="true">
 
 					<div class='product-wrap'>
 						<img src={LOGOS[product.id]} alt={`${product.symbol} logo`}>

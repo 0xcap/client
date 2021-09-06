@@ -20,14 +20,19 @@
 			value: data.product
 		},
 		{
+			label: 'Entry Price',
+			value: formatToDisplay(data.entryPrice),
+			helper: 'Price includes fees.'
+		},
+		{
 			label: 'Close Price',
 			value: formatToDisplay(data.price),
 			helper: 'Price includes fees.'
 		},
 		{
-			label: 'Entry Price',
-			value: formatToDisplay(data.entryPrice),
-			helper: 'Price includes fees.'
+			label: 'Profit or Loss',
+			value: `${formatPnl(data.pnl, data.pnlIsNegative)} ${BASE_SYMBOL}`,
+			helper: 'P/L includes interest charged.'
 		},
 		{
 			label: 'Margin',
@@ -41,12 +46,7 @@
 		{
 			label: 'Amount',
 			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-			helper: 'Amount includes leverage.'
-		},
-		{
-			label: 'Profit or Loss',
-			value: `${formatPnl(data.pnl, data.pnlIsNegative)}`,
-			helper: 'P/L includes interest charged.'
+			helper: 'Amount equals margin × leverage.'
 		},
 		{
 			label: 'Was Liquidated',

@@ -50,7 +50,7 @@
 		{
 			label: 'Amount',
 			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-			helper: 'Amount includes leverage.'
+			helper: 'Amount equals margin × leverage.'
 		},
 		{
 			label: 'Has Settled',

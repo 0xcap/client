@@ -51,12 +51,12 @@
 	.toast.success {
 		border: 2px solid var(--green);
 		color: var(--green);
-		fill: var(--green);;
+		fill: var(--green);
 	}
 	.toast.transaction {
 		border: 2px solid var(--blue);
 		color: var(--blue);
-		fill: var(--blue);;
+		fill: var(--blue);
 	}
 
 	:global(.toast-wrapper .close svg) {
