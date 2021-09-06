@@ -79,6 +79,7 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		-webkit-tap-highlight-color: transparent;
+		overflow-x: hidden;
 	}
 
 	:global(body) {
@@ -86,6 +87,7 @@
 		height: 100%;
 		padding: 0;
 		margin: 0;
+		overflow-x: hidden;
 	}
 
 	:global(a) {

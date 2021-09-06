@@ -107,6 +107,7 @@
 		align-items: center;
 		font-size: 115%;
 		font-weight: 800;
+		white-space: nowrap;
 	}
 
 	.product-wrap img {
