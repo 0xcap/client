@@ -25,8 +25,8 @@ const TRADING_ABI = [
 	"function addMargin(uint256 positionId) payable",
 	"function closePosition(uint256 positionId, uint256 margin, bool releaseMargin)",
 
-	"event Staked(uint256 stakeId, address indexed from, uint256 amount)",
-	"event Redeemed(uint256 stakeId, address indexed to, uint256 amount, bool isFullRedeem)",
+	"event Staked(uint256 stakeId, address indexed user, uint256 amount)",
+	"event Redeemed(uint256 stakeId, address indexed user, uint256 amount, bool isFullRedeem)",
 	"event NewPosition(uint256 positionId, address indexed user, uint64 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
 	"event AddMargin(uint256 positionId, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
 	"event ClosePosition(uint256 positionId, address indexed user, bool indexed isFullClose, uint64 indexed productId, uint256 price, uint256 entryPrice, uint256 margin, uint256 leverage, uint256 pnl, bool pnlIsNegative, bool wasLiquidated)",

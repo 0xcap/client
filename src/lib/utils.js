@@ -181,7 +181,7 @@ export function formatEvent(ev) {
 
 	} else if (ev.event == 'Staked') {
 
-		const { stakeId, from, amount } = ev.args;
+		const { stakeId, user, amount } = ev.args;
 
 		return {
 			type: 'Staked',
@@ -193,7 +193,7 @@ export function formatEvent(ev) {
 
 	} else if (ev.event == 'Redeemed') {
 
-		const { stakeId, from, amount, isFullRedeem } = ev.args;
+		const { stakeId, user, amount, isFullRedeem } = ev.args;
 
 		return {
 			type: 'Redeemed',
