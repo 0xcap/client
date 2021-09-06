@@ -140,10 +140,33 @@
 		font-weight: 400;
 	}
 
+	@media (max-width: 600px) {
+		.product .leverage {
+			display: none;
+		}
+	}
+
 	.entry {
 		color: var(--gray-light);
 		margin-top: 8px;
 		font-size: 80%;
+	}
+
+	.entry-text-mobile {
+		display: none;
+	}
+
+	.upl-entry {
+		display: none;
+	}
+
+	@media (max-width: 600px) {
+		.entry-text {
+			display: none;
+		}
+		.entry-text-mobile, .upl-entry {
+			display: inline;
+		}
 	}
 
 	.settling {
@@ -161,6 +184,13 @@
 		text-align: right;
 	}
 
+	@media (max-width: 600px) {
+		.upl-wrap {
+			display: none;
+			margin-right: 0;
+		}
+	}
+
 	.upl-percent {
 		margin-top: 10px;
 		font-size: 80%;
@@ -168,16 +198,22 @@
 	}
 
 	.pos {
-		color: var(--green);
+		color: var(--green) !important;
 	}
 	.neg {
-		color: var(--red);
+		color: var(--red) !important;
 	}
 
 	.add-margin, .close {
 		padding: 16px;
 		margin-right: 8px;
 		fill: var(--gray);
+	}
+
+	@media (max-width: 600px) {
+		.add-margin, .close {
+			margin-right: 0;
+		}
 	}
 
 	.add-margin:hover {
@@ -228,7 +264,16 @@
 								<span class='leverage'>{formatToDisplay(position.leverage)}×</span>
 							</div>
 							<div class='entry'>
-								{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}{#if position.isSettling}<span title='Price settles at the next oracle price change' class='settling'>&#8226;</span>{/if}
+								<span class='entry-text'>
+									{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}
+								</span>
+								<span class='entry-text-mobile'>
+									{formatToDisplay(position.amount)}@{formatToDisplay(position.price)}
+								</span>
+								{#if position.isSettling}<span title='Price settles at the next oracle price change' class='settling'>&#8226;</span>{/if}
+								<span class={`upl-entry ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
+									{formatPnl(upls[position.positionId])}
+								</span>
 							</div>
 						</div>
 					</div>

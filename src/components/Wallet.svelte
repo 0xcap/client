@@ -31,13 +31,31 @@
 		margin-right: 16px;
 	}
 
+	@media (max-width: 600px) {
+		.network {
+			margin-right: 8px;
+		}
+	}
+
 	.balance {
 		margin-right: 8px;
 	}
 
-	@media (max-width: 960px) {
+	@media (max-width: 600px) {
 		.balance {
 			display: none;
+		}
+	}
+
+	.address {
+		white-space: nowrap;
+	}
+
+	@media (max-width: 600px) {
+		.address {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 75px;
 		}
 	}
 
@@ -71,6 +89,7 @@
 		border-radius: var(--base-radius);
 		font-weight: 700;
 		cursor: pointer;
+		white-space: nowrap;
 	}
 	button:hover, .button:hover {
 		background-color: var(--blue-dark);
@@ -84,7 +103,7 @@
 		position: absolute;
 		top: 72px;
 		right: var(--base-padding);
-		background-color: var(--black-almost);
+		background-color: rgb(23,23,23);
 		border-radius: var(--base-radius);
 		padding: 6px 0;
 		min-width: 160px;
@@ -123,13 +142,15 @@
 	{/if}
 
 	{#if $selectedAddress}
-		<div class='balance'>
-			{formatToDisplay($userBaseBalance)} {BASE_SYMBOL}
-		</div>
-		<div class='clickable-item address-wrap' on:click={() => {showModal('Account')}} data-intercept="true">
-			{#if $hasPending}<div class='has-pending'>{@html SPINNER_ICON}</div>{/if}
-			<div class='address'>{shortAddr($selectedAddress)}</div>
-		</div>
+		{#if !$isUnsupported}
+			<div class='balance'>
+				{formatToDisplay($userBaseBalance)} {BASE_SYMBOL}
+			</div>
+			<div class='clickable-item address-wrap' on:click={() => {showModal('Account')}} data-intercept="true">
+				{#if $hasPending}<div class='has-pending'>{@html SPINNER_ICON}</div>{/if}
+				<div class='address'>{shortAddr($selectedAddress)}</div>
+			</div>
+		{/if}
 	{:else}
 		<button on:click={connectWallet}>Connect Wallet</button>
 	{/if}

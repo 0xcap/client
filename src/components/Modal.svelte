@@ -22,6 +22,7 @@
 		align-items: center;
 		justify-content: center;
 		z-index: 100;
+		padding: 0 var(--base-padding);
 	}
 
 	.modal {
