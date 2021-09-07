@@ -25,7 +25,7 @@ export const EXTERNAL_ICON = `<svg viewBox="0 0 283.178 283.178">
 		C283.177,3.358,279.819,0,275.677,0z"/>
 </svg>`;
 
-export const SPINNER_ICON = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><style>@keyframes rotate-center{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}</style><g style="animation:rotate-center 1s cubic-bezier(.18,.89,.32,1.28) infinite both;transform-origin:center center"><circle cx="12" cy="12" r="8" stroke="rgb(55,55,55)" stroke-width="2"/><path d="M18.447 14.73a.53.53 0 00.233.68l.89.457a.48.48 0 00.66-.223A9 9 0 0016.551 4.22a.48.48 0 00-.667.205l-.456.89a.53.53 0 00.209.688 7.001 7.001 0 012.81 8.726z" fill="rgb(225,80,221)"/></g></svg>`;
+export const SPINNER_ICON = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><style>@keyframes rotate-center{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}</style><g style="animation:rotate-center 1s cubic-bezier(.18,.89,.32,1.28) infinite both;transform-origin:center center"><circle cx="12" cy="12" r="8" stroke="rgb(55,55,55)" stroke-width="2"/><path d="M18.447 14.73a.53.53 0 00.233.68l.89.457a.48.48 0 00.66-.223A9 9 0 0016.551 4.22a.48.48 0 00-.667.205l-.456.89a.53.53 0 00.209.688 7.001 7.001 0 012.81 8.726z" fill="rgb(88,201,242)"/></g></svg>`;
 
 export const TWITTER_ICON = `<svg viewBox="0 0 20 20" xml:space="preserve">
 <path d="M17.316,6.246c0.008,0.162,0.011,0.326,0.011,0.488c0,4.99-3.797,10.742-10.74,10.742

@@ -32,20 +32,21 @@ export function shortAddr(_address) {
 	return _address.substring(0,6) + '...' + _address.slice(-4);
 }
 
-export function formatToDisplay(amount, precision) {
+export function formatToDisplay(amount, maxPrecision) {
 	if (isNaN(amount)) return 0;
-	if (precision) return (amount * 1).toFixed(precision);
+	if (!maxPrecision) maxPrecision = 100000;
+
 	if ((amount * 1).toFixed(6)*1 == Math.round(amount * 1)) return Math.round(amount);
 	if (amount * 1 >= 1000 || amount * 1 <= -1000) {
 		return Math.round(amount*1).toLocaleString();
 	} else if (amount * 1 >= 100 || amount * 1 <= -100) {
 		return (amount * 1).toFixed(2);
 	} else if (amount * 1 >= 10 || amount * 1 <= -10) {
-		return (amount * 1).toFixed(3);
+		return (amount * 1).toFixed(Math.min(maxPrecision,3));
 	} else if (amount * 1 >= 0.1 || amount * 1 <= -0.1) {
-		return (amount * 1).toFixed(5);
+		return (amount * 1).toFixed(Math.min(maxPrecision,5));
 	} else {
-		return (amount * 1).toFixed(6);
+		return (amount * 1).toFixed(Math.min(maxPrecision,6));
 	}
 }
 
@@ -181,7 +182,7 @@ export function formatEvent(ev) {
 
 	} else if (ev.event == 'Staked') {
 
-		const { stakeId, from, amount } = ev.args;
+		const { stakeId, user, amount } = ev.args;
 
 		return {
 			type: 'Staked',
@@ -193,7 +194,7 @@ export function formatEvent(ev) {
 
 	} else if (ev.event == 'Redeemed') {
 
-		const { stakeId, from, amount, isFullRedeem } = ev.args;
+		const { stakeId, user, amount, isFullRedeem } = ev.args;
 
 		return {
 			type: 'Redeemed',

@@ -7,8 +7,9 @@
 
 	import { BASE_SYMBOL, PRICE_DECIMALS } from '../lib/constants'
 	import { calculateLiquidationPrice } from '../lib/helpers'
-	import { getProduct } from '../lib/methods'
 	import { formatUnits, formatToDisplay } from '../lib/utils'
+
+	import { prices } from '../stores/prices'
 
 	export let data;
 
@@ -34,9 +35,18 @@
 			value: data.isLong ? 'Long' : 'Short'
 		},
 		{
-			label: 'Price',
+			label: 'Entry Price',
 			value: formatToDisplay(data.price),
 			helper: 'Price includes fees.'
+		},
+		{
+			label: 'Current Price',
+			value: formatToDisplay($prices[data.productId])
+		},
+		{
+			label: 'Amount',
+			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
+			helper: 'Amount equals margin × leverage.'
 		},
 		{
 			label: 'Margin',
@@ -47,11 +57,7 @@
 			label: 'Leverage',
 			value: `${formatToDisplay(data.leverage)}×`
 		},
-		{
-			label: 'Amount',
-			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-			helper: 'Amount includes leverage.'
-		},
+		
 		{
 			label: 'Has Settled',
 			value: data.isSettling ? 'No' : 'Yes'

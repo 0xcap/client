@@ -1,6 +1,7 @@
 import { get } from 'svelte/store'
 import { getProduct } from './methods'
 import { contract } from '../stores/contracts'
+import { positions } from '../stores/positions'
 import { activeProducts } from '../stores/prices'
 import { selectedProductId, products } from '../stores/products'
 import { signer } from '../stores/wallet'
@@ -14,12 +15,26 @@ export function getContractAddress(name) {
   return get(contract).address;
 }
 
-export function selectProduct(productId) {
+export function selectProduct(productId, deactivate) {
 	selectedProductId.set(productId);
 	localStorage.setItem('selectedProductId', productId);
 	activateProductPrices(productId);
 	const productSymbol = get(products)[productId];
 	if (productSymbol) location.hash = '/trade/' + productSymbol;
+
+	if (deactivate) {
+		// deactivate unused products = not selected one + not in positions
+		let activeProducts = {};
+		for (const p of get(positions)) {
+			activeProducts[p.productId] = 1;
+		}
+		activeProducts[productId] = 1;
+		let inactiveProductIds = {};
+		for (const _productId in get(products)) {
+			if (!activeProducts[_productId]) inactiveProductIds[_productId] = 1;
+		}
+		deactivateProductPrices(Object.keys(inactiveProductIds));
+	}
 }
 
 export function activateProductPrices(productId) {
@@ -29,9 +44,11 @@ export function activateProductPrices(productId) {
 	});
 }
 
-export function deactivateProductPrices(productId) {
+export function deactivateProductPrices(productIds) {
 	activeProducts.update((x) => {
-		delete x[productId];
+		for (const productId of productIds) {
+			delete x[productId];
+		}
 		return x;
 	});
 }

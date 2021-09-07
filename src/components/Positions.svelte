@@ -150,6 +150,8 @@
 		color: var(--gray-light);
 		margin-top: 8px;
 		font-size: 80%;
+		display: flex;
+		align-items: center;
 	}
 
 	.entry-text-mobile {
@@ -167,11 +169,6 @@
 		.entry-text-mobile, .upl-entry {
 			display: inline;
 		}
-	}
-
-	.settling {
-		margin-left: 6px;
-		color: var(--orange);
 	}
 
 	.tools {
@@ -217,7 +214,7 @@
 	}
 
 	.add-margin:hover {
-		fill: var(--blue);
+		fill: #fff;
 	}
 
 	.close:hover {
@@ -266,11 +263,9 @@
 							<div class='entry'>
 								<span class='entry-text'>
 									{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}
-								</span>
-								<span class='entry-text-mobile'>
+								</span><span class='entry-text-mobile'>
 									{formatToDisplay(position.amount)}@{formatToDisplay(position.price)}
-								</span>
-								{#if position.isSettling}<span title='Price settles at the next oracle price change' class='settling'>&#8226;</span>{/if}
+								</span>{#if position.isSettling}<Helper direction='right' text='Settles at the next oracle price change.' type='settling' />{/if}
 								<span class={`upl-entry ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
 									{formatPnl(upls[position.positionId])}
 								</span>

@@ -83,9 +83,10 @@
 		justify-content: space-between;
 		border: 1px solid rgb(45,45,45);
 		border-radius: 14px;
-		padding: var(--base-padding);
+		padding: 0 var(--base-padding);
 		background-color: var(--gray-darkest);
 		cursor: text;
+		height: 83px;
 	}
 
 	.input-row:hover, .input-row.focused {
@@ -190,27 +191,33 @@
 	<div class='input-row product-row' on:click={() => {showModal('Products')}} data-intercept="true">
 		<div class='label-wrap'>
 			<div class='label'>Product</div>
+			{#if $selectedAddress}
 			<div class='sub-label'title='Price provided by Chainlink'>
-				Price: {formatToDisplay($prices[$selectedProductId]) || ''}
+				Price: {formatToDisplay($prices[$selectedProductId]) || '...'}
 			</div>
+			{/if}
 		</div>
 		<div class='product-wrap'>
 			{#if $selectedProduct.symbol}
 				<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol}</span> <span class='leverage'>{$leverage}×</span>
+			{:else}
+				<img src={LOGOS[1]} alt={`ETH-USD logo`}><span>ETH-USD</span> <span class='leverage'>20×</span>
 			{/if}
 		</div>
 	</div>
 
 	<label class='input-row' class:focused={amountIsFocused} for='amount'>
 		<div class='label-wrap'>
-			<div class='label'>Amount<Helper direction='top' text='Amount including leverage.' /></div>
+			<div class='label'>Amount<Helper direction='top' text='Enter an amount including leverage.' /></div>
+			{#if $selectedAddress}
 			<div class='sub-label'>
 				Available: <a on:click={() => {amount.set($buyingPower*1)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
 			</div>
+			{/if}
 		</div>
 		<div class='input-wrap'>
 			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
-			{#if $margin > 0}<div class='input-label'>Margin: {formatToDisplay($margin)} {BASE_SYMBOL}</div>{/if}
+			{#if $margin > 0}<div class='input-label'><Helper direction='top' text='Actual balance used from your wallet.' /> Margin: {formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>{/if}
 		</div>
 	</label>
 

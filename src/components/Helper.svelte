@@ -1,7 +1,7 @@
 <script>
 	export let text;
 	export let direction;
-
+	export let type = 'default';
 </script>
 
 <style>
@@ -24,6 +24,12 @@
 		font-size: 12.5px;
 		color: rgb(220,220,220);
 		font-weight: 400;
+	}
+
+	.tooltip.settling {
+		width: 7px;
+		height: 7px;
+		background-color: var(--orange);
 	}
 
 	.tooltip:after {
@@ -93,6 +99,9 @@
 		top: 50%;
 		transform: translate(calc(4px * -1), -50%);
 	}
+	.right.settling:after {
+		top: -10px;
+	}
 
 	.right:hover:before, .right:hover:after {
 		opacity: 1;
@@ -105,5 +114,7 @@
 </style>
 
 <div class='container'>
-	<div class={`tooltip ${direction}`} data-text={text}>?</div>
+	<div class:settling={type =='settling'} class={`tooltip ${direction}`} data-text={text}>
+		{#if type !='settling'}?{/if}
+	</div>
 </div>
