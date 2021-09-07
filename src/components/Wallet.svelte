@@ -120,10 +120,15 @@
 	}
 
 	.menu a.button {
-		color: var(--gray-darkest);
 		text-align: center;
 		margin: 6px 4px 0;
-		border-radius: 12px;
+		border-radius: 14px;
+		color: var(--gray-darkest);
+		background-color: var(--green);
+		padding: 12px 16px;
+	}
+	.menu a.button:hover {
+		background-color: var(--green-dark);
 	}
 
 	:global(.wallet .menu-icon svg) {
@@ -161,7 +166,6 @@
 			<div class='menu'>
 				<a href='https://t.me/capfin' target="_blank" on:click={hideMenu}>Telegram</a>
 				<a href='https://twitter.com/CapDotFinance' target="_blank" on:click={hideMenu}>Twitter</a>
-				<a href='https://blog.cap.finance' target="_blank" on:click={hideMenu}>Blog</a>
 				<a href='https://github.com/0xcap' target="_blank" on:click={hideMenu}>Github</a>
 				<a href='#/vault' on:click={hideMenu}>Vault</a>
 				<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x43044f861ec040db59a7e324c40507addb673142' target="_blank" on:click={hideMenu}>Buy CAP</a>	
