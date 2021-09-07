@@ -11,7 +11,7 @@ export function showToast(data, type) {
 	if (!type) type = 'error';
 	if (!message) return;
 	toasts.update((x) => {
-		x.unshift({message: message + " " + lastToastId, type, id: lastToastId});
+		x.unshift({message: message, type, id: lastToastId});
 		return x;
 	});
 	let _id = lastToastId;
