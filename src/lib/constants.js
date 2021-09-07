@@ -69,7 +69,7 @@ export const CHAIN_DATA = {
 		label: 'Rinkeby',
 		explorer: 'https://rinkeby.etherscan.io',
 		contract: {
-			address: '0x91e434e892381D30bd01E008F539fe8b76217973',
+			address: '0x71e82EBe9B6F9A844E8003e56ff4e41636066bB6',
 			abi: TRADING_ABI
 		},
 		products: {
