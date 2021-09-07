@@ -35,6 +35,11 @@
 			helper: 'P/L includes interest charged.'
 		},
 		{
+			label: 'Amount',
+			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
+			helper: 'Amount equals margin × leverage.'
+		},
+		{
 			label: 'Margin',
 			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
 			helper: 'Real balance used from your wallet.'
@@ -42,11 +47,6 @@
 		{
 			label: 'Leverage',
 			value: `${formatToDisplay(data.leverage)}×`
-		},
-		{
-			label: 'Amount',
-			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-			helper: 'Amount equals margin × leverage.'
 		},
 		{
 			label: 'Was Liquidated',

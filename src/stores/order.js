@@ -12,6 +12,6 @@ export const margin = derived([amount, leverage], ([$amount, $leverage]) => {
 
 export const buyingPower = derived([userBaseBalance, leverage], ([$userBaseBalance, $leverage]) => {
 	if (!$userBaseBalance || !$leverage) return 0;
-	return Math.floor($userBaseBalance * $leverage);
+	return $userBaseBalance * $leverage;
 }, 0);
 
