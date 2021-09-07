@@ -41,7 +41,7 @@
 	async function _submitOrder() {
 		let marginToSubmit;
 		if (closePercent >= 100) {
-			marginToSubmit = data.margin * 1;
+			marginToSubmit = data.margin * 1.01;
 		} else {
 			marginToSubmit = (amount*1)/(data.leverage*1);
 		}
