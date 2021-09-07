@@ -15,6 +15,7 @@
 	import { leverage } from '../stores/order'
 	import { prices } from '../stores/prices'
 	import { selectedProductId, selectedProduct, productList } from '../stores/products'
+	import { selectedAddress } from '../stores/wallet'
 	
 	const unsubscribe = leverage.subscribe(value => {
 		setCachedLeverage($selectedProductId, value);
@@ -264,7 +265,9 @@
 						<span>{product.symbol}</span>
 					</div>
 
+					{#if $selectedAddress}
 					<div class:empty={!$prices[product.id]} class='price'>{formatToDisplay($prices[product.id]) || 'Tap for price'}</div>
+					{/if}
 
 				</div>
 
@@ -274,6 +277,7 @@
 
 	</div>
 
+	{#if $selectedAddress}
 	<div class='bottom-container no-scrollbar'>
 
 		<div class='header-row'>
@@ -294,5 +298,6 @@
 		<DataList data={rows} />
 
 	</div>
+	{/if}
 
 </Modal>

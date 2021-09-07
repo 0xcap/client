@@ -14,9 +14,6 @@ function handleChainSwitch(_chainId, _provider) {
 
 	if (!CHAIN_DATA[_chainId]) {
 		if (get(signer)) showToast('Network not supported.');
-		// Use read only provider, not connected one because it's on the wrong chain
-		_provider = new ethers.providers.JsonRpcProvider(CHAIN_DATA[DEFAULT_CHAIN_ID].network);
-		provider.set(_provider);
 	}
 
 	if (get(chainId) != _chainId) {
@@ -41,21 +38,15 @@ function handleAccountsChanged(accounts) {
 export async function initWallet() {
 
 	// Window.ethereum is Metamask
-
-	if (!window.ethereum) {
-		showToast('Install Metamask to use Cap.');
-		// Use read only provider, not connected one because it's on the wrong chain
-		walletProvider = new ethers.providers.JsonRpcProvider(CHAIN_DATA[DEFAULT_CHAIN_ID].network);
-		handleChainSwitch(DEFAULT_CHAIN_ID, walletProvider);
-	} else {
-		walletProvider = new ethers.providers.Web3Provider(window.ethereum);
-	}
-
-	provider.set(walletProvider);
-
 	let listener = window.ethereum;
 
-	if (listener) {
+	if (!listener) {
+		showToast('Install Metamask to use Cap.');
+		handleChainSwitch(DEFAULT_CHAIN_ID, null);
+	} else {
+
+		walletProvider = new ethers.providers.Web3Provider(listener);
+
 		// Chain id (number)
 		const network = await walletProvider.getNetwork();
 		handleChainSwitch(network.chainId, walletProvider);
@@ -64,7 +55,10 @@ export async function initWallet() {
 		// Account
 		handleAccountsChanged(await walletProvider.send('eth_accounts'));
 		listener.on('accountsChanged', handleAccountsChanged);
+
 	}
+
+	provider.set(walletProvider);
 	
 }
 

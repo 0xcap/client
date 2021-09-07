@@ -8,7 +8,6 @@ export const DEFAULT_CHAIN_ID = 4; // rinkeby
 
 export const PRICE_DECIMALS = 8;
 export const LEVERAGE_DECIMALS = 18;
-const INFURA_KEY = '344f83ae728540b7a0af85fe96b0b146';
 
 // ABIS
 const TRADING_ABI = [
@@ -63,13 +62,11 @@ export const CHAIN_DATA = {
 			3: 'Gold',
 			4: 'EUR-USD'
 		},
-		network: `http://localhost:8545`,
 		explorer: `http://localhost:8545`
 	},
 	4: {
 		id: 4,
 		label: 'Rinkeby',
-		network: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
 		explorer: 'https://rinkeby.etherscan.io',
 		contract: {
 			address: '0x91e434e892381D30bd01E008F539fe8b76217973',
@@ -111,12 +108,10 @@ export const CHAIN_DATA = {
 	'xx1': { // Ethereum mainnet
 		id: 1,
 		label: 'Mainnet',
-		network: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
 		explorer: 'https://etherscan.io'
 	},
 	'xx10': {
 		id: 10,
-		label: 'Optimism',
-		network: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
+		label: 'Optimism'
 	}
 }
