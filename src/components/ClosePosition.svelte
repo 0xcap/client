@@ -46,7 +46,7 @@
 			marginToSubmit = (amount*1)/(data.leverage*1);
 		}
 		submitIsPending = true;
-		await closePosition(
+		const error = await closePosition(
 			data.positionId,
 			marginToSubmit,
 			amount,

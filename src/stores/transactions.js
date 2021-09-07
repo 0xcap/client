@@ -10,10 +10,14 @@ export const transactions = writable(JSON.parse(localStorage.getItem('transactio
 export function addPendingTransaction(tx) {
 	transactions.update((x) => {
 		tx.state = 'pending';
-		x.unshift(tx);
-		let localTxs = JSON.parse(localStorage.getItem('transactions') || '[]');
-		localTxs.unshift(tx);
-		localStorage.setItem('transactions', JSON.stringify(localTxs));
+		try {
+			let localTxs = JSON.parse(localStorage.getItem('transactions') || '[]');
+			localTxs.unshift(tx);
+			localStorage.setItem('transactions', JSON.stringify(localTxs));
+			x.unshift(tx);
+		} catch(e) {
+			console.error('APT error', e);
+		}
 		return x;
 	});
 	hasPending.set(true);

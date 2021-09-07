@@ -27,20 +27,20 @@ async function handleEvent() {
 	if (ev.event == 'NewPosition') {
 		completeTransaction(ev.transactionHash);
 		refreshUserPositionIds.update(n => n + 1);
-		refreshUserBaseBalance.update(n => n + 1);
 		if (acceptToasts) showToast('Position opened.', 'success');
+		refreshUserBaseBalance.update(n => n + 1);
 	}
 
 	if (ev.event == 'AddMargin') {
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
-		refreshUserBaseBalance.update(n => n + 1);
 		if (acceptToasts) showToast('Margin added.', 'success');
+		refreshUserBaseBalance.update(n => n + 1);
 	}
 
 	if (ev.event == 'ClosePosition') {
 		completeTransaction(ev.transactionHash);
-		refreshUserBaseBalance.update(n => n + 1);
+		
 		if (ev.args.isFullClose) {
 			refreshUserPositionIds.update(n => n + 1);
 		} else {
@@ -49,7 +49,16 @@ async function handleEvent() {
 
 		refreshUserHistory.update(n => n + 1);
 		
-		if (acceptToasts) showToast('Position closed.', 'success');
+		if (acceptToasts) {
+			if (ev.args.wasLiquidated) {
+				showToast('Position was liquidated.', 'info');
+			} else {
+				showToast('Position closed.', 'success');
+			}
+		}
+
+		refreshUserBaseBalance.update(n => n + 1);
+
 	}
 
 	if (ev.event == 'NewPositionSettled') {
@@ -60,21 +69,20 @@ async function handleEvent() {
 		completeTransaction(ev.transactionHash);
 		refreshUserStakeIds.update(n => n + 1);
 		refreshSelectedVault.update(n => n + 1);
-		refreshUserBaseBalance.update(n => n + 1);
 		if (acceptToasts) showToast('Staked.', 'success');
+		refreshUserBaseBalance.update(n => n + 1);
 	}
 
 	if (ev.event == 'Redeemed') {
 		completeTransaction(ev.transactionHash);
-		refreshUserBaseBalance.update(n => n + 1);
 		refreshSelectedVault.update(n => n + 1);
-		console.log('ev redeemed', ev);
 		if (ev.args.isFullRedeem) {
 			refreshUserStakeIds.update(n => n + 1);
 		} else {
 			refreshUserStakes.update(n => n + 1);
 		}
 		if (acceptToasts) showToast('Redeemed.', 'success');
+		refreshUserBaseBalance.update(n => n + 1);
 	}
 
 }
