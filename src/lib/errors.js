@@ -16,7 +16,7 @@ const ERROR_STRINGS = {
 	'!price': "Price is unavailable.",
 	'!settling': "Position price is still settling. It settles at the next oracle price change.",
 	'!owner': "You're not authorized to update this, or the item is no longer available.",
-	'!duration': "You can't close before minimum hold time is up.",
+	'!duration': "You can't close before minimum hold time is up (2min).",
 	'!exposure-long': "There are too many longs on this product right now. Try again later.",
 	'!exposure-short': "There are too many shorts on this product right now. Try again later.",
 	'!low-leverage': "Leverage would be too low. Try adding less margin.",
