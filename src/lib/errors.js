@@ -7,7 +7,7 @@ const ERROR_STRINGS = {
 	'!position': 'Position not found.',
 	'!cap': 'Stake exceeds vault cap.',
 	'!period': "Can't redeem outside redemption period.",
-	'!margin': "Margin is too low (min: 0.001 ETH).",
+	'!margin': "Margin or amount is too low (min: 0.001 ETH).",
 	'!leverage': "Leverage is too low.",
 	'!locked': "User is locked.",
 	'!vault-active': "Vault is paused.",
