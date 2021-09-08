@@ -22,6 +22,7 @@ const ERROR_STRINGS = {
 	'!low-leverage': "Leverage would be too low. Try adding less margin.",
 	'!vault-insufficient': "Not enough funds in the vault to complete this trade. Try again later.",
 	'!max-drawdown': "Max daily drawdown on the vault is already reached. Try again later.",
+	'!staked': "Amount exceeds what is available in the vault",
 	'gas': "Insufficient funds or gas. Deposit more funds into your wallet or try adjusting the gas limit.",
 };
 

@@ -16,7 +16,7 @@ const TRADING_ABI = [
 	"function getVault() view returns(tuple(uint96 cap, uint96 balance, uint64 staked, uint80 lastCheckpointBalance, uint80 lastCheckpointTime, uint32 stakingPeriod, uint32 redemptionPeriod, uint32 maxDailyDrawdown))",
 	"function getProduct(uint256 productId) view returns(tuple(address feed, uint72 maxLeverage, uint16 fee, bool isActive, uint64 maxExposure, uint48 openInterestLong, uint48 openInterestShort, uint16 interest, uint32 settlementTime, uint16 minTradeDuration, uint16 liquidationThreshold, uint16 liquidationBounty))",
 	"function getPositions(uint256[] calldata positionIds) view returns(tuple(uint64 productId, uint64 leverage, uint64 price, uint64 margin, address owner, uint80 timestamp, bool isLong, bool isSettling)[] _positions)",
-	"function getStakes(uint256[] calldata stakeIds) view returns(tuple(uint64 amount, uint32 timestamp, address owner)[] _stakes)",
+	"function getStakes(uint256[] calldata stakeIds) view returns(tuple(address owner, uint64 amount, uint32 timestamp)[] _stakes)",
 
 	"function stake() payable",
 	"function redeem(uint256 stakeId, uint256 amount)",
@@ -26,10 +26,10 @@ const TRADING_ABI = [
 
 	"event Staked(uint256 stakeId, address indexed user, uint256 amount)",
 	"event Redeemed(uint256 stakeId, address indexed user, uint256 amount, bool isFullRedeem)",
-	"event NewPosition(uint256 positionId, address indexed user, uint256 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
-	"event AddMargin(uint256 positionId, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
+	"event NewPosition(uint256 indexed positionId, address indexed user, uint256 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
+	"event AddMargin(uint256 indexed positionId, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
 	"event ClosePosition(uint256 positionId, address indexed user, uint256 indexed productId, bool indexed isFullClose, uint256 price, uint256 entryPrice, uint256 margin, uint256 leverage, uint256 pnl, bool pnlIsNegative, bool wasLiquidated)",
-	"event NewPositionSettled(uint256 positionId, address indexed user, uint256 price)"
+	"event NewPositionSettled(uint256 indexed positionId, address indexed user, uint256 price)"
 ];
 
 export const PRODUCT_TO_ID = {
@@ -44,7 +44,10 @@ export const PRODUCT_TO_ID = {
 	'GBP-USD': 9,
 	'JPY-USD': 10,
 	'CHF-USD': 11,
-	'AUD-USD': 12
+	'AUD-USD': 12,
+	'KRW-USD': 13,
+	'PHP-USD': 14,
+	'CNY-USD': 15,
 };
 
 export const CHAIN_DATA = {
@@ -68,7 +71,7 @@ export const CHAIN_DATA = {
 		label: 'Rinkeby',
 		explorer: 'https://rinkeby.etherscan.io',
 		contract: {
-			address: '0x71e82EBe9B6F9A844E8003e56ff4e41636066bB6',
+			address: '0x47c2C1BFb067d8DD3983761f5A902C42E3dC7d3e',
 			abi: TRADING_ABI
 		},
 		products: {
@@ -83,7 +86,7 @@ export const CHAIN_DATA = {
 			9: 'GBP-USD',
 			10: 'JPY-USD',
 			11: 'CHF-USD',
-			12: 'AUD-USD'
+			12: 'AUD-USD',
 		},
 		testnet: true
 	},
@@ -99,10 +102,13 @@ export const CHAIN_DATA = {
 		products: {
 			1: 'ETH-USD',
 			2: 'BTC-USD',
-			4: 'EUR-USD'
-		},
-		testnet: true,
-		underMaintenance: true
+			3: 'LINK-USD',
+			8: 'EUR-USD',
+			12: 'AUD-USD',
+			13: 'KRW-USD',
+			14: 'PHP-USD',
+			15: 'CNY-USD'
+		}
 	},
 	'xx1': { // Ethereum mainnet
 		id: 1,
