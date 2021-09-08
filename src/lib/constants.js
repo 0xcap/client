@@ -94,7 +94,7 @@ export const CHAIN_DATA = {
 		label: 'Arbitrum',
 		explorer: 'https://arbiscan.io',
 		contract: {
-			address: '0x010403A7a50e0D439E416A8565C2428E82cD8EEC',
+			address: '0x9BC357bc5b312AaCD41a84F3C687F031B8786853',
 			abi: TRADING_ABI
 		},
 		products: {
@@ -105,8 +105,7 @@ export const CHAIN_DATA = {
 			12: 'AUD-USD',
 			13: 'KRW-USD',
 			14: 'PHP-USD'
-		},
-		underMaintenance: true
+		}
 	},
 	'xx1': { // Ethereum mainnet
 		id: 1,
