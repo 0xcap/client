@@ -114,7 +114,7 @@ export async function fetchPositionIds(address) {
 	if (!tradingContract) return;
 
 	const filter_new = tradingContract.filters.NewPosition(null, address);
-	const _events_new = await tradingContract.queryFilter(filter_new, -510000); // last 510K blocks, eg 90 days
+	const _events_new = await tradingContract.queryFilter(filter_new, -70000); // last 510K blocks, eg 90 days
 
 	let formattedHistoryEvents = await fetchHistoryEvents(address);
 	let full_close_ids = {};
@@ -145,7 +145,7 @@ export async function fetchHistoryEvents(address) {
 	const tradingContract = getContract();
 	if (!tradingContract) return [];
 	const filter = tradingContract.filters.ClosePosition(null, address);
-	const _events = await tradingContract.queryFilter(filter, -510000); // last 90 days
+	const _events = await tradingContract.queryFilter(filter, -70000); // last 90 days
 	let formattedEvents = [];
 	for (const ev of _events) {
 		formattedEvents.unshift(formatEvent(ev));
@@ -160,7 +160,7 @@ export async function fetchStakeIds(address) {
 	if (!tradingContract) return;
 
 	const filter_redeemed = tradingContract.filters.Redeemed(null, address);
-	const _events_redeemed = await tradingContract.queryFilter(filter_redeemed, -510000); // last 510K blocks, eg 90 days
+	const _events_redeemed = await tradingContract.queryFilter(filter_redeemed, -70000); // last 510K blocks, eg 90 days
 
 	let full_redeemed_ids = {};
 	for (let ev of _events_redeemed) {
