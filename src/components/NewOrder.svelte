@@ -225,7 +225,7 @@
 		{#if !$selectedAddress}
 			<button class='disabled'>Connect a wallet</button>
 		{:else if $isUnsupported}
-			<button class='disabled'>Switch to Rinkeby to trade</button>
+			<button class='disabled'>Switch to Arbitrum to trade</button>
 		{:else}
 			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
