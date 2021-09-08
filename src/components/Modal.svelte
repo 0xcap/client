@@ -51,14 +51,15 @@
 	}
 
 	.done-button {
-		background-color: rgb(50,50,50);
+		background-color: var(--blue);
 		padding: 6px 10px;
 		border-radius: 14px;
 		font-weight: 650;
 		cursor: pointer;
+		color: var(--gray-darkest);
 	}
 	.done-button:hover {
-		background-color: rgb(40,40,40);
+		background-color: var(--blue-dark);
 	}
 
 	:global(.modal-close svg) {
