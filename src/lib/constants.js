@@ -47,7 +47,6 @@ export const PRODUCT_TO_ID = {
 	'AUD-USD': 12,
 	'KRW-USD': 13,
 	'PHP-USD': 14,
-	'CNY-USD': 15,
 };
 
 export const CHAIN_DATA = {
@@ -93,10 +92,9 @@ export const CHAIN_DATA = {
 	42161: {
 		id: 42161,
 		label: 'Arbitrum',
-		network: `https://arb1.arbitrum.io/rpc`,
 		explorer: 'https://arbiscan.io',
 		contract: {
-			address: '0x5F2fFc7883BD12604e0adf0403f9436D40386Ef4',
+			address: '0x010403A7a50e0D439E416A8565C2428E82cD8EEC',
 			abi: TRADING_ABI
 		},
 		products: {
@@ -106,8 +104,7 @@ export const CHAIN_DATA = {
 			8: 'EUR-USD',
 			12: 'AUD-USD',
 			13: 'KRW-USD',
-			14: 'PHP-USD',
-			15: 'CNY-USD'
+			14: 'PHP-USD'
 		}
 	},
 	'xx1': { // Ethereum mainnet

@@ -11,5 +11,7 @@ export const LOGOS = {
 	9: "https://data-chain-link.cdn.prismic.io/data-chain-link/4850e7d1-ed26-4063-8807-f57d4cb8896d_GBP.svg",
 	10: "https://data-chain-link.cdn.prismic.io/data-chain-link/33350ae8-4a08-49e7-b0c7-d83cabc2dadb_JPY.svg",
 	11: "https://data-chain-link.cdn.prismic.io/data-chain-link/641fc1a9-606e-4aff-a61b-83c40a2e5e2a_CHF.svg",
-	12: "https://data-chain-link.cdn.prismic.io/data-chain-link/7bdb9930-38a3-4f49-9d91-4deaa8060bc1_AUD.svg"
+	12: "https://data-chain-link.cdn.prismic.io/data-chain-link/7bdb9930-38a3-4f49-9d91-4deaa8060bc1_AUD.svg",
+	13: "https://data-chain-link.cdn.prismic.io/data-chain-link/03a738a0-d3b6-48b7-9aba-2958e1d7523a_KRW.svg",
+	14: "https://data-chain-link.cdn.prismic.io/data-chain-link/ece2e98f-da9c-4f7c-bb34-e6780e58fe22_PH--ICON.svg"
 };
