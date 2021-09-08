@@ -105,7 +105,8 @@ export const CHAIN_DATA = {
 			12: 'AUD-USD',
 			13: 'KRW-USD',
 			14: 'PHP-USD'
-		}
+		},
+		underMaintenance: true
 	},
 	'xx1': { // Ethereum mainnet
 		id: 1,
