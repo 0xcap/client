@@ -6,6 +6,7 @@
 
 	import { selectedVault, stakes, userStaked } from '../stores/vault'
 	import { showModal } from '../stores/modals'
+	import { selectedAddress } from '../stores/wallet'
 
 </script>
 
@@ -155,10 +156,12 @@
 				<div class='value'>{formatToDisplay($selectedVault.maxDailyDrawdown, 2)}%</div>
 			</div>
 
+			{#if $selectedAddress}
 			<div class='row sep'>
 				<div class='label'>My Stake <a on:click={() => {showModal('Stake')}} data-intercept="true">(Stake)</a></div>
 				<div class='value'>{formatToDisplay($userStaked)} ({formatToDisplay($userStaked*100/($selectedVault.staked || "N/A"), 4) || 0}%)</div>
 			</div>
+			{/if}
 
 		</div>
 

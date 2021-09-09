@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 
-import { CHAIN_DATA, LEVERAGE_DECIMALS, PRICE_DECIMALS, BASE_SYMBOL } from './constants'
+import { CHAIN_DATA, PRICE_DECIMALS, BASE_SYMBOL } from './constants'
 import { activateProductPrices } from './helpers'
 
 import { hideMenu } from '../stores/menu'
