@@ -47,6 +47,11 @@ export const PRODUCT_TO_ID = {
 	'AUD-USD': 12,
 	'KRW-USD': 13,
 	'PHP-USD': 14,
+	'CNY-USD': 15,
+	'AAVE-USD': 16,
+	'SUSHI-USD': 17,
+	'UNI-USD': 18,
+	'YFI-USD': 19,
 };
 
 export const CHAIN_DATA = {
@@ -101,10 +106,14 @@ export const CHAIN_DATA = {
 			1: 'ETH-USD',
 			2: 'BTC-USD',
 			3: 'LINK-USD',
-			8: 'EUR-USD',
-			12: 'AUD-USD',
-			13: 'KRW-USD',
-			14: 'PHP-USD'
+			//8: 'EUR-USD',
+			//12: 'AUD-USD',
+			//13: 'KRW-USD',
+			//14: 'PHP-USD'
+			16: 'AAVE-USD',
+			17: 'SUSHI-USD',
+			18: 'UNI-USD',
+			19: 'YFI-USD',
 		}
 	},
 	'xx1': { // Ethereum mainnet

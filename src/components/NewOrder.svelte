@@ -3,6 +3,8 @@
 	import { onMount } from 'svelte'
 
 	import Helper from './Helper.svelte'
+	import Volume from './Volume.svelte'
+
 
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
@@ -15,7 +17,7 @@
 	import { selectedProductId, selectedProduct } from '../stores/products'
 	import { prices } from '../stores/prices'
 	import { showToast } from '../stores/toasts'
-	import { selectedAddress, isTestnet, isUnsupported } from '../stores/wallet'
+	import { selectedAddress, isTestnet, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
 
 	let submitIsPending = false;
 	async function _submitOrder(isLong) {
@@ -184,9 +186,28 @@
 		background-color: var(--green-dark);
 	}
 
+	.arbitrum-link {
+		display: flex;
+		font-size: 90%;
+		line-height: 1.35;
+	}
+
+	:global(.arbitrum-link img) {
+		height: 54px;
+		width: 54px;
+		margin-right: 8px;
+	}
+
 </style>
 
 <div class='new-order' class:disabled={submitIsPending}>
+
+	{#if $selectedAddress && $networkLabel == 'Arbitrum' && $userBaseBalance == 0}
+		<div class='arbitrum-link'>
+			<div><img src='/img/arbitrum-logo.svg' alt='Arbitrum logo' /></div>
+			<div>Arbitrum is a Layer 2 network that works just like Ethereum except it's faster and cheaper. You must first <strong><a href='https://bridge.arbitrum.io' target='_blank'>bridge↗</a></strong> ETH into Arbitrum to start trading on Cap.</div>
+		</div>
+	{/if}
 
 	<div class='input-row product-row' on:click={() => {showModal('Products')}} data-intercept="true">
 		<div class='label-wrap'>
@@ -230,5 +251,7 @@
 			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 		{/if}
 	</div>
+
+	<Volume/>
 
 </div>

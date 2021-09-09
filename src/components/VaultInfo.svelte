@@ -115,6 +115,10 @@
 		padding: 0 var(--base-padding);
 	}
 
+	.hidden {
+		display: none;
+	}
+
 </style>
 
 <div class='vault'>
@@ -126,26 +130,27 @@
 			<span>Vault ({BASE_SYMBOL})</span>
 		</div>
 
-		<div class='description'>This vault backs trader profits while receiving losses, fees, and interest, in {BASE_SYMBOL}.</div>
+		<div class='description'>This vault backs trader profits while receiving losses, fees, and interest, in {BASE_SYMBOL}. The vault is currently at capacity and cannot accept new stakers.</div>
 
-		<div class='balance'>
+		<div class='balance hidden'>
 			<div class='balance-label'>Balance</div>
 			<div class='balance-value'>{formatToDisplay($selectedVault.balance || 0)}</div>
 		</div>
 
 		<div class='details'>
-			<div class='row'>
+
+			<div class='row hidden'>
 				<div class='label'>Total Staked</div>
 				<div class='value'>{formatToDisplay($selectedVault.staked) || 0} ({formatToDisplay($selectedVault.staked*100/$selectedVault.cap || 0, 2)}%)</div>
 			</div>
-			<div class='stake-meter'>
+			<div class='stake-meter hidden'>
 				<div class='stake-progress' style={`width: ${$selectedVault.staked*100/$selectedVault.cap || 0}%`}></div>
 			</div>
-			<div class='row'>
+			<div class='row hidden'>
 				<div class='label'>Max Stake Capacity</div>
 				<div class='value'>{formatToDisplay($selectedVault.cap)}</div>
 			</div>
-			<div class='row'>
+			<div class='row hidden'>
 				<div class='label'>Max Daily Drawdown</div>
 				<div class='value'>{formatToDisplay($selectedVault.maxDailyDrawdown, 2)}%</div>
 			</div>

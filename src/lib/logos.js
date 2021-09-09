@@ -13,5 +13,10 @@ export const LOGOS = {
 	11: "https://data-chain-link.cdn.prismic.io/data-chain-link/641fc1a9-606e-4aff-a61b-83c40a2e5e2a_CHF.svg",
 	12: "https://data-chain-link.cdn.prismic.io/data-chain-link/7bdb9930-38a3-4f49-9d91-4deaa8060bc1_AUD.svg",
 	13: "https://data-chain-link.cdn.prismic.io/data-chain-link/03a738a0-d3b6-48b7-9aba-2958e1d7523a_KRW.svg",
-	14: "https://data-chain-link.cdn.prismic.io/data-chain-link/ece2e98f-da9c-4f7c-bb34-e6780e58fe22_PH--ICON.svg"
+	14: "https://data-chain-link.cdn.prismic.io/data-chain-link/ece2e98f-da9c-4f7c-bb34-e6780e58fe22_PH--ICON.svg",
+	15: "",
+	16: "https://data-chain-link.cdn.prismic.io/data-chain-link/4e29e655-070f-4c09-81e9-18fe8eed46e3_AAVE.svg",
+	17: "https://data-chain-link.cdn.prismic.io/data-chain-link/a8e5dbdc-8a2e-4812-96ca-27c91d6535a7_SUSHI.svg",
+	18: "https://data-chain-link.cdn.prismic.io/data-chain-link/c45e9a80-ecdd-4980-b9dc-1b393d64ee31_UNI.svg",
+	19: "https://data-chain-link.cdn.prismic.io/data-chain-link/7a1725e8-cbbf-4541-a39f-54a41c56bef9_YFI.svg"
 };
