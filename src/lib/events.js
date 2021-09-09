@@ -22,7 +22,7 @@ async function handleEvent() {
 
 	const ev = arguments[arguments.length - 1];
 
-	//console.log('got event', ev);
+	//console.log('got event', Date.now(), ev);
 	
 	if (ev.event == 'NewPosition') {
 		completeTransaction(ev.transactionHash);

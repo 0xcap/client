@@ -49,6 +49,7 @@
 	    word-break: break-word;
 	    white-space: pre-line;
 	    line-height: 1.3;
+	    text-align: left !important;
 	}
 
 	.tooltip:before {

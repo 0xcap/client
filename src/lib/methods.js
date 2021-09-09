@@ -75,6 +75,20 @@ export async function getStakes(stakeIds) {
 	return formatStakes(await getContract().getStakes(stakeIds), stakeIds);
 }
 
+/*
+let c;
+async function checkTx(hash) {
+	c = setInterval(async () => {
+		const txReceipt = await get(provider).getTransactionReceipt(hash);
+		console.log('txReceipt', txReceipt)
+	    if (txReceipt && txReceipt.blockNumber) {
+	    	console.log('done ', Date.now(), txReceipt);
+	    	clearInterval(c);
+	    }
+	}, 500);
+}
+*/
+
 export async function openPosition(productId, isLong, leverage, margin) {
 	if (get(isUnsupported)) return;
 	const product = await getProduct(productId);
@@ -85,6 +99,7 @@ export async function openPosition(productId, isLong, leverage, margin) {
 			hash: tx.hash,
 			description: `Open position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
 		});
+		//checkTx(tx.hash);
 		showToast(`Order to open ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
 		hideModal();
 	} catch(e) {
