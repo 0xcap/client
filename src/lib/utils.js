@@ -36,7 +36,7 @@ export function formatToDisplay(amount, maxPrecision) {
 	if (isNaN(amount)) return 0;
 	if (!maxPrecision) maxPrecision = 100000;
 
-	if (amount * 1 >= 1 && (amount * 1).toFixed(3)*1 == Math.round(amount * 1)) return Math.round(amount);
+	if ((amount*1 == 0 || amount * 1 >= 1) && (amount * 1).toFixed(3)*1 == Math.round(amount * 1)) return Math.round(amount);
 	
 	if (amount * 1 >= 1000 || amount * 1 <= -1000) {
 		return Math.round(amount*1).toLocaleString();

@@ -95,6 +95,28 @@
 		border-color: rgb(55,55,55);
 	}
 
+	.amount-row {
+		align-items: initial;
+		height: 98px !important;
+	}
+
+	.amount-row > div {
+		flex: 1 1 auto;
+	}
+
+	.top {
+		margin-top: 18px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.bottom {
+		height: 36px;
+		display: flex;
+		justify-content: space-between;
+	}
+
 	.label {
 		font-weight: 600;
 	}
@@ -131,17 +153,20 @@
 	}
 
 	input {
-		font-size: 115%;
+		font-size: 135%;
 		font-weight: 600;
 		text-align: right;
 	}
 
 	.input-label {
-		position: absolute;
-		bottom: -17px;
-		right: 0;
-		color: rgba(70,70,70);
+		color: var(--gray-light);
 		font-size: 80%;
+		text-align: right;
+		margin-top: 5px;
+	}
+
+	.input-label.regular {
+		color: #fff;
 	}
 
 	.buttons {
@@ -227,19 +252,40 @@
 		</div>
 	</div>
 
-	<label class='input-row' class:focused={amountIsFocused} for='amount'>
-		<div class='label-wrap'>
-			<div class='label'>Amount<Helper direction='top' text='Enter an amount including leverage.' /></div>
-			{#if $selectedAddress}
-			<div class='sub-label'>
-				Available: <a on:click={() => {amount.set($buyingPower*1)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
+	<label class='input-row amount-row' class:focused={amountIsFocused} for='amount'>
+
+		<div>
+
+			<div class='top'>
+				<div class='label-wrap'>
+					<div class='label'>Amount<Helper direction='top' text='Enter an amount including leverage.' /></div>
+					
+				</div>
+				<div class='input-wrap'>
+					<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
+					
+				</div>
 			</div>
-			{/if}
+
+			<div class='bottom'>
+
+				{#if $selectedAddress}
+				<div class='sub-label'>
+					Available: <a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
+				</div>
+				{/if}
+
+					<div>
+						<div class:regular={$margin > 0} class='input-label'>${formatToDisplay($prices[1] * $amount, 2)}</div>
+						{#if $margin > 0}
+						<div class='input-label'><Helper direction='top' text='Actual balance used from your wallet.' /> Margin: {formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>
+						{/if}
+					</div>
+
+			</div>
+
 		</div>
-		<div class='input-wrap'>
-			<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
-			{#if $margin > 0}<div class='input-label'><Helper direction='top' text='Actual balance used from your wallet.' /> Margin: {formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>{/if}
-		</div>
+
 	</label>
 
 	<div class='buttons'>
