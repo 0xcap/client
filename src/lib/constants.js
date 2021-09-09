@@ -4,10 +4,9 @@ export const BASE_SYMBOL = 'ETH';
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 
-export const DEFAULT_CHAIN_ID = 4; // rinkeby
+export const DEFAULT_CHAIN_ID = 42161; // Arbitrum
 
 export const PRICE_DECIMALS = 8;
-export const LEVERAGE_DECIMALS = 18;
 
 // ABIS
 const TRADING_ABI = [
