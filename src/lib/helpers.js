@@ -47,6 +47,7 @@ export function activateProductPrices(productId) {
 export function deactivateProductPrices(productIds) {
 	activeProducts.update((x) => {
 		for (const productId of productIds) {
+			if (productId == 1) continue; // don't deactivate ETH/USD
 			delete x[productId];
 		}
 		return x;

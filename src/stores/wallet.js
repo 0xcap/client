@@ -20,11 +20,11 @@ export const selectedAddress = derived([signer], async([$signer], set) => {
 
 export const userBaseBalance = derived([selectedAddress, refreshUserBaseBalance], async ([$selectedAddress, $refreshUserBaseBalance], set) => {
 	if (!$selectedAddress) {
-		set(0);
+		set(undefined);
 		return;
 	}
 	set(await getBalance($selectedAddress) * 1);
-}, 0);
+}, undefined);
 
 export const networkLabel = derived([chainId], ([$chainId]) => {
 	return CHAIN_DATA[$chainId] && CHAIN_DATA[$chainId].label;
