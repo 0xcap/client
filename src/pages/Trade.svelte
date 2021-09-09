@@ -20,7 +20,7 @@
 	.trade {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 70px;
+		grid-gap: 80px;
 	}
 </style>
 

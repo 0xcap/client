@@ -16,7 +16,7 @@ export const selectedAddress = derived([signer], async([$signer], set) => {
 	const address = await $signer.getAddress();
 	localStorage.setItem('address', address);
 	set(address);
-});
+}, null);
 
 export const userBaseBalance = derived([selectedAddress, refreshUserBaseBalance], async ([$selectedAddress, $refreshUserBaseBalance], set) => {
 	if (!$selectedAddress) {
