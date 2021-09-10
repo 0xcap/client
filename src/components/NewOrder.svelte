@@ -50,12 +50,12 @@
 
 	let showArbitrumLink = false;
 	let first_call = true;
-	function checkArbitrumLink(address, balance) {
+	function checkArbitrumLink(address, balance, isUnsupported) {
 		if (first_call) {
 			first_call = false;
 			return;
 		}
-		if ($selectedAddress && $userBaseBalance == 0 || !$selectedAddress && !$userBaseBalance) {
+		if (isUnsupported || address && balance == 0 || !address && !balance) {
 			showArbitrumLink = true;
 		} else {
 			showArbitrumLink = false;
@@ -68,11 +68,11 @@
 		checkFocus($selectedAddress);
 
 		setTimeout(() => {
-			checkArbitrumLink($selectedAddress, $userBaseBalance);
+			checkArbitrumLink($selectedAddress, $userBaseBalance, $isUnsupported);
 		}, 750);
 	});
 
-	$: checkArbitrumLink($selectedAddress, $userBaseBalance);
+	$: checkArbitrumLink($selectedAddress, $userBaseBalance, $isUnsupported);
 
 </script>
 

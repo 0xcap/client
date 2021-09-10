@@ -6,6 +6,9 @@
 
 	export let title;
 	export let doneButton = false;
+	export let isActive;
+
+	if (isActive == undefined) isActive = true;
 
 </script>
 
@@ -14,15 +17,19 @@
 	.modal-container {
 		position: fixed;
 		top: 0;
-		bottom: 0;
 		left: 0;
-		right: 0;
+		overflow-x: hidden;
+		overflow-y: auto;
+		width: 100%;
+		height: 100%;
 		background-color: rgb(0,0,0,0.524);
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		z-index: 100;
 		padding: 0 var(--base-padding);
+		outline: 0;
+		display: none;
+	}
+	.modal-container.active {
+		display: block;
 	}
 
 	.modal {
@@ -31,6 +38,10 @@
 		border-radius: var(--base-radius);
 		background-color: rgb(25,25,25);
 		overflow: hidden;
+		position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    transform: translate(-50%, -50%);
 	}
 
 	.modal-header {
@@ -76,7 +87,7 @@
 
 </style>
 
-<div class='modal-container no-scrollbar'>
+<div class:active={isActive} class='modal-container no-scrollbar'>
 
 	<div class='modal' data-intercept="true">
 
