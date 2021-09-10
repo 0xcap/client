@@ -18,11 +18,20 @@ setTimeout(() => {
 	acceptToasts = true;
 }, 4000);
 
+let handled_cache = {};
+
+export async function handleTransactionEvent(ev) {
+	handleEvent(ev);
+}
+
 async function handleEvent() {
 
 	const ev = arguments[arguments.length - 1];
 
 	//console.log('got event', Date.now(), ev);
+
+	if (handled_cache[ev.transactionHash]) return;
+	handled_cache[ev.transactionHash] = true;
 	
 	if (ev.event == 'NewPosition') {
 		completeTransaction(ev.transactionHash);
@@ -58,7 +67,6 @@ async function handleEvent() {
 		}
 
 		refreshUserBaseBalance.update(n => n + 1);
-
 	}
 
 	if (ev.event == 'NewPositionSettled') {

@@ -8,8 +8,8 @@
 <style>
 	.toast-container {
 		position: fixed;
-		top: 72px;
-		right: var(--base-padding);
+		bottom: var(--base-padding);
+		left: var(--base-padding);
 		z-index: 101;
 		display: flex;
 		align-items: center;
@@ -70,7 +70,7 @@
 <div class='toast-container'>
 	<div class='toast-wrapper'>
 		{#each $toasts as toast}
-			<div transition:fly="{{ x: 100, duration: 250 }}" class={`toast ${toast.type || 'error'}`} data-intercept="true">
+			<div transition:fly="{{ x: -100, duration: 250 }}" class={`toast ${toast.type || 'error'}`} data-intercept="true">
 				<div class='body'>
 					<div class='title'>{toast.type}</div>
 					<div class='text'>{toast.message}</div>

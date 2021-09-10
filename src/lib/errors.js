@@ -24,6 +24,7 @@ const ERROR_STRINGS = {
 	'!max-drawdown': "Max daily drawdown on the vault is already reached. Try again later.",
 	'!staked': "Amount exceeds what is available in the vault",
 	'gas': "Insufficient funds or gas. Deposit more funds into your wallet or try adjusting the gas limit.",
+	'nonce': 'Invalid transaction nonce. Try restting your Metamask account.'
 };
 
 export function parseErrorToString(e) {
