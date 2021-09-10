@@ -17,7 +17,7 @@
 	import { selectedProductId, selectedProduct } from '../stores/products'
 	import { prices } from '../stores/prices'
 	import { showToast } from '../stores/toasts'
-	import { selectedAddress, isTestnet, isUnsupported, networkLabel, userBaseBalance, signer } from '../stores/wallet'
+	import { selectedAddress, isTestnet, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
 
 	let submitIsPending = false;
 	async function _submitOrder(isLong) {
