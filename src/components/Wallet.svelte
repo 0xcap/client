@@ -12,9 +12,19 @@
 	import { hasPending, checkPendingTransactions } from '../stores/transactions'
 	import { selectedAddress, chainId, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
 
+	let scrolled = false;
 	onMount(async () => {
 		await initWallet();
 		await checkPendingTransactions();
+
+		document.body.addEventListener("scroll", () => {
+			if (document.body.scrollTop > 44) {
+				scrolled = true;
+			} else {
+				scrolled = false;
+			}
+		});
+
 	});
 
 </script>
@@ -80,6 +90,13 @@
 	:global(.wallet .has-pending svg) {
 		height: 24px;
 		margin-bottom: -3px;
+	}
+
+	.has-pending.floating {
+		position: fixed;
+		top: var(--base-padding);
+		right: var(--base-padding);
+		z-index: 999;
 	}
 
 	button, .button {
@@ -152,7 +169,7 @@
 				{formatToDisplay($userBaseBalance)} {BASE_SYMBOL}
 			</div>
 			<div class='clickable-item address-wrap' on:click={() => {showModal('Account')}} data-intercept="true">
-				{#if $hasPending}<div class='has-pending'>{@html SPINNER_ICON}</div>{/if}
+				{#if $hasPending}<div class:floating={scrolled} class='has-pending'>{@html SPINNER_ICON}</div>{/if}
 				<div class='address'>{shortAddr($selectedAddress)}</div>
 			</div>
 		{/if}
