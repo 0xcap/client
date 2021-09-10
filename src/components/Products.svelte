@@ -288,7 +288,7 @@
 		<div class='leverage-select'>
 			<div class='header-row'>
 				<div class='label'>Leverage<Helper text='Profit or loss multiplier.' direction='right' /></div>
-				<div class='value' on:click={toggleRange}>{@html EDIT_ICON} {$leverage}x</div>
+				<div class='value' on:click={toggleRange}>{@html EDIT_ICON} {$leverage}×</div>
 			</div>
 			<div class:hidden={!rangeShown} class='range'>
 				<input type=range bind:value={$leverage} min=1 max={$selectedProduct.maxLeverage * 1 || 100}> 

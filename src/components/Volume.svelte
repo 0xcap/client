@@ -32,5 +32,6 @@
 <div class='volume'>
 	7-day volume: {#if volume}
 		{formatToDisplay(volume)} {BASE_SYMBOL} {#if $prices[1]}(${formatToDisplay($prices[1] * volume)}){/if}
+	{:else}...
 	{/if}
 </div>
