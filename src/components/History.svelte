@@ -18,6 +18,18 @@
 		}
 	}
 
+	let shown_events = [];
+	let current_index = 1;
+
+	function updateShownEvents(all_events) {
+		if (!all_events) all_events = $history;
+		if (!all_events || !all_events.length) return;
+		shown_events = all_events.slice(0, current_index * 7);
+		current_index++;
+	}
+
+	$: updateShownEvents($history);
+
 </script>
 
 <style>
@@ -58,6 +70,18 @@
 		padding: 0 var(--base-padding);
 	}
 	.item:hover {
+		background-color: rgba(40,40,40,0.85);
+	}
+
+	.item-more {
+		background-color: rgba(40,40,40,0.55);
+		text-align: center;
+		padding: var(--base-padding);
+		cursor: pointer;
+		color: var(--gray-light);
+	}
+	.item-more:hover {
+		color: #fff;
 		background-color: rgba(40,40,40,0.85);
 	}
 
@@ -107,7 +131,7 @@
 
 	<div class='history-list'>
 	
-		{#each $history as event}
+		{#each shown_events as event}
 	
 			<div class='item' on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
 	
@@ -128,6 +152,10 @@
 			</div>
 	
 		{/each}
+
+		{#if shown_events.length < $history.length}
+		<div class='item-more' on:click={() => {updateShownEvents()}}>+More</div>
+		{/if}
 	
 	</div>
 	

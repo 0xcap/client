@@ -48,11 +48,31 @@
 	}
 	$: checkFocus($selectedAddress);
 
+	let showArbitrumLink = false;
+	let first_call = true;
+	function checkArbitrumLink(address, balance) {
+		if (first_call) {
+			first_call = false;
+			return;
+		}
+		if ($selectedAddress && $userBaseBalance == 0 || !$selectedAddress && !$userBaseBalance) {
+			showArbitrumLink = true;
+		} else {
+			showArbitrumLink = false;
+		}
+	}
+
 	onMount(() => {
 		// Activates prices
 		selectProduct($selectedProductId);
 		checkFocus($selectedAddress);
+
+		setTimeout(() => {
+			checkArbitrumLink($selectedAddress, $userBaseBalance);
+		}, 750);
 	});
+
+	$: checkArbitrumLink($selectedAddress, $userBaseBalance);
 
 </script>
 
@@ -214,7 +234,8 @@
 	.arbitrum-link {
 		display: flex;
 		font-size: 90%;
-		line-height: 1.35;
+		line-height: 1.45;
+		padding: 6px 0;
 	}
 
 	:global(.arbitrum-link img) {
@@ -227,7 +248,7 @@
 
 <div class='new-order' class:disabled={submitIsPending}>
 
-	{#if $selectedAddress && $networkLabel == 'Arbitrum' && $userBaseBalance == 0}
+	{#if showArbitrumLink}
 		<div class='arbitrum-link'>
 			<div><img src='/img/arbitrum-logo.svg' alt='Arbitrum logo' /></div>
 			<div>Arbitrum is a Layer 2 network that works just like Ethereum except it's faster and cheaper. You must first <strong><a href='https://bridge.arbitrum.io' target='_blank'>bridge↗</a></strong> ETH into Arbitrum to start trading on Cap.</div>
