@@ -5,7 +5,14 @@
 	import Toasts from './components/Toasts.svelte'
 	import Header from './components/Header.svelte'
 	import Footer from './components/Footer.svelte'
+
+	// Modals
 	import Account from './components/Account.svelte'
+	import Products from './components/Products.svelte'
+	import PositionDetails from './components/PositionDetails.svelte'
+	import AddMargin from './components/AddMargin.svelte'
+	import ClosePosition from './components/ClosePosition.svelte'
+	import EventDetails from './components/EventDetails.svelte'
 
 	import { initEventListeners } from './lib/events'
 	import { catchLinks, hidePopoversOnClick } from './lib/utils'
@@ -74,20 +81,18 @@
 		font-family: 'Inter var';
 		font-feature-settings: 'ss01','ss02','ss03','cv01','tnum';
 		font-size: 16.5px;
-		height: 100%;
 		font-variant: none;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		-webkit-tap-highlight-color: transparent;
-		overflow-x: hidden;
 	}
 
 	:global(body) {
-		position: relative;
-		height: 100%;
 		padding: 0;
 		margin: 0;
-		overflow-x: hidden;
+	}
+	:global(.overflow-hidden) {
+		overflow: hidden;
 	}
 
 	:global(a) {
@@ -177,6 +182,20 @@
 {#if $activeModal && $activeModal.name == 'Account'}
 	<Account />
 {/if}
+{#if $activeModal && $activeModal.name == 'Products'}
+	<Products />
+{/if}
+{#if $activeModal && $activeModal.name == 'PositionDetails'}
+	<PositionDetails data={$activeModal.data} />
+{/if}
+{#if $activeModal && $activeModal.name == 'AddMargin'}
+	<AddMargin data={$activeModal.data} />
+{/if}
+{#if $activeModal && $activeModal.name == 'ClosePosition'}
+	<ClosePosition data={$activeModal.data} />
+{/if}
+
+<EventDetails isActive={$activeModal && $activeModal.name == 'EventDetails'} data={$activeModal.data} />
 <Toasts />
 <div class='grid'>
 	<div class='radial-gradient'></div>

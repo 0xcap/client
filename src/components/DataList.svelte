@@ -11,7 +11,7 @@
 
 	let amountIsFocused = false;
 	onMount(() => {
-		document.getElementById('amount').focus();
+		document.getElementById('amount') && document.getElementById('amount').focus();
 	});
 
 </script>
