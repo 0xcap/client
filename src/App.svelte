@@ -104,6 +104,7 @@
 
 	:global(input[type='number'],input[type='range'],input[type='text']) {
 		appearance: textfield;
+		-moz-appearance: textfield;
 		font-family: inherit;
 		font-size: inherit;
 		font-weight: inherit;
@@ -119,6 +120,7 @@
 		cursor: pointer;
 		user-select: none;
 		appearance: none;
+		-moz-appearance: none;
 		font-family: inherit;
 		font-size: inherit;
 		font-weight: inherit;

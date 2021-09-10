@@ -269,18 +269,16 @@
 
 			<div class='bottom'>
 
-				{#if $selectedAddress}
 				<div class='sub-label'>
 					Available: <a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
 				</div>
-				{/if}
 
-					<div>
-						<div class:regular={$margin > 0} class='input-label'>${formatToDisplay($prices[1] * $amount, 2)}</div>
-						{#if $margin > 0}
-						<div class='input-label'><Helper direction='top' text='Actual balance used from your wallet.' /> Margin: {formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>
-						{/if}
-					</div>
+				<div>
+					<div class:regular={$margin > 0} class='input-label'>${formatToDisplay($prices[1] * $amount, 2)}</div>
+					{#if $margin > 0}
+					<div class='input-label'><Helper direction='top' text='Actual balance used from your wallet.' /> Margin: {formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>
+					{/if}
+				</div>
 
 			</div>
 
