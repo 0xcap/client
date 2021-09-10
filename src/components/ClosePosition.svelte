@@ -51,7 +51,8 @@
 			marginToSubmit,
 			amount,
 			false,
-			data.productId
+			data.productId,
+			closePercent >= 100
 		);
 		submitIsPending = false;
 	}
