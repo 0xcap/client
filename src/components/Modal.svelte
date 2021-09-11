@@ -20,16 +20,18 @@
 		left: 0;
 		overflow-x: hidden;
 		overflow-y: auto;
-		width: 100%;
-		height: 100%;
+		right: 0;
+		bottom: 0;
 		background-color: rgb(0,0,0,0.524);
 		z-index: 100;
 		padding: 0 var(--base-padding);
 		outline: 0;
 		display: none;
+		align-items: center;
+		justify-content: center;
 	}
 	.modal-container.active {
-		display: block;
+		display: flex;
 	}
 
 	.modal {
@@ -38,10 +40,6 @@
 		border-radius: var(--base-radius);
 		background-color: rgb(25,25,25);
 		overflow: hidden;
-		position: absolute;
-	    top: 50%;
-	    left: 50%;
-	    transform: translate(-50%, -50%);
 	}
 
 	.modal-header {
