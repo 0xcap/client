@@ -2,6 +2,9 @@ import { writable, derived } from 'svelte/store'
 import { fetchPositionIds } from '../lib/events'
 import { getPositions } from '../lib/methods'
 
+import { getPositionIDs } from '../lib/api'
+
+
 import { selectedAddress } from './wallet'
 
 export const refreshUserPositions = writable(0);
