@@ -1,6 +1,6 @@
-import { formatUnits } from './utils'
+import { formatUnits, formatTrades } from './utils'
 
-const graph_url = 'https://api.studio.thegraph.com/query/7324/cap-v1/v0.0.6';
+const graph_url = 'https://api.studio.thegraph.com/query/7324/cap-v1/v0.0.7';
 
 export async function getVolume() {
 	const response = await fetch(graph_url, {
@@ -25,7 +25,6 @@ export async function getVolume() {
 }
 
 export async function getPositionIDs(owner) {
-	console.log('getPositionIDs', owner);
 	if (!owner) return;
 	const response = await fetch(graph_url, {
 		method: 'POST',
@@ -44,6 +43,46 @@ export async function getPositionIDs(owner) {
 	});
 	const json = await response.json();
 	let ids = json.data.positions.map((x) => {return x.id});
-	console.log(ids);
 	return ids;
+}
+
+export async function getTrades(owner) {
+	if (!owner) return;
+	const response = await fetch(graph_url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			query: `
+				query {
+				  trades(
+				    orderBy: timestamp,
+				    orderDirection: desc,
+				    first:100,
+				    where: {owner: "${owner}"}
+				  ) {
+				    id,
+				    txHash,
+				    positionId,
+				    productId,
+				    margin,
+				    leverage,
+				    amount,
+				    entryPrice,
+				    closePrice,
+				    isLong,
+				    pnl,
+				    pnlIsNegative,
+				    timestamp,
+				    blockNumber,
+				    wasLiquidated,
+				    isFullClose
+				  }
+				}
+			`
+		})
+	});
+	const json = await response.json();
+	return formatTrades(json.data.trades);
 }

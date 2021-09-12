@@ -3,7 +3,7 @@
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { formatToDisplay, formatPnl } from '../lib/utils'
 
-	import { history } from '../stores/history'
+	import { history, sessionTrades } from '../stores/history'
 	import { showModal } from '../stores/modals'
 
 	let hide_history = false;
@@ -22,13 +22,15 @@
 	let current_index = 1;
 
 	function updateShownEvents(all_events) {
-		if (!all_events) all_events = $history;
 		if (!all_events || !all_events.length) return;
 		shown_events = all_events.slice(0, current_index * 7);
 		current_index++;
 	}
 
-	$: updateShownEvents($history);
+	let all_events = [];
+	$: all_events = $sessionTrades.concat($history);
+
+	$: updateShownEvents(all_events);
 
 </script>
 

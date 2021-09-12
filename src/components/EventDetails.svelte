@@ -18,8 +18,12 @@
 				value: data.positionId
 			},
 			{
-				label: 'Product',
-				value: data.product
+				label: 'Closed',
+				value: data.timestamp ? new Date(data.timestamp * 1000).toLocaleString() : 'Recently'
+			},
+			{
+				label: 'Direction',
+				value: data.isLong ? 'Long' : 'Short'
 			},
 			{
 				label: 'Entry Price',
@@ -70,6 +74,6 @@
 <style>
 </style>
 
-<Modal isActive={isActive} title='Trade'>
+<Modal isActive={isActive} title={`${data && data.product} Trade`}>
 	<DataList data={rows} />
 </Modal>

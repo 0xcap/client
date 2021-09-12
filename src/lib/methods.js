@@ -34,7 +34,7 @@ export async function getUserStaked(stakeId) {
 }
 
 // TX completion handler
-async function checkTx(hash, event, isFullClose) {
+async function checkTx(hash, event, isFullClose, positionId) {
 	let i = 0;
 	let c = setInterval(async () => {
 		//console.log('check');
@@ -46,9 +46,11 @@ async function checkTx(hash, event, isFullClose) {
 	    	//console.log('done ', Date.now(), txReceipt);
 	    	handleTransactionEvent({
 	    		event,
+	    		txReceipt,
 	    		transactionHash: txReceipt.transactionHash,
 	    		args: {
-	    			isFullClose
+	    			isFullClose,
+	    			positionId
 	    		}
 	    	});
 	    	clearInterval(c);
@@ -94,6 +96,11 @@ export async function getLatestPrice(productId) {
 }
 
 export async function getPositions(positionIds) {
+	if (!positionIds.length) return;
+	// unique
+	positionIds = positionIds.filter((value, index, self) => {
+		return self.indexOf(value) === index;
+	});
 	return formatPositions(await getContract().getPositions(positionIds), positionIds);
 }
 
@@ -146,7 +153,7 @@ export async function closePosition(positionId, margin, amount, releaseMargin, p
 			hash: tx.hash,
 			description: `Close position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
 		});
-		checkTx(tx.hash, 'ClosePosition', isFullClose);
+		checkTx(tx.hash, 'ClosePosition', isFullClose, positionId);
 		//showToast(`Order to close ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
 		hideModal();
 	} catch(e) {
