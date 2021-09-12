@@ -1,6 +1,6 @@
 import { formatUnits, formatTrades } from './utils'
 
-const graph_url = 'https://api.studio.thegraph.com/query/7324/cap-v1/v0.0.7';
+const graph_url = 'https://api.thegraph.com/subgraphs/name/0xcap/capv1';
 
 export async function getVolume() {
 	const response = await fetch(graph_url, {
