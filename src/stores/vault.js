@@ -2,7 +2,7 @@ import { writable, derived } from 'svelte/store'
 
 import { selectedAddress } from './wallet'
 
-import { fetchStakeIds } from '../lib/events'
+import { getStakeIDs } from '../lib/api'
 import { getStakes, getVault } from '../lib/methods'
 
 export const refreshSelectedVault = writable(0);
@@ -13,21 +13,22 @@ export const selectedVault = derived([refreshSelectedVault], async ([$refreshSel
 	set(await getVault());
 }, 0);
 
-export const activeStakeIds = derived([selectedAddress, refreshUserStakeIds], async ([$selectedAddress, $refreshUserStakeIds], set) => {
+
+export const sessionStakeIds = writable([]);
+
+export const stakes = derived([selectedAddress, sessionStakeIds, refreshUserStakes], async ([$selectedAddress, $sessionStakeIds, $refreshUserStakes], set) => {
 	if (!$selectedAddress) {
 		set([]);
 		return;
 	}
-	set(await fetchStakeIds($selectedAddress));
-},[]);
-
-export const stakes = derived([selectedAddress, activeStakeIds, refreshUserStakes], async ([$selectedAddress, $activeStakeIds, $refreshUserStakes], set) => {
-	if (!$selectedAddress || !$activeStakeIds.length) {
-		set([]);
+	if (!$sessionStakeIds.length) {
+		// first load, fetch stake ids for user
+		const stake_ids = await getStakeIDs($selectedAddress);
+		if (stake_ids.length) sessionStakeIds.set(stake_ids);
 		return;
 	}
-	set(await getStakes($activeStakeIds));
-}, []);
+	set(await getStakes($sessionStakeIds));
+},[]);
 
 export const userStaked = derived([stakes], ([$stakes], set) => {
 	if (!$stakes.length) {

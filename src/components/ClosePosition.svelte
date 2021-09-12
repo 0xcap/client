@@ -1,6 +1,6 @@
 <script>
 
-	import { BASE_SYMBOL } from '../lib/constants'
+	import { BASE_SYMBOL, MIN_MARGIN } from '../lib/constants'
 	import { closePosition } from '../lib/methods'
 	import { formatToDisplay, intify } from '../lib/utils'
 
@@ -42,6 +42,7 @@
 		let marginToSubmit;
 		if (closePercent >= 100) {
 			marginToSubmit = data.margin * 1.01;
+			if (marginToSubmit < MIN_MARGIN) marginToSubmit = MIN_MARGIN * 1.01;
 		} else {
 			marginToSubmit = (amount*1)/(data.leverage*1);
 		}

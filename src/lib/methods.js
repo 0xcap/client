@@ -27,9 +27,6 @@ export async function getVault() {
 	return formatVault(await getContract().getVault());
 }
 
-export async function getStake(stakeId) {
-	return formatStake(await getContract().getStake(stakeId));
-}
 export async function getUserStaked(stakeId) {
 }
 
@@ -105,6 +102,11 @@ export async function getPositions(positionIds) {
 }
 
 export async function getStakes(stakeIds) {
+	if (!stakeIds.length) return;
+	// unique
+	stakeIds = stakeIds.filter((value, index, self) => {
+		return self.indexOf(value) === index;
+	});
 	return formatStakes(await getContract().getStakes(stakeIds), stakeIds);
 }
 

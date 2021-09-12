@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 
 import { getContract } from './helpers'
 
-import { refreshUserStakes, refreshUserStakeIds, refreshSelectedVault } from '../stores/vault'
+import { refreshUserStakes, refreshSelectedVault, sessionStakeIds } from '../stores/vault'
 import { refreshUserPositions, sessionPositionIds } from '../stores/positions'
 import { refreshUserBaseBalance, userBaseAllowance, selectedAddress } from '../stores/wallet'
 import { sessionTrades, history } from '../stores/history'
@@ -111,17 +111,31 @@ async function handleEvent() {
 
 	if (ev.event == 'Staked') {
 		completeTransaction(ev.transactionHash);
-		refreshUserStakeIds.update(n => n + 1);
 		refreshSelectedVault.update(n => n + 1);
 		if (acceptToasts) showToast('Staked.', 'success');
 		refreshUserBaseBalance.update(n => n + 1);
+
+		let stake_id = ev.args.stakeId && ev.args.stakeId.toNumber();
+		if (stake_id) {
+			sessionStakeIds.update((arr) => {
+				arr.push(stake_id);
+				return arr;
+			});
+		}
+
 	}
 
 	if (ev.event == 'Redeemed') {
 		completeTransaction(ev.transactionHash);
 		refreshSelectedVault.update(n => n + 1);
 		if (ev.args.isFullRedeem) {
-			refreshUserStakeIds.update(n => n + 1);
+			let stake_id = ev.args.stakeId && ev.args.stakeId.toNumber();
+			sessionStakeIds.update((arr) => {
+				arr = arr.filter((value) => {
+					return value != stake_id;
+				});
+				return arr;
+			});
 		} else {
 			refreshUserStakes.update(n => n + 1);
 		}
@@ -145,36 +159,5 @@ export function initEventListeners(address, chainId) {
 	tradingContract.on(tradingContract.filters.NewPositionSettled(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.AddMargin(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.ClosePosition(null, address), handleEvent);
-
-}
-
-let history_cache = {timestamp: 0, items: []};
-
-export async function fetchStakeIds(address) {
-
-	if (!address) return;
-	const tradingContract = getContract();
-	if (!tradingContract) return;
-
-	const filter_redeemed = tradingContract.filters.Redeemed(null, address);
-	const _events_redeemed = await tradingContract.queryFilter(filter_redeemed, -150000);
-
-	let full_redeemed_ids = {};
-	for (let ev of _events_redeemed) {
-		ev = formatEvent(ev);
-		if (ev.isFullRedeem) full_redeemed_ids[ev.stakeId] = true;
-	}
-
-	const filter_staked = tradingContract.filters.Staked(null, address);
-	const _events_staked = await tradingContract.queryFilter(filter_staked, -150000); // last 510K blocks, eg 90 days
-
-	//console.log('_events_staked', _events_staked);
-	let new_stake_ids = {};
-	for (let ev of _events_staked) {
-		ev = formatEvent(ev);
-		if (!full_redeemed_ids[ev.stakeId]) new_stake_ids[ev.stakeId] = true;
-	}
-
-	return Object.keys(new_stake_ids);
 
 }
