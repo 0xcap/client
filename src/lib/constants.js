@@ -8,6 +8,8 @@ export const DEFAULT_CHAIN_ID = 42161; // Arbitrum
 
 export const PRICE_DECIMALS = 8;
 
+export const MIN_MARGIN = 0.001;
+
 // ABIS
 const TRADING_ABI = [
 

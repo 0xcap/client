@@ -1,27 +1,24 @@
 import { writable, derived } from 'svelte/store'
-import { fetchPositionIds } from '../lib/events'
 import { getPositions } from '../lib/methods'
 
 import { getPositionIDs } from '../lib/api'
 
-
 import { selectedAddress } from './wallet'
 
 export const refreshUserPositions = writable(0);
-export const refreshUserPositionIds = writable(0);
 
-export const activePositionIds = derived([selectedAddress, refreshUserPositionIds], async ([$selectedAddress, $refreshUserPositionIds], set) => {
+export const sessionPositionIds = writable([]);
+
+export const positions = derived([selectedAddress, sessionPositionIds, refreshUserPositions], async ([$selectedAddress, $sessionPositionIds, $refreshUserPositions], set) => {
 	if (!$selectedAddress) {
 		set([]);
 		return;
 	}
-	set(await fetchPositionIds($selectedAddress));
-},[]);
-
-export const positions = derived([selectedAddress, activePositionIds, refreshUserPositions], async ([$selectedAddress, $activePositionIds, $refreshUserPositions], set) => {
-	if (!$selectedAddress || !$activePositionIds.length) {
-		set([]);
+	if (!$sessionPositionIds.length) {
+		// first load, fetch position ids for user
+		const position_ids = await getPositionIDs($selectedAddress);
+		if (position_ids.length) sessionPositionIds.set(position_ids);
 		return;
 	}
-	set(await getPositions($activePositionIds));
+	set(await getPositions($sessionPositionIds));
 },[]);

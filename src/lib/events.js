@@ -1,16 +1,17 @@
 import { get } from 'svelte/store'
+import { ethers } from 'ethers'
 
 import { getContract } from './helpers'
 
-import { refreshUserStakes, refreshUserStakeIds, refreshSelectedVault } from '../stores/vault'
-import { refreshUserPositions, refreshUserPositionIds } from '../stores/positions'
+import { refreshUserStakes, refreshSelectedVault, sessionStakeIds } from '../stores/vault'
+import { refreshUserPositions, sessionPositionIds } from '../stores/positions'
 import { refreshUserBaseBalance, userBaseAllowance, selectedAddress } from '../stores/wallet'
-import { refreshUserHistory, history } from '../stores/history'
+import { sessionTrades, history } from '../stores/history'
 import { showToast } from '../stores/toasts'
 
 import { completeTransaction } from '../stores/transactions'
 
-import { formatEvent } from './utils'
+import { formatEvent, formatTrades } from './utils'
 	
 // toasts dark for a period after page load
 let acceptToasts = false;
@@ -30,12 +31,24 @@ async function handleEvent() {
 
 	//console.log('got event', Date.now(), ev);
 
-	if (handled_cache[ev.transactionHash]) return;
-	handled_cache[ev.transactionHash] = true;
+	if (handled_cache[ev.transactionHash] && ev.event != 'ClosePosition') return;
+
+	//console.log('handling event', ev);
 	
 	if (ev.event == 'NewPosition') {
 		completeTransaction(ev.transactionHash);
-		refreshUserPositionIds.update(n => n + 1);
+		let position_id;
+		if (ev.txReceipt) {
+			// get position id from here, add it to session ids
+			position_id = ethers.utils.defaultAbiCoder.decode([ 'uint256' ], ev.txReceipt.logs[0].topics[1])[0].toNumber();
+		} else {
+			// get position id from ev.args, add it to session ids
+			position_id = ev.args.positionId.toNumber();
+		}
+		sessionPositionIds.update((arr) => {
+			arr.push(position_id);
+			return arr;
+		});
 		if (acceptToasts) showToast('Position opened.', 'success');
 		refreshUserBaseBalance.update(n => n + 1);
 	}
@@ -50,23 +63,46 @@ async function handleEvent() {
 	if (ev.event == 'ClosePosition') {
 		completeTransaction(ev.transactionHash);
 		
-		if (ev.args.isFullClose) {
-			refreshUserPositionIds.update(n => n + 1);
-		} else {
-			refreshUserPositions.update(n => n + 1);
-		}
+		if (!handled_cache[ev.transactionHash]) {
 
-		refreshUserHistory.update(n => n + 1);
-		
-		if (acceptToasts) {
-			if (ev.args.wasLiquidated) {
-				showToast('Position was liquidated.', 'info');
+			if (ev.args.isFullClose) {
+				let position_id;
+				if (ev.txReceipt) {
+					position_id = ev.args.positionId;
+				} else {
+					position_id = ev.args.positionId.toNumber();
+				}
+				sessionPositionIds.update((arr) => {
+					arr = arr.filter((value) => {
+						return value != position_id;
+					});
+					return arr;
+				});
 			} else {
-				showToast('Position closed.', 'success');
+				refreshUserPositions.update(n => n + 1);
 			}
+			
+			if (acceptToasts) {
+				if (ev.args.wasLiquidated) {
+					showToast('Position was liquidated.', 'info');
+				} else {
+					showToast('Position closed.', 'success');
+				}
+			}
+
+			refreshUserBaseBalance.update(n => n + 1);
+
 		}
 
-		refreshUserBaseBalance.update(n => n + 1);
+		// show new trades in UI
+		if (!ev.txReceipt) {
+			sessionTrades.update((arr) => {
+				let formattedTrade = formatTrades([ev.args], ev.blockNumber, ev.transactionHash)[0];
+				arr.unshift(formattedTrade);
+				return arr;
+			});
+		}
+		
 	}
 
 	if (ev.event == 'NewPositionSettled') {
@@ -75,23 +111,39 @@ async function handleEvent() {
 
 	if (ev.event == 'Staked') {
 		completeTransaction(ev.transactionHash);
-		refreshUserStakeIds.update(n => n + 1);
 		refreshSelectedVault.update(n => n + 1);
 		if (acceptToasts) showToast('Staked.', 'success');
 		refreshUserBaseBalance.update(n => n + 1);
+
+		let stake_id = ev.args.stakeId && ev.args.stakeId.toNumber();
+		if (stake_id) {
+			sessionStakeIds.update((arr) => {
+				arr.push(stake_id);
+				return arr;
+			});
+		}
+
 	}
 
 	if (ev.event == 'Redeemed') {
 		completeTransaction(ev.transactionHash);
 		refreshSelectedVault.update(n => n + 1);
 		if (ev.args.isFullRedeem) {
-			refreshUserStakeIds.update(n => n + 1);
+			let stake_id = ev.args.stakeId && ev.args.stakeId.toNumber();
+			sessionStakeIds.update((arr) => {
+				arr = arr.filter((value) => {
+					return value != stake_id;
+				});
+				return arr;
+			});
 		} else {
 			refreshUserStakes.update(n => n + 1);
 		}
 		if (acceptToasts) showToast('Redeemed.', 'success');
 		refreshUserBaseBalance.update(n => n + 1);
 	}
+
+	handled_cache[ev.transactionHash] = true;
 
 }
 
@@ -107,85 +159,5 @@ export function initEventListeners(address, chainId) {
 	tradingContract.on(tradingContract.filters.NewPositionSettled(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.AddMargin(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.ClosePosition(null, address), handleEvent);
-
-}
-
-let history_cache = {timestamp: 0, items: []};
-
-export async function fetchPositionIds(address) {
-
-	// get past NewPosition and ClosePosition events and determine which position ids are still active for this user
-	// populate history using closeposition events
-
-	if (!address) return;
-	const tradingContract = getContract();
-	if (!tradingContract) return;
-
-	const filter_new = tradingContract.filters.NewPosition(null, address);
-	const _events_new = await tradingContract.queryFilter(filter_new, -150000); // last 510K blocks, eg 90 days
-
-	let formattedHistoryEvents = await fetchHistoryEvents(address);
-	let full_close_ids = {};
-	for (const ev of formattedHistoryEvents) {
-		if (ev.isFullClose) full_close_ids[ev.positionId] = true;
-	}
-
-	history_cache.timestamp = Date.now();
-	history_cache.items = formattedHistoryEvents;
-
-	let new_position_ids = {};
-	for (let ev of _events_new) {
-		ev = formatEvent(ev);
-		if (!full_close_ids[ev.positionId]) new_position_ids[ev.positionId] = true;
-	}
-
-	return Object.keys(new_position_ids);
-
-}
-
-export async function fetchHistoryEvents(address) {
-	if (!address) return [];
-
-	if (history_cache.timestamp > Date.now() - 3*1000) {
-		return history_cache.items;
-	}
-
-	const tradingContract = getContract();
-	if (!tradingContract) return [];
-	const filter = tradingContract.filters.ClosePosition(null, address);
-	const _events = await tradingContract.queryFilter(filter, -150000); // last 90 days
-	let formattedEvents = [];
-	for (const ev of _events) {
-		formattedEvents.unshift(formatEvent(ev));
-	}
-	return formattedEvents;
-}
-
-export async function fetchStakeIds(address) {
-
-	if (!address) return;
-	const tradingContract = getContract();
-	if (!tradingContract) return;
-
-	const filter_redeemed = tradingContract.filters.Redeemed(null, address);
-	const _events_redeemed = await tradingContract.queryFilter(filter_redeemed, -150000);
-
-	let full_redeemed_ids = {};
-	for (let ev of _events_redeemed) {
-		ev = formatEvent(ev);
-		if (ev.isFullRedeem) full_redeemed_ids[ev.stakeId] = true;
-	}
-
-	const filter_staked = tradingContract.filters.Staked(null, address);
-	const _events_staked = await tradingContract.queryFilter(filter_staked, -150000); // last 510K blocks, eg 90 days
-
-	//console.log('_events_staked', _events_staked);
-	let new_stake_ids = {};
-	for (let ev of _events_staked) {
-		ev = formatEvent(ev);
-		if (!full_redeemed_ids[ev.stakeId]) new_stake_ids[ev.stakeId] = true;
-	}
-
-	return Object.keys(new_stake_ids);
 
 }

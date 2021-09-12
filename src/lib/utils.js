@@ -77,7 +77,7 @@ export function formatPositions(positions, positionIds) {
 		formattedPositions.push({
 			positionId: positionIds[i],
 			product: get(products)[p.productId],
-			timestamp: p.timestamp.toNumber(),
+			timestamp: p.timestamp,
 			isLong: p.isLong,
 			isSettling: p.isSettling,
 			margin: formatUnits(p.margin),
@@ -91,6 +91,31 @@ export function formatPositions(positions, positionIds) {
 	}
 	formattedPositions.reverse();
 	return formattedPositions;
+}
+
+export function formatTrades(trades, blockNumber, txHash) {
+	let formattedTrades = [];
+	for (const t of trades) {
+		formattedTrades.push({
+			positionId: t.positionId,
+			productId: t.productId,
+			product: get(products)[t.productId],
+			price: formatUnits(t.closePrice || t.price, PRICE_DECIMALS),
+			entryPrice: formatUnits(t.entryPrice, PRICE_DECIMALS),
+			margin: formatUnits(t.margin),
+			leverage: formatUnits(t.leverage),
+			amount: formatUnits(t.margin) * formatUnits(t.leverage),
+			timestamp: t.timestamp,
+			isLong: t.isLong,
+			pnl: formatUnits(t.pnl),
+			pnlIsNegative: t.pnlIsNegative,
+			isFullClose: t.isFullClose,
+			wasLiquidated: t.wasLiquidated,
+			txHash: t.txHash || t.transactionHash || txHash,
+			block: t.blockNumber || blockNumber
+		});
+	}
+	return formattedTrades;
 }
 
 export function formatStakes(stakes, stakeIds) {
