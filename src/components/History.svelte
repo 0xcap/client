@@ -21,14 +21,15 @@
 	let shown_events = [];
 	let current_index = 1;
 
-	function updateShownEvents(all_events) {
-		if (!all_events || !all_events.length) return;
-		shown_events = all_events.slice(0, current_index * 7);
-		current_index++;
-	}
-
 	let all_events = [];
 	$: all_events = $sessionTrades.concat($history);
+
+	function updateShownEvents(_all_events) {
+		if (!_all_events) _all_events = all_events;
+		if (!_all_events || !_all_events.length) return;
+		shown_events = _all_events.slice(0, current_index * 7);
+		current_index++;
+	}
 
 	$: updateShownEvents(all_events);
 
