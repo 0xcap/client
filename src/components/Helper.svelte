@@ -88,7 +88,7 @@
 	.right:after {
 		right: 0;
 		margin-left: 10px;
-		width: 160px;
+		width: 175px;
 	}
 	.right:before {
 		right: 5px;

@@ -23,7 +23,7 @@
 			},
 			{
 				label: 'Direction',
-				value: data.isLong ? 'Long' : 'Short'
+				value: data.isLong ? 'Short' : 'Long'
 			},
 			{
 				label: 'Entry Price',
