@@ -58,13 +58,13 @@
 			label: 'Fee',
 			value: `${$selectedProduct.fee}%`,
 			dim: true,
-			helper: 'Fee to open or close a position.'
+			helper: 'Includes trade execution, slippage, and oracle deviation.'
 		},
 		{
 			label: 'Interest (1yr)',
 			value: `${$selectedProduct.interest || 0}%`,
 			dim: true,
-			helper: 'Interest is charged in real-time on open positions.'
+			helper: 'Charged on open positions in real-time.'
 		},
 		{
 			label: 'Max Exposure',
@@ -86,7 +86,7 @@
 			label: 'Settlement Time',
 			value: `${parseInt($selectedProduct.settlementTime/60)}min`,
 			dim: true,
-			helper: 'Price settles at the next oracle price change or after this time has passed.'
+			helper: 'Price settles at the next oracle update or after this time has passed.'
 		},
 		{
 			label: 'Minimum Trade Duration',

@@ -30,7 +30,7 @@
 </style>
 
 <div class='volume'>
-	Total volume: {#if volume}
+	Volume: {#if volume}
 		{formatToDisplay(volume)} {BASE_SYMBOL} {#if $prices[1]}(${formatToDisplay($prices[1] * volume)}){/if}
 	{:else}...
 	{/if}
