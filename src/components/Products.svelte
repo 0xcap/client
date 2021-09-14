@@ -58,13 +58,13 @@
 			label: 'Fee',
 			value: `${$selectedProduct.fee}%`,
 			dim: true,
-			helper: 'Fee to open or close a position.'
+			helper: 'Fee to trade, including slippage.'
 		},
 		{
 			label: 'Interest (1yr)',
 			value: `${$selectedProduct.interest || 0}%`,
 			dim: true,
-			helper: 'Interest is charged in real-time on open positions.'
+			helper: 'Interest is charged on open positions.'
 		},
 		{
 			label: 'Max Exposure',
