@@ -131,7 +131,7 @@
 			<span>Vault ({BASE_SYMBOL})</span>
 		</div>
 
-		<div class='description'>This vault backs trader profits while receiving losses, fees, and interest, in {BASE_SYMBOL}. The vault is currently at capacity and cannot accept new stakers.</div>
+		<div class='description'>The vault pays out trader profits while receiving losses, fees, and interest, in {BASE_SYMBOL}. As a staker, you take the opposite side of Cap trader positions automatically — you win when they lose and vice versa.</div>
 
 		<div class='balance hidden'>
 			<div class='balance-label'>Balance</div>
@@ -140,18 +140,23 @@
 
 		<div class='details'>
 
-			<div class='row hidden'>
+			<div class='row'>
+				<div class='label'>Balance</div>
+				<div class='value'>{formatToDisplay($selectedVault.balance || 0)}</div>
+			</div>
+
+			<div class='row'>
 				<div class='label'>Total Staked</div>
 				<div class='value'>{formatToDisplay($selectedVault.staked) || 0} ({formatToDisplay($selectedVault.staked*100/$selectedVault.cap || 0, 2)}%)</div>
 			</div>
-			<div class='stake-meter hidden'>
+			<div class='stake-meter'>
 				<div class='stake-progress' style={`width: ${$selectedVault.staked*100/$selectedVault.cap || 0}%`}></div>
 			</div>
-			<div class='row hidden'>
+			<div class='row'>
 				<div class='label'>Max Stake Capacity</div>
 				<div class='value'>{formatToDisplay($selectedVault.cap)}</div>
 			</div>
-			<div class='row hidden'>
+			<div class='row'>
 				<div class='label'>Max Daily Drawdown</div>
 				<div class='value'>{formatToDisplay($selectedVault.maxDailyDrawdown, 2)}%</div>
 			</div>
