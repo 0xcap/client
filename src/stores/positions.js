@@ -1,6 +1,8 @@
 import { writable, derived } from 'svelte/store'
 import { getPositions } from '../lib/methods'
 
+import { fetchPositionIdsFromEvents } from '../lib/events'
+
 import { getPositionIDs } from '../lib/api'
 
 import { selectedAddress } from './wallet'
@@ -17,7 +19,12 @@ export const positions = derived([selectedAddress, sessionPositionIds, refreshUs
 	if (!$sessionPositionIds.length) {
 		// first load, fetch position ids for user
 		const position_ids = await getPositionIDs($selectedAddress);
-		if (position_ids.length) sessionPositionIds.set(position_ids);
+		// tmp when graph doesn't work
+		const _position_ids = await fetchPositionIdsFromEvents($selectedAddress);
+
+		const all_pos_ids = (position_ids || []).concat(_position_ids || []);
+		if (all_pos_ids.length) sessionPositionIds.set(all_pos_ids);
+		
 		return;
 	}
 	set(await getPositions($sessionPositionIds));

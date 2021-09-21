@@ -161,3 +161,54 @@ export function initEventListeners(address, chainId) {
 	tradingContract.on(tradingContract.filters.ClosePosition(null, address), handleEvent);
 
 }
+
+let history_cache = {timestamp: 0, items: []};
+
+export async function fetchPositionIdsFromEvents(address) {
+
+	// get past NewPosition and ClosePosition events and determine which position ids are still active for this user
+	// populate history using closeposition events
+
+	if (!address) return;
+	const tradingContract = getContract();
+	if (!tradingContract) return;
+
+	const filter_new = tradingContract.filters.NewPosition(null, address);
+	const _events_new = await tradingContract.queryFilter(filter_new, -10000);
+
+	let formattedHistoryEvents = await fetchHistoryEvents(address);
+	let full_close_ids = {};
+	for (const ev of formattedHistoryEvents) {
+		if (ev.isFullClose) full_close_ids[ev.positionId] = true;
+	}
+
+	history_cache.timestamp = Date.now();
+	history_cache.items = formattedHistoryEvents;
+
+	let new_position_ids = {};
+	for (let ev of _events_new) {
+		let positionId = ev.args.positionId && ev.args.positionId.toNumber();
+		if (!full_close_ids[positionId]) new_position_ids[positionId] = true;
+	}
+
+	return Object.keys(new_position_ids);
+
+}
+
+export async function fetchHistoryEvents(address) {
+	if (!address) return [];
+
+	if (history_cache.timestamp > Date.now() - 3*1000) {
+		return history_cache.items;
+	}
+
+	const tradingContract = getContract();
+	if (!tradingContract) return [];
+	const filter = tradingContract.filters.ClosePosition(null, address);
+	const _events = await tradingContract.queryFilter(filter, -10000);
+	let formattedEvents = [];
+	for (const ev of _events) {
+		formattedEvents.unshift(formatEvent(ev));
+	}
+	return formattedEvents;
+}
