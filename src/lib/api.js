@@ -86,25 +86,3 @@ export async function getTrades(owner) {
 	const json = await response.json();
 	return formatTrades(json.data.trades);
 }
-
-export async function getStakeIDs(owner) {
-	if (!owner) return;
-	const response = await fetch(graph_url, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({
-			query: `
-				query {
-					stakes(where: {owner: "${owner}"}) {
-						id
-					}
-				}
-			`
-		})
-	});
-	const json = await response.json();
-	let ids = json.data.stakes.map((x) => {return x.id});
-	return ids;
-}

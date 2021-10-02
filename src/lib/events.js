@@ -3,7 +3,6 @@ import { ethers } from 'ethers'
 
 import { getContract } from './helpers'
 
-import { refreshUserStakes, refreshSelectedVault, sessionStakeIds } from '../stores/vault'
 import { refreshUserPositions, sessionPositionIds } from '../stores/positions'
 import { refreshUserBaseBalance, userBaseAllowance, selectedAddress } from '../stores/wallet'
 import { sessionTrades, history } from '../stores/history'
@@ -29,7 +28,7 @@ async function handleEvent() {
 
 	const ev = arguments[arguments.length - 1];
 
-	//console.log('got event', Date.now(), ev);
+	console.log('got event', Date.now(), ev);
 
 	if (handled_cache[ev.transactionHash] && ev.event != 'ClosePosition') return;
 
@@ -39,6 +38,7 @@ async function handleEvent() {
 		completeTransaction(ev.transactionHash);
 		let position_id;
 		if (ev.txReceipt) {
+			console.log('ev.txReceipt', ev.txReceipt);
 			// get position id from here, add it to session ids
 			position_id = ethers.utils.defaultAbiCoder.decode([ 'uint256' ], ev.txReceipt.logs[0].topics[1])[0].toNumber();
 		} else {
@@ -105,44 +105,6 @@ async function handleEvent() {
 		
 	}
 
-	if (ev.event == 'NewPositionSettled') {
-		refreshUserPositions.update(n => n + 1);
-	}
-
-	if (ev.event == 'Staked') {
-		completeTransaction(ev.transactionHash);
-		refreshSelectedVault.update(n => n + 1);
-		if (acceptToasts) showToast('Staked.', 'success');
-		refreshUserBaseBalance.update(n => n + 1);
-
-		let stake_id = ev.args.stakeId && ev.args.stakeId.toNumber();
-		if (stake_id) {
-			sessionStakeIds.update((arr) => {
-				arr.push(stake_id);
-				return arr;
-			});
-		}
-
-	}
-
-	if (ev.event == 'Redeemed') {
-		completeTransaction(ev.transactionHash);
-		refreshSelectedVault.update(n => n + 1);
-		if (ev.args.isFullRedeem) {
-			let stake_id = ev.args.stakeId && ev.args.stakeId.toNumber();
-			sessionStakeIds.update((arr) => {
-				arr = arr.filter((value) => {
-					return value != stake_id;
-				});
-				return arr;
-			});
-		} else {
-			refreshUserStakes.update(n => n + 1);
-		}
-		if (acceptToasts) showToast('Redeemed.', 'success');
-		refreshUserBaseBalance.update(n => n + 1);
-	}
-
 	handled_cache[ev.transactionHash] = true;
 
 }
@@ -153,10 +115,7 @@ export function initEventListeners(address, chainId) {
 	tradingContract.removeAllListeners();
 	if (!address || !chainId) return;
 	
-	tradingContract.on(tradingContract.filters.Staked(null, address), handleEvent);
-	tradingContract.on(tradingContract.filters.Redeemed(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.NewPosition(null, address), handleEvent);
-	tradingContract.on(tradingContract.filters.NewPositionSettled(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.AddMargin(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.ClosePosition(null, address), handleEvent);
 
@@ -165,6 +124,8 @@ export function initEventListeners(address, chainId) {
 let history_cache = {timestamp: 0, items: []};
 
 export async function fetchPositionIdsFromEvents(address) {
+
+	console.log('fetchPositionIdsFromEvents', address);
 
 	// get past NewPosition and ClosePosition events and determine which position ids are still active for this user
 	// populate history using closeposition events
@@ -176,6 +137,7 @@ export async function fetchPositionIdsFromEvents(address) {
 	const filter_new = tradingContract.filters.NewPosition(null, address);
 	const _events_new = await tradingContract.queryFilter(filter_new, -10000);
 
+	console.log('_events_new', _events_new);
 	let formattedHistoryEvents = await fetchHistoryEvents(address);
 	let full_close_ids = {};
 	for (const ev of formattedHistoryEvents) {

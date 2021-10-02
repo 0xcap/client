@@ -3,7 +3,7 @@ import { get } from 'svelte/store'
 import { PRICE_DECIMALS, BASE_SYMBOL, ADDRESS_ZERO } from './constants'
 import { handleTransactionEvent } from './events'
 import { getContract, getContractAddress } from './helpers'
-import { formatUnits, parseUnits, formatProduct, formatVault, formatPositions, formatStakes, formatToDisplay } from './utils'
+import { formatUnits, parseUnits, formatProduct, formatPositions, formatToDisplay } from './utils'
 
 import { hideModal } from '../stores/modals'
 import { showToast } from '../stores/toasts'
@@ -21,13 +21,6 @@ export async function getProduct(productId) {
 	const product = formatProduct(await getContract().getProduct(productId), productId);
 	productCache[productId] = product;
 	return product;
-}
-
-export async function getVault() {
-	return formatVault(await getContract().getVault());
-}
-
-export async function getUserStaked(stakeId) {
 }
 
 // TX completion handler
@@ -55,41 +48,8 @@ async function checkTx(hash, event, isFullClose, positionId) {
 	}, 500);
 }
 
-export async function stake(amount) {
-	if (get(isUnsupported)) return;
-	try {
-		const tx = await getContract(true).stake({value: parseUnits(amount, 18)});
-		addPendingTransaction({
-			hash: tx.hash,
-			description: `Stake ${amount} ${BASE_SYMBOL}`
-		});
-		checkTx(tx.hash, 'Staked');
-		//showToast(`Stake ${amount} ${BASE_SYMBOL} submitted.`, 'transaction');
-		hideModal();
-	} catch(e) {
-		showToast(e);
-		return e;
-	}
-}
-
-export async function redeem(stakeId, amount) {
-	try {
-		const tx = await getContract(true).redeem(stakeId, parseUnits(amount));
-		addPendingTransaction({
-			hash: tx.hash,
-			description: `Redeem ${amount} ${BASE_SYMBOL}`
-		});
-		checkTx(tx.hash, 'Redeemed');
-		//showToast(`Redeem ${amount} ${BASE_SYMBOL} submitted.`, 'transaction');
-		hideModal();
-	} catch(e) {
-		showToast(e);
-		return e;
-	}
-}
-
-export async function getLatestPrice(productId) {
-	return formatUnits(await getContract().getLatestPrice(ADDRESS_ZERO, productId), PRICE_DECIMALS);
+export async function getChainlinkPrice(productId) {
+	return formatUnits(await getContract().getChainlinkPrice(productId), PRICE_DECIMALS);
 }
 
 export async function getPositions(positionIds) {
@@ -101,21 +61,12 @@ export async function getPositions(positionIds) {
 	return formatPositions(await getContract().getPositions(positionIds), positionIds);
 }
 
-export async function getStakes(stakeIds) {
-	if (!stakeIds.length) return;
-	// unique
-	stakeIds = stakeIds.filter((value, index, self) => {
-		return self.indexOf(value) === index;
-	});
-	return formatStakes(await getContract().getStakes(stakeIds), stakeIds);
-}
-
 export async function openPosition(productId, isLong, leverage, margin) {
 	if (get(isUnsupported)) return;
 	const product = await getProduct(productId);
 	const amount = margin * leverage;
 	try {
-		const tx = await getContract(true).openPosition(productId, isLong, parseUnits(leverage), {value: parseUnits(margin, 18)});
+		const tx = await getContract(true).submitNewPosition(productId, isLong, parseUnits(leverage), {value: parseUnits(margin, 18)});
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Open position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
@@ -150,7 +101,7 @@ export async function addMargin(positionId, margin, productId) {
 export async function closePosition(positionId, margin, amount, releaseMargin, productId, isFullClose) {
 	const product = await getProduct(productId);
 	try {
-		const tx = await getContract(true).closePosition(positionId, parseUnits(margin), releaseMargin || false);
+		const tx = await getContract(true).submitCloseOrder(positionId, parseUnits(margin), releaseMargin || false);
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Close position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`

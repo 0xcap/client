@@ -6,6 +6,8 @@
 	import Header from './components/Header.svelte'
 	import Footer from './components/Footer.svelte'
 
+	import Trade from './pages/Trade.svelte'
+
 	// Modals
 	import Account from './components/Account.svelte'
 	import Products from './components/Products.svelte'
@@ -14,27 +16,29 @@
 	import ClosePosition from './components/ClosePosition.svelte'
 	import EventDetails from './components/EventDetails.svelte'
 
+	import { subscribeToProducts } from './lib/stream'
 	import { initEventListeners } from './lib/events'
-	import { catchLinks, hidePopoversOnClick } from './lib/utils'
+	import { hidePopoversOnClick } from './lib/utils'
 
 	import { contractReady } from './stores/contracts'
 	import { activeModal } from './stores/modals'
 	import { refreshUserPositions } from './stores/positions'
-	import { component, loadRoute, navigateTo } from './stores/router'
+	import { activeProducts } from './stores/prices'
 	import { selectedAddress, chainId, isUnderMaintenance } from './stores/wallet'
 
 	onMount(async () => {
-		loadRoute(location.hash);
-		catchLinks((path) => navigateTo(path));
+		
 		hidePopoversOnClick();
 		
 		// Refresh user positions periodically
 		setInterval(() => {
 			refreshUserPositions.update(n => n + 1);
 		}, 5000);
+
 	});
 
 	$: initEventListeners($selectedAddress, $chainId);
+	$: subscribeToProducts(Object.keys($activeProducts));
 
 </script>
 
@@ -205,10 +209,9 @@
 	{:else}
 		{#if $contractReady}
 		<main>
-			<svelte:component this={$component}/>
+			<Trade />
 		</main>
 		{/if}
 	{/if}
 	<Footer />
 </div>
-

@@ -38,6 +38,7 @@ export function selectProduct(productId, deactivate) {
 }
 
 export function activateProductPrices(productId) {
+	if (get(activeProducts)[productId]) return;
 	activeProducts.update((x) => {
 		x[productId] = true;
 		return x;
