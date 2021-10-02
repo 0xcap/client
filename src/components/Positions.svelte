@@ -232,6 +232,10 @@
 		fill: var(--red);
 	}
 
+	.disabled {
+		pointer-events: none;
+	}
+
 	:global(.positions svg) {
 		height: 16px;
 		fill: inherit;
@@ -285,7 +289,10 @@
 									{/if}
 								{/if}
 
-								{#if position.closeOrderId}<Helper direction='right' text='Close order being picked up by oracle.' type='closing' />{/if}
+								{#if position.closeOrderId}
+									<Helper direction='right' text='Close order being picked up by oracle.' type='closing' />
+									<a on:click|stopPropagation={() => {_cancelOrder(position.closeOrderId)}}>Cancel Close Order</a>
+								{/if}
 								
 								<span class={`upl-entry ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
 									{formatPnl(upls[position.positionId])}
@@ -306,10 +313,10 @@
 							</div>
 							-->
 						</div>
-						<a class='add-margin' on:click={() => {showModal('AddMargin', position)}} data-intercept="true">
+						<a class='add-margin' class:disabled={position.closeOrderId > 0} on:click={() => {showModal('AddMargin', position)}} data-intercept="true">
 							{@html PLUS_ICON}
 						</a>
-						<a class='close' on:click={() => {showModal('ClosePosition', position)}} data-intercept="true">
+						<a class='close' class:disabled={position.closeOrderId > 0} on:click={() => {showModal('ClosePosition', position)}} data-intercept="true">
 							{@html PLUS_ICON}
 						</a>
 					</div>

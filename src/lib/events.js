@@ -40,7 +40,7 @@ async function handleEvent() {
 		});
 		if (acceptToasts) showToast('Order submitted.', 'success');
 		refreshUserBaseBalance.update(n => n + 1);
-	} if (ev.event == 'CancelPosition') {
+	} else if (ev.event == 'CancelPosition') {
 		// From TX checker only
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
@@ -83,6 +83,10 @@ async function handleEvent() {
 			return arr;
 		});
 		
+	} else if (ev.event == 'CancelOrder') {
+		// From TX checker only
+		completeTransaction(ev.transactionHash);
+		refreshUserPositions.update(n => n + 1);
 	}
 
 }

@@ -83,7 +83,8 @@ export function formatPositions(positions, positionIds) {
 			leverage: formatUnits(p.leverage),
 			amount: formatUnits(p.margin) * formatUnits(p.leverage),
 			price: formatUnits(p.price, PRICE_DECIMALS),
-			productId: p.productId
+			productId: p.productId,
+			closeOrderId: p.closeOrderId
 		});
 		activateProductPrices(p.productId);
 		i++;
@@ -161,7 +162,7 @@ export function formatEvent(ev) {
 
 	} else if (ev.event == 'NewPosition') {
 
-		const { positionId, user, productId, price, margin, leverage, isLong } = ev.args;
+		const { positionId, closeOrderId, user, productId, price, margin, leverage, isLong } = ev.args;
 
 		return {
 			type: 'NewPosition',
@@ -174,7 +175,8 @@ export function formatEvent(ev) {
 			isLong,
 			txHash: ev.transactionHash,
 			block: ev.blockNumber,
-			productId: productId
+			productId: productId,
+			closeOrderId: closeOrderId
 		}
 
 	}
