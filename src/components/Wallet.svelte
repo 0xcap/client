@@ -84,7 +84,7 @@
 	}
 
 	.has-pending {
-		color: var(--pink);
+		color: var(--blue);
 		margin-right: 6px;
 	}
 	:global(.wallet .has-pending svg) {
@@ -99,7 +99,7 @@
 		z-index: 999;
 	}
 
-	button, .button {
+	button {
 		background-color: var(--blue);
 		color: var(--gray-darkest);
 		padding: 8px 16px;
@@ -108,7 +108,7 @@
 		cursor: pointer;
 		white-space: nowrap;
 	}
-	button:hover, .button:hover {
+	button:hover {
 		background-color: var(--blue-dark);
 	}
 
@@ -137,12 +137,8 @@
 	}
 
 	.menu a.button {
-		text-align: center;
-		margin: 6px 4px 0;
-		border-radius: 14px;
-		color: var(--gray-darkest);
-		background-color: var(--green);
-		padding: 12px 16px;
+		font-weight: 700;
+		color: var(--green);
 	}
 	.menu a.button:hover {
 		background-color: var(--green-dark);

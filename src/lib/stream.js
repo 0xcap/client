@@ -58,9 +58,17 @@ function initWebsocket() {
 
 	console.log('initWebsocket');
 
+	if (ws) {
+		ws.close(3335,"");
+		ws = null;
+		clearTimeout(h);
+	}
+
 	ws = new WebSocket('wss://ws-feed.exchange.coinbase.com');
 
 	ws.onopen = (e) => {
+
+		if (ws.readyState != 1) return;
 
 		let _products = get(products);
 		let product_ids = [];
@@ -111,7 +119,7 @@ function initWebsocket() {
 
 	ws.onclose = (e) => {
 
-		console.log('Socket closed', e);
+		console.log('Socket closed', e.code, e);
 
 		if (e.wasClean) {
 
@@ -119,12 +127,14 @@ function initWebsocket() {
 
 		}
 
-		initWebsocket();
+		if (e.code != 3335) {
+			initWebsocket();
+		}
 
 	}
 
 	ws.onerror = (e) => {
-		ws.close(1000,"");
+		console.log('Websocket error', e);
 	}
 
 	function heartbeat() {
