@@ -22,19 +22,11 @@
 
 	import { contractReady } from './stores/contracts'
 	import { activeModal } from './stores/modals'
-	import { refreshUserPositions } from './stores/positions'
 	import { activeProducts } from './stores/prices'
 	import { selectedAddress, chainId, isUnderMaintenance } from './stores/wallet'
 
 	onMount(async () => {
-		
 		hidePopoversOnClick();
-		
-		// Refresh user positions periodically
-		setInterval(() => {
-			refreshUserPositions.update(n => n + 1);
-		}, 5000);
-
 	});
 
 	$: initEventListeners($selectedAddress, $chainId);

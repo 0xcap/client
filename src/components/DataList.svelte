@@ -90,18 +90,20 @@
 				</div>
 			</div>
 		{:else}
-			<div class='row'>
-				<div class='label'>{row.label}{#if row.helper}<Helper text={row.helper} direction='right' />{/if}</div>
-				<div class:error={!row.isEmpty && row.hasError} class:dim={row.dim} class:clickable={Boolean(row.onclick)} on:click={row.onclick} class='value'>
-					{#if row.renderHTML}
-						{@html row.value}
-					{:else if row.isEmpty}
-						-
-					{:else}
-						{row.value}
-					{/if}
+			{#if row.value !== null}
+				<div class='row'>
+					<div class='label'>{row.label}{#if row.helper}<Helper text={row.helper} direction='right' />{/if}</div>
+					<div class:error={!row.isEmpty && row.hasError} class:dim={row.dim} class:clickable={Boolean(row.onclick)} on:click={row.onclick} class='value'>
+						{#if row.renderHTML}
+							{@html row.value}
+						{:else if row.isEmpty}
+							-
+						{:else}
+							{row.value}
+						{/if}
+					</div>
 				</div>
-			</div>
+			{/if}
 		{/if}
 	{/each}
 </div>

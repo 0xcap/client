@@ -9,7 +9,7 @@
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { LOGOS } from '../lib/logos'
 	import { PLUS_ICON } from '../lib/icons'
-	import { getProduct } from '../lib/methods'
+	import { getProduct, cancelPosition, cancelOrder } from '../lib/methods'
 	import { formatToDisplay, intify, formatPnl } from '../lib/utils'
 
 	let upls = {};
@@ -18,11 +18,20 @@
 	let count = 0;
 	$: count = $positions && $positions.length || 0;
 
+	async function _cancelPosition(positionId) {
+		const error = await cancelPosition(positionId);
+	}
+
+	async function _cancelOrder(orderId) {
+		const error = await cancelOrder(orderId);
+	}
+
 	async function calculateUPLs(_prices) {
 		totalUPL = 0;
 		for (const position of $positions) {
 			const upl = await getUPL(position);
-			upls[position.positionId] = upl * 1;
+			upls[position.positionId] = upl;
+			if (!upl) continue;
 			upls_percent[position.positionId] = (100 * upl * 1 / position.margin);
 			totalUPL += upl * 1;
 		}
@@ -32,6 +41,7 @@
 	async function getUPL(position) {
 		let latestPrice = $prices[position.productId];
 		let upl = 0;
+		if (position.price * 1 == 0) return undefined;
 		if (latestPrice) {
 			const productInfo = await getProduct(position.productId);
 			if (position.isLong) {
@@ -251,6 +261,8 @@
 
 			{#each $positions as position}
 				
+				{#if position.margin * 1 > 0}
+
 				<div class='position'>
 
 					<div class='details' on:click={() => {showModal('PositionDetails', position)}} data-intercept="true">
@@ -263,13 +275,22 @@
 							</div>
 							<div class='entry'>
 								<span class='entry-text'>
-									{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}
+									{formatToDisplay(position.amount)} {BASE_SYMBOL} {#if position.price > 0} at {formatToDisplay(position.price)}{/if}
 								</span><span class='entry-text-mobile'>
 									{formatToDisplay(position.amount)}@{formatToDisplay(position.price)}
-								</span>{#if position.isSettling}<Helper direction='right' text='Settles at the next oracle price change.' type='settling' />{/if}
+								</span>
+								
+								{#if position.price * 1 == 0}
+									<Helper direction='right' text='Order being picked up by oracle.' type='opening' /> {#if position.timestamp * 1000 < Date.now() - 5 * 60 * 1000} <a on:click|stopPropagation={() => {_cancelPosition(position.positionId)}}>Cancel</a>
+									{/if}
+								{/if}
+
+								{#if position.closeOrderId}<Helper direction='right' text='Close order being picked up by oracle.' type='closing' />{/if}
+								
 								<span class={`upl-entry ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
 									{formatPnl(upls[position.positionId])}
 								</span>
+
 							</div>
 						</div>
 					</div>
@@ -294,6 +315,8 @@
 					</div>
 
 				</div>
+
+				{/if}
 
 			{/each}
 

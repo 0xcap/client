@@ -1,4 +1,5 @@
 import { get } from 'svelte/store'
+import { LIQUIDATION_THRESHOLD } from './constants'
 import { getProduct } from './methods'
 import { contract } from '../stores/contracts'
 import { positions } from '../stores/positions'
@@ -58,12 +59,11 @@ export function deactivateProductPrices(productIds) {
 export async function calculateLiquidationPrice(params) {
 	const { productId, price, leverage, isLong } = params;
 	const productInfo = await getProduct(productId);
-	const liquidationThreshold = productInfo.liquidationThreshold * 1 || 80;
 	let liquidationPrice;
 	if (isLong) {
-		liquidationPrice = price * (1 - liquidationThreshold / 100 / leverage);
+		liquidationPrice = price * (1 - LIQUIDATION_THRESHOLD / 10000 / leverage);
 	} else {
-		liquidationPrice = price * (1 + liquidationThreshold/100 / leverage);
+		liquidationPrice = price * (1 + LIQUIDATION_THRESHOLD / 10000 / leverage);
 	}
 	return liquidationPrice;
 }

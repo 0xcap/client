@@ -36,7 +36,7 @@
 		},
 		{
 			label: 'Entry Price',
-			value: formatToDisplay(data.price),
+			value: data.price ? formatToDisplay(data.price) : 'Settling',
 			helper: 'Price includes fees.'
 		},
 		{
@@ -57,14 +57,9 @@
 			label: 'Leverage',
 			value: `${formatToDisplay(data.leverage)}×`
 		},
-		
-		{
-			label: 'Has Settled',
-			value: data.isSettling ? 'No' : 'Yes'
-		},
 		{
 			label: 'Liquidation Price',
-			value: formatToDisplay(liquidationPrice)
+			value: "~" + formatToDisplay(liquidationPrice)
 		}
 	];
 

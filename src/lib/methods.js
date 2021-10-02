@@ -29,7 +29,7 @@ async function checkTx(hash, event, isFullClose, positionId) {
 	let c = setInterval(async () => {
 		//console.log('check');
 		i++;
-		if (i > 12) return clearInterval(c);
+		if (i > 30) return clearInterval(c);
 		const txReceipt = await get(provider).getTransactionReceipt(hash);
 		//console.log('txReceipt', txReceipt)
 	    if (txReceipt && txReceipt.blockNumber) {
@@ -54,14 +54,10 @@ export async function getChainlinkPrice(productId) {
 
 export async function getPositions(positionIds) {
 	if (!positionIds.length) return;
-	// unique
-	positionIds = positionIds.filter((value, index, self) => {
-		return self.indexOf(value) === index;
-	});
 	return formatPositions(await getContract().getPositions(positionIds), positionIds);
 }
 
-export async function openPosition(productId, isLong, leverage, margin) {
+export async function submitNewPosition(productId, isLong, leverage, margin) {
 	if (get(isUnsupported)) return;
 	const product = await getProduct(productId);
 	const amount = margin * leverage;
@@ -69,11 +65,24 @@ export async function openPosition(productId, isLong, leverage, margin) {
 		const tx = await getContract(true).submitNewPosition(productId, isLong, parseUnits(leverage), {value: parseUnits(margin, 18)});
 		addPendingTransaction({
 			hash: tx.hash,
-			description: `Open position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
+			description: `New position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
 		});
-		checkTx(tx.hash, 'NewPosition');
-		//checkTx(tx.hash);
-		//showToast(`Order to open ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
+		checkTx(tx.hash, 'OpenOrder');
+		hideModal();
+	} catch(e) {
+		showToast(e);
+		return e;
+	}
+}
+
+export async function cancelPosition(positionId) {
+	try {
+		const tx = await getContract(true).cancelPosition(positionId);
+		addPendingTransaction({
+			hash: tx.hash,
+			description: `Cancel open order`
+		});
+		checkTx(tx.hash, 'CancelPosition');
 		hideModal();
 	} catch(e) {
 		showToast(e);
@@ -90,7 +99,6 @@ export async function addMargin(positionId, margin, productId) {
 			description: `Add margin ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol}`
 		});
 		checkTx(tx.hash, 'AddMargin');
-		//showToast(`Order to add ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
 		hideModal();
 	} catch(e) {
 		showToast(e);
@@ -106,8 +114,22 @@ export async function closePosition(positionId, margin, amount, releaseMargin, p
 			hash: tx.hash,
 			description: `Close position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
 		});
-		checkTx(tx.hash, 'ClosePosition', isFullClose, positionId);
-		//showToast(`Order to close ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol} submitted.`, 'transaction');
+		checkTx(tx.hash, 'CloseOrder', isFullClose, positionId);
+		hideModal();
+	} catch(e) {
+		showToast(e);
+		return e;
+	}
+}
+
+export async function cancelOrder(orderId) {
+	try {
+		const tx = await getContract(true).cancelOrder(orderId);
+		addPendingTransaction({
+			hash: tx.hash,
+			description: `Cancel close order`
+		});
+		checkTx(tx.hash, 'CancelOrder');
 		hideModal();
 	} catch(e) {
 		showToast(e);

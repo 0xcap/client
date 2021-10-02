@@ -8,7 +8,7 @@
 
 	.container {
 		display: inline-block;
-		margin-left: 6px;
+		margin: 0 6px;
 	}
 
 	.tooltip {
@@ -26,9 +26,15 @@
 		font-weight: 400;
 	}
 
-	.tooltip.settling {
+	.tooltip.opening, .tooltip.closing {
 		width: 7px;
 		height: 7px;
+	}
+
+	.tooltip.opening {
+		background-color: var(--gray-light);
+	}
+	.tooltip.closing {
 		background-color: var(--orange);
 	}
 
@@ -100,7 +106,7 @@
 		top: 50%;
 		transform: translate(calc(4px * -1), -50%);
 	}
-	.right.settling:after {
+	.right.opening:after, .right.closing:after {
 		top: -10px;
 	}
 
@@ -115,7 +121,7 @@
 </style>
 
 <div class='container'>
-	<div class:settling={type =='settling'} class={`tooltip ${direction}`} data-text={text}>
-		{#if type !='settling'}?{/if}
+	<div class:opening={type =='opening'} class:closing={type =='closing'} class={`tooltip ${direction}`} data-text={text}>
+		{#if type !='opening' && type != 'closing'}?{/if}
 	</div>
 </div>

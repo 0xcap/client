@@ -18,8 +18,6 @@ setTimeout(() => {
 	acceptToasts = true;
 }, 4000);
 
-let handled_cache = {};
-
 export async function handleTransactionEvent(ev) {
 	handleEvent(ev);
 }
@@ -30,82 +28,62 @@ async function handleEvent() {
 
 	console.log('got event', Date.now(), ev);
 
-	if (handled_cache[ev.transactionHash] && ev.event != 'ClosePosition') return;
-
 	//console.log('handling event', ev);
-	
-	if (ev.event == 'NewPosition') {
+
+	if (ev.event == 'OpenOrder') {
+		// From TX checker only
 		completeTransaction(ev.transactionHash);
-		let position_id;
-		if (ev.txReceipt) {
-			console.log('ev.txReceipt', ev.txReceipt);
-			// get position id from here, add it to session ids
-			position_id = ethers.utils.defaultAbiCoder.decode([ 'uint256' ], ev.txReceipt.logs[0].topics[1])[0].toNumber();
-		} else {
-			// get position id from ev.args, add it to session ids
-			position_id = ev.args.positionId.toNumber();
-		}
+		const position_id = ethers.utils.defaultAbiCoder.decode([ 'uint256' ], ev.txReceipt.logs[0].topics[1])[0].toNumber();
 		sessionPositionIds.update((arr) => {
 			arr.push(position_id);
 			return arr;
 		});
-		if (acceptToasts) showToast('Position opened.', 'success');
+		if (acceptToasts) showToast('Order submitted.', 'success');
 		refreshUserBaseBalance.update(n => n + 1);
-	}
-
-	if (ev.event == 'AddMargin') {
+	} if (ev.event == 'CancelPosition') {
+		// From TX checker only
+		completeTransaction(ev.transactionHash);
+		refreshUserPositions.update(n => n + 1);
+	} else if (ev.event == 'NewPosition') {
+		// From listener only - oracle triggered
+		refreshUserPositions.update(n => n + 1);
+	} else if (ev.event == 'AddMargin') {
+		// From TX checker only
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
 		if (acceptToasts) showToast('Margin added.', 'success');
 		refreshUserBaseBalance.update(n => n + 1);
-	}
-
-	if (ev.event == 'ClosePosition') {
+	} else if (ev.event == 'CloseOrder') {
+		// From TX checker only
 		completeTransaction(ev.transactionHash);
-		
-		if (!handled_cache[ev.transactionHash]) {
+		console.log('Close order succeeded', ev);
+		if (acceptToasts) showToast('Order submitted.', 'success');
+		refreshUserPositions.update(n => n + 1);
+	} else if (ev.event == 'ClosePosition') {
+		// From listener only - oracle triggered
 
-			if (ev.args.isFullClose) {
-				let position_id;
-				if (ev.txReceipt) {
-					position_id = ev.args.positionId;
-				} else {
-					position_id = ev.args.positionId.toNumber();
-				}
-				sessionPositionIds.update((arr) => {
-					arr = arr.filter((value) => {
-						return value != position_id;
-					});
-					return arr;
+		if (ev.args.isFullClose) {
+			let position_id= ev.args.positionId.toNumber();
+			sessionPositionIds.update((arr) => {
+				arr = arr.filter((value) => {
+					return value != position_id;
 				});
-			} else {
-				refreshUserPositions.update(n => n + 1);
-			}
-			
-			if (acceptToasts) {
-				if (ev.args.wasLiquidated) {
-					showToast('Position was liquidated.', 'info');
-				} else {
-					showToast('Position closed.', 'success');
-				}
-			}
-
-			refreshUserBaseBalance.update(n => n + 1);
-
-		}
-
-		// show new trades in UI
-		if (!ev.txReceipt) {
-			sessionTrades.update((arr) => {
-				let formattedTrade = formatTrades([ev.args], ev.blockNumber, ev.transactionHash)[0];
-				arr.unshift(formattedTrade);
 				return arr;
 			});
+		} else {
+			refreshUserPositions.update(n => n + 1);
 		}
+
+		refreshUserBaseBalance.update(n => n + 1);
+
+		// show new trades in UI
+		sessionTrades.update((arr) => {
+			let formattedTrade = formatTrades([ev.args], ev.blockNumber, ev.transactionHash)[0];
+			arr.unshift(formattedTrade);
+			return arr;
+		});
 		
 	}
-
-	handled_cache[ev.transactionHash] = true;
 
 }
 
@@ -114,12 +92,13 @@ export function initEventListeners(address, chainId) {
 	if (!tradingContract) return;
 	tradingContract.removeAllListeners();
 	if (!address || !chainId) return;
-	
+
 	tradingContract.on(tradingContract.filters.NewPosition(null, address), handleEvent);
-	tradingContract.on(tradingContract.filters.AddMargin(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.ClosePosition(null, address), handleEvent);
 
 }
+
+// Below are for when graph data is delayed, to get recent orders/TXs
 
 let history_cache = {timestamp: 0, items: []};
 
@@ -127,15 +106,20 @@ export async function fetchPositionIdsFromEvents(address) {
 
 	console.log('fetchPositionIdsFromEvents', address);
 
-	// get past NewPosition and ClosePosition events and determine which position ids are still active for this user
+	// get recent past OpenOrder, NewPosition and ClosePosition events and determine which position ids are still active for this user
 	// populate history using closeposition events
 
 	if (!address) return;
 	const tradingContract = getContract();
 	if (!tradingContract) return;
 
+	const filter_open = tradingContract.filters.OpenOrder(null, address);
+	const _events_open = await tradingContract.queryFilter(filter_open, -2000);
+
+	console.log('_events_open', _events_open);
+
 	const filter_new = tradingContract.filters.NewPosition(null, address);
-	const _events_new = await tradingContract.queryFilter(filter_new, -10000);
+	const _events_new = await tradingContract.queryFilter(filter_new, -2000);
 
 	console.log('_events_new', _events_new);
 	let formattedHistoryEvents = await fetchHistoryEvents(address);
@@ -148,16 +132,25 @@ export async function fetchPositionIdsFromEvents(address) {
 	history_cache.items = formattedHistoryEvents;
 
 	let new_position_ids = {};
+	for (let ev of _events_open) {
+		let positionId = ev.args.positionId && ev.args.positionId.toNumber();
+		if (!full_close_ids[positionId]) new_position_ids[positionId] = true;
+	}
 	for (let ev of _events_new) {
 		let positionId = ev.args.positionId && ev.args.positionId.toNumber();
 		if (!full_close_ids[positionId]) new_position_ids[positionId] = true;
 	}
+
+	console.log('new_position_ids', new_position_ids);
 
 	return Object.keys(new_position_ids);
 
 }
 
 export async function fetchHistoryEvents(address) {
+
+	console.log('fetchHistoryEvents', address);
+
 	if (!address) return [];
 
 	if (history_cache.timestamp > Date.now() - 3*1000) {
@@ -167,7 +160,7 @@ export async function fetchHistoryEvents(address) {
 	const tradingContract = getContract();
 	if (!tradingContract) return [];
 	const filter = tradingContract.filters.ClosePosition(null, address);
-	const _events = await tradingContract.queryFilter(filter, -10000);
+	const _events = await tradingContract.queryFilter(filter, -2000);
 	let formattedEvents = [];
 	for (const ev of _events) {
 		formattedEvents.unshift(formatEvent(ev));

@@ -19,7 +19,7 @@
 			},
 			{
 				label: 'Closed',
-				value: data.timestamp ? new Date(data.timestamp * 1000).toLocaleString() : 'Recently'
+				value: data.timestamp ? new Date(data.timestamp * 1000).toLocaleString() : null
 			},
 			{
 				label: 'Direction',

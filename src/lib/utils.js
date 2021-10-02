@@ -70,7 +70,7 @@ export function formatPositions(positions, positionIds) {
 	let formattedPositions = [];
 	let i = 0;
 	for (const p of positions) {
-		if (!p.productId || !p.productId.toNumber()) {
+		if (!p.productId) {
 			i++;
 			continue;
 		}

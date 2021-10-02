@@ -9,7 +9,7 @@
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
 	import { LOGOS } from '../lib/logos'
-	import { openPosition } from '../lib/methods'
+	import { submitNewPosition } from '../lib/methods'
 	import { formatToDisplay } from '../lib/utils'
 
 	import { showModal } from '../stores/modals'
@@ -26,7 +26,7 @@
 			return;
 		}
 		submitIsPending = true;
-		const error = await openPosition(
+		const error = await submitNewPosition(
 			$selectedProductId,
 			isLong,
 			$leverage * 1,

@@ -124,14 +124,14 @@ function initWebsocket() {
 	}
 
 	ws.onerror = (e) => {
-		ws.close(1,"");
+		ws.close(1000,"");
 	}
 
 	function heartbeat() {
 		clearTimeout(h);
 		h = setTimeout(() => {
 			console.log('Terminating, reconnecting socket...');
-			ws.close(2,"");
+			ws.close(1000,"");
 			initWebsocket();
 		}, 15 * 1000);
 	}

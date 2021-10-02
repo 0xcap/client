@@ -27,5 +27,13 @@ export const positions = derived([selectedAddress, sessionPositionIds, refreshUs
 		
 		return;
 	}
-	set(await getPositions($sessionPositionIds));
+
+	let uniquePositionIds = $sessionPositionIds;
+	// unique
+	uniquePositionIds = uniquePositionIds.filter((value, index, self) => {
+		return self.indexOf(value) === index;
+	});
+
+	set(await getPositions(uniquePositionIds));
+	
 },[]);

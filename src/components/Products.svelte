@@ -6,7 +6,7 @@
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 		
-	import { BASE_SYMBOL } from '../lib/constants'
+	import { BASE_SYMBOL, LIQUIDATION_THRESHOLD } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
 	import { EDIT_ICON, CANCEL_ICON } from '../lib/icons'
 	import { LOGOS } from '../lib/logos'
@@ -58,7 +58,7 @@
 			label: 'Fee',
 			value: `${$selectedProduct.fee}%`,
 			dim: true,
-			helper: 'Includes trade execution, slippage, and oracle deviation.'
+			helper: 'Fee is applied directly to the trade execution price.'
 		},
 		{
 			label: 'Interest (1yr)',
@@ -83,10 +83,10 @@
 			dim: true
 		},
 		{
-			label: 'Settlement Time',
-			value: `${parseInt($selectedProduct.settlementTime/60)}min`,
+			label: 'Max Oracle Deviation',
+			value: `${$selectedProduct.oracleMaxDeviation}%`,
 			dim: true,
-			helper: 'Price settles at the next oracle update or after this time has passed.'
+			helper: 'Max oracle price deviation allowed relative to Chainlink price.'
 		},
 		{
 			label: 'Minimum Trade Duration',
@@ -96,15 +96,9 @@
 		},
 		{
 			label: 'Liquidation Threshold',
-			value: `-${$selectedProduct.liquidationThreshold}%`,
+			value: `-${parseInt(LIQUIDATION_THRESHOLD/100)}%`,
 			dim: true,
 			helper: 'Positions are liquidated when they reach this loss.'
-		},
-		{
-			label: 'Liquidation Bounty',
-			value: `${$selectedProduct.liquidationBounty}%`,
-			dim: true,
-			helper: 'Liquidator bots receive this amount.'
 		}
 	];
 
