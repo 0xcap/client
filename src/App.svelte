@@ -47,12 +47,18 @@
 	}
 
 	:global(:root) {
+		--black: rgb(0,4,3);
+		--dim-black: rgba(21, 24, 28, 0.8);
+		--less-black: rgb(21, 24, 28);
+		--gray: rgb(32, 35, 39);
+		--gray-lighter: rgb(55,55,55);
+		--gray-light: rgb(110, 118, 125);
+
 		--black-almost: rgba(23,23,23,0.55);
 		--gray-darkest: rgb(30,30,30);
 		--gray-between: rgb(40,40,40);
 		--gray-dark: rgb(55,55,55);
-		--gray: rgb(80,80,80);
-		--gray-light: rgb(125,125,125);
+
 		--blue: rgb(88,201,242);
 		--blue-dark: rgb(65,194,241);
 		--red: rgb(255,80,0);
@@ -63,7 +69,7 @@
 		--orange: rgb(253,167,20);
 		--base-padding: 20px;
 		--semi-padding: 16px;
-		--base-radius: 18px;
+		--base-radius: 8px;
 		--container-width: 580px;
 	}
 	@supports (font-variation-settings: normal) {
@@ -73,7 +79,7 @@
 	}
 
 	:global(html) {
-		background-color: var(--gray-darkest);
+		background-color: var(--black);
 		color: #fff;
 		font-family: 'Inter var';
 		font-feature-settings: 'ss01','ss02','ss03','cv01','tnum';

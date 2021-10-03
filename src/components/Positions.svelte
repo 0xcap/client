@@ -93,23 +93,23 @@
 	}
 
 	.positions-list {
-		border-radius: 8px;
-		overflow: hidden;
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 5px;
+		grid-gap: 12px;
 	}
 
 	.position {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background-color: rgba(23,23,23,0.4);
+		background-color: var(--less-black);
+		border-radius: var(--base-radius);
 		height: 56px;
 		font-size: 115%;
+		overflow: hidden;
 	}
 	.position:hover {
-		background-color: rgba(23,23,23,0.65);
+		background-color: var(--gray);
 	}
 
 	.details {
@@ -201,7 +201,7 @@
 	.add-margin, .close {
 		padding: 16px;
 		margin-left: 8px;
-		fill: var(--gray);
+		fill: var(--gray-light);
 	}
 
 	@media (max-width: 600px) {

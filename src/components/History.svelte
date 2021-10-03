@@ -54,30 +54,29 @@
 	}
 
 	.history-list {
-		border-radius: var(--base-radius);
-		overflow: hidden;
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 5px;
+		grid-gap: 12px;
 	}
 
 	.item {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background-color: rgba(40,40,40,0.55);
+		background-color: var(--dim-black);
 		overflow: hidden;
 		height: 56px;
 		font-size: 115%;
 		cursor: pointer;
 		padding: 0 var(--base-padding);
+		border-radius: var(--base-radius);
 	}
 	.item:hover {
-		background-color: rgba(40,40,40,0.85);
+		background-color: var(--gray);
 	}
 
 	.item-more {
-		background-color: rgba(40,40,40,0.55);
+		background-color: var(--dim-black);
 		text-align: center;
 		padding: var(--base-padding);
 		cursor: pointer;
@@ -85,7 +84,7 @@
 	}
 	.item-more:hover {
 		color: #fff;
-		background-color: rgba(40,40,40,0.85);
+		background-color: var(--gray);
 	}
 
 	.info {

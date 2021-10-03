@@ -18,7 +18,7 @@
 		justify-content: center;
 		width: 18px;
 		height: 18px;
-		background-color: var(--gray-dark);
+		background-color: var(--gray-lighter);
 		border-radius: 50px;
 		cursor: default;
 		font-size: 12.5px;

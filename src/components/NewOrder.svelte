@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte'
 
 	import Helper from './Helper.svelte'
-	import Volume from './Volume.svelte'
 
 
 	import { BASE_SYMBOL } from '../lib/constants'
@@ -95,9 +94,9 @@
 	.new-order {
 		display:  grid;
 		grid-auto-flow: row;
-		grid-gap: 12px;
-		padding: 12px;
-		background-color: var(--black-almost);
+		grid-gap: var(--semi-padding);
+		padding: var(--semi-padding);
+		background-color: var(--less-black);
 		border-radius: var(--base-radius);
 	}
 
@@ -109,6 +108,10 @@
 		opacity: 0.6;
 	}
 
+	.new-order a {
+		color: inherit;
+	}
+
 	.product-row {
 		cursor: pointer !important;
 	}
@@ -117,14 +120,14 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-radius: 14px;
+		border: 1px solid var(--gray);
+		border-radius: var(--base-radius);
 		padding: 0 var(--base-padding);
-		background-color: rgb(32,32,32);
 		height: 96px;
 	}
 
-	.input-row:hover, .input-row.focused {
-		border-color: rgb(55,55,55);
+	.input-row.focused {
+		border-color: var(--gray-lighter);
 	}
 
 	.left {
@@ -189,13 +192,13 @@
 	.buttons {
 		display: grid;
 		grid-auto-flow: column;
-		grid-gap: 12px;
+		grid-gap: var(--semi-padding);
 	}
 
 	button {
 		padding: 0 var(--base-padding);
 		height: 58px;
-		border-radius: 14px;
+		border-radius: var(--base-radius);
 		color: var(--gray-darkest);
 		font-weight: 650;
 		font-size: 115%;
@@ -306,8 +309,6 @@
 				<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 			{/if}
 		</div>
-
-		<Volume/>
 
 	</div>
 

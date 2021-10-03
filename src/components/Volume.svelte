@@ -22,9 +22,8 @@
 <style>
 
 	.volume {
-		color: var(--gray);
+		color: inherit;
 		text-align: center;
-		font-size: 80%;
 	}
 
 </style>

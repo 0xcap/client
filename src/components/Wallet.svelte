@@ -74,13 +74,13 @@
 		align-items: center;
 		border-radius: var(--base-radius);
 		cursor: pointer;
-		background-color: var(--black-almost);
+		background-color: var(--less-black);
 		padding: 0 12px;
 		height: 36px;
 		border: 1px solid transparent;
 	}
 	.clickable-item:hover, .clickable-item.selected {
-		border-color: var(--gray-dark);
+		border-color: var(--gray);
 	}
 
 	.has-pending {
