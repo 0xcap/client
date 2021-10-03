@@ -133,11 +133,13 @@
 	}
 
 	.bottom {
+		margin-top: var(--base-padding);
 		padding-top: var(--base-padding);
 		display: flex;
 		align-items: center;
 		font-weight: 300;
 		font-size: 90%;
+		border-top: 1px solid var(--gray);
 	}
 
 	.left {
@@ -283,9 +285,7 @@
 			<div class='bottom'>
 
 				<div class='left'>
-					<span class='helper'>
-						<Helper direction='top' text='Reference price. Your trade execution price may differ.' />
-					</span>
+					<Helper direction='top' marginRight={true} text='Reference price. Your trade execution price may differ.' />
 					<span>{formatToDisplay($prices[$selectedProductId]) || '...'} {displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}</span>
 				</div>
 
@@ -294,23 +294,15 @@
 					{#if $margin > 0}
 						
 						<span>{formatToDisplay($margin, 4)} {BASE_SYMBOL}</span>
-						<span class='helper'>
-							<Helper direction='top' text='The actual amount debited from your wallet for this trade (margin).' />
-						</span>
+						<Helper direction='top' text='The actual amount debited from your wallet for this trade (margin).' marginLeft={true} marginRight={true} />
 
 						<span>${formatToDisplay($prices[1] * $amount, 2)}</span>
-						<span class='helper'>
-							<Helper direction='top' text='Your trade size in USD, equal to margin times leverage.' />
-						</span>
+						<Helper direction='top' text='Your trade size in USD, equal to margin times leverage.' marginLeft={true} />
 
 					{:else}
 
-						<span>
-							<a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
-						</span>
-						<span class='helper'>
-							<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' />
-						</span>
+						<a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
+						<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' marginLeft={true} />
 					
 					{/if}
 				

@@ -55,6 +55,8 @@
 	}
 
 	.label {
+		display: flex;
+		align-items: center;
 		color: var(--gray-light);
 	}
 
@@ -92,7 +94,7 @@
 		{:else}
 			{#if row.value !== null}
 				<div class='row'>
-					<div class='label'>{row.label}{#if row.helper}<Helper text={row.helper} direction='right' />{/if}</div>
+					<div class='label'>{row.label}{#if row.helper}<Helper marginLeft={true} text={row.helper} direction='right' />{/if}</div>
 					<div class:error={!row.isEmpty && row.hasError} class:dim={row.dim} class:clickable={Boolean(row.onclick)} on:click={row.onclick} class='value'>
 						{#if row.renderHTML}
 							{@html row.value}

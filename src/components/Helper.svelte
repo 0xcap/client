@@ -1,28 +1,33 @@
 <script>
+
+	import { HELP_ICON } from '../lib/icons'
+
 	export let text;
 	export let direction;
+	export let marginRight = false;
+	export let marginLeft = false;
 	export let type = 'default';
+
 </script>
 
 <style>
 
-	.container {
-		display: inline-block;
-	}
-
 	.tooltip {
-		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		position: relative;
+	}
+	.tooltip.mr {
+		margin-right: 6px;
+	}
+	.tooltip.ml {
+		margin-left: 6px;
+	}
+
+	:global(.tooltip svg) {
 		width: 18px;
-		height: 18px;
-		background-color: var(--gray-lighter);
-		border-radius: 50px;
-		cursor: default;
-		font-size: 12.5px;
-		color: rgb(220,220,220);
-		font-weight: 400;
+		fill: var(--gray-lighter);
 	}
 
 	.tooltip.opening, .tooltip.closing {
@@ -43,7 +48,8 @@
 		transition: all 0.18s ease-out 0.18s;
 		text-indent: 0;
 	    font-size: 1rem;
-	    background-color: var(--gray-dark);
+	    background-color: var(--less-black);
+	    border: 1px solid var(--gray-lighter);
 	    border-radius: 8px;
 	    color: rgb(220,220,220);
 	    content: attr(data-text);
@@ -72,7 +78,7 @@
 		left: 50%;
 		bottom: 100%;
 	    transform-origin: top;
-	    transform: translate(-50%, 4px);
+	    transform: translate(-50%, 0);
 	}
 
 	.top:after {
@@ -81,13 +87,12 @@
 
 	.top:before {
 		border: 5px solid transparent;
-		border-top-color: var(--gray-dark);
+		border-top-color: var(--gray-lighter);
 	}
 
 	.top:hover:before, .top:hover:after {
 		opacity: 1;
     	pointer-events: none;
-    	transform: translate(-50%, 0);
 	}
 
 	.right:after {
@@ -98,7 +103,7 @@
 	.right:before {
 		right: 5px;
 		border: 5px solid transparent;
-		border-right-color: var(--gray-dark);
+		border-right-color: var(--gray-lighter);
 	}
 	.right:after, .right:before {
 		left: 100%;
@@ -115,10 +120,10 @@
 		transform: translate(0, -50%);
 	}
 
+	
+
 </style>
 
-<div class='container'>
-	<div class:opening={type =='opening'} class:closing={type =='closing'} class={`tooltip ${direction}`} data-text={text}>
-		{#if type !='opening' && type != 'closing'}?{/if}
-	</div>
+<div class:opening={type =='opening'} class:closing={type =='closing'} class:mr={marginRight} class:ml={marginLeft} class={`tooltip ${direction}`} data-text={text}>
+	{#if type !='opening' && type != 'closing'}{@html HELP_ICON}{/if}
 </div>
