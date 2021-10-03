@@ -38,7 +38,7 @@
 		width: 460px;
 		border: 1px solid rgb(30,30,30);
 		border-radius: var(--base-radius);
-		background-color: rgb(25,25,25);
+		background-color: var(--less-black);
 		overflow: hidden;
 	}
 
@@ -48,7 +48,7 @@
 		justify-content: space-between;
 		padding: 0 var(--base-padding);
 		height: 62px;
-		background-color: rgb(30,30,30);
+		background-color: var(--gray);
 	}
 
 	.modal-title {

@@ -7,9 +7,10 @@
 
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
+	import { CARET_DOWN } from '../lib/icons'
 	import { LOGOS } from '../lib/logos'
 	import { submitNewPosition } from '../lib/methods'
-	import { formatToDisplay, displayPricePercentChange } from '../lib/utils'
+	import { formatToDisplay, displayPricePercentChange, shortSymbol } from '../lib/utils'
 	import { connectWallet } from '../lib/wallet'
 
 	import { showModal } from '../stores/modals'
@@ -94,8 +95,8 @@
 	.new-order {
 		display:  grid;
 		grid-auto-flow: row;
-		grid-gap: var(--semi-padding);
-		padding: var(--semi-padding);
+		grid-gap: var(--base-padding);
+		padding: var(--base-padding);
 		background-color: var(--less-black);
 		border-radius: var(--base-radius);
 	}
@@ -117,17 +118,26 @@
 	}
 
 	.input-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		border: 1px solid var(--gray);
 		border-radius: var(--base-radius);
-		padding: 0 var(--base-padding);
-		height: 96px;
 	}
 
 	.input-row.focused {
-		border-color: var(--gray-lighter);
+	}
+
+	.top {
+		display: flex;
+		align-items: center;
+		height: 48px;
+		font-weight: 800;
+		font-size: 140%;
+	}
+
+	.bottom {
+		padding-top: var(--base-padding);
+		display: flex;
+		align-items: center;
+		font-weight: 300;
+		font-size: 90%;
 	}
 
 	.left {
@@ -135,57 +145,58 @@
 		align-items: center;
 	}
 
+	.left .helper {
+		margin-right: 6px;
+	}
+
 	.right {
 		flex: 1 1 auto;
 		text-align: right;
-	}
-
-	.left .column:first-child {
-		margin-right: 8px;
-	}
-
-	.column .top {
 		display: flex;
 		align-items: center;
-		height: 32px;
-		font-weight: 800;
-		font-size: 130%;
+		justify-content: flex-end;
 	}
 
-	.column .bottom {
-		margin-top: 16px;
-		color: var(--gray-light);
-		font-size: 80%;
+	.right .helper {
+		margin-left: 6px;
 	}
 
-	.select-leverage {
-		color: var(--blue);
+	.selector {
+		display: flex;
+		align-items: center;
+		background-color: var(--gray);
+		border-radius: var(--base-radius);
+		white-space: nowrap;
 		cursor: pointer;
-		font-weight: 400 !important;
+		padding: 10px 12px;
+	}
+
+	.selector:hover {
+		background-color: var(--gray-lighter);
+	}
+
+	:global(.selector svg) {
+		margin-left: 12px;
+		height: 8px;
+		fill: inherit;
+		stroke: inherit;
 	}
 
 	.product-wrap {
-		display: flex;
-		align-items: center;
-		white-space: nowrap;
-		cursor: pointer;
+		margin-right: 12px;
 	}
 
 	.product-wrap img {
-		width: 32px;
-		height: 32px;
-		border-radius: 32px;
-		margin-right: 10px;
-	}
-
-	.input-wrap {
-		position: relative;
-		flex: 1 1 auto;
+		width: 28px;
+		height: 28px;
+		border-radius: 28px;
+		margin-right: 12px;
 	}
 
 	input {
-		font-size: inherit;
-		font-weight: 600;
+		flex: 1 1 auto;
+		font-size: 110%;
+		font-weight: 500;
 		text-align: right;
 	}
 
@@ -199,9 +210,9 @@
 		padding: 0 var(--base-padding);
 		height: 58px;
 		border-radius: var(--base-radius);
-		color: var(--gray-darkest);
-		font-weight: 650;
-		font-size: 115%;
+		color: var(--less-black);
+		font-weight: 700;
+		font-size: 110%;
 	}
 
 	button.disabled {
@@ -220,19 +231,19 @@
 	}
 
 	.button-short {
+		color: #3D1300;
 		background-color: var(--red);
 	}
 	.button-short:not(.disabled):hover {
-		background-color: var(--red-dark);
+		background-color: #E04700;
 	}
 	.button-long {
+		color: #003D01;
 		background-color: var(--green);
 	}
 	.button-long:not(.disabled):hover {
-		background-color: var(--green-dark);
+		background-color: #00B803;
 	}
-
-	
 
 </style>
 
@@ -249,51 +260,60 @@
 
 		<div class='input-row' class:focused={amountIsFocused}>
 
-			<div class='left'>
+			<div class='top'>
 
-				<div class='column'>
-					<div class='top' on:click={() => {showModal('Products')}} data-intercept="true">
-						<div class='product-wrap'>
-							{#if $selectedProduct.symbol}
-								<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol} ⌄</span>
-							{:else}
-								<img src={LOGOS[1]} alt={`ETH-USD logo`}><span>ETH-USD</span>
-							{/if}
-						</div>
-					</div>
-					<div class='bottom'>
-						{formatToDisplay($prices[$selectedProductId]) || '...'} {displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}
-					</div>
+				<div class='selector product-wrap' on:click={() => {showModal('Products')}} data-intercept="true">
+					{#if $selectedProduct.symbol}
+						<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}>
+					{:else}
+						<img src={LOGOS[1]} alt={`ETH-USD logo`}><span>ETH</span>
+					{/if}
+					<span>{shortSymbol($selectedProduct.symbol)}</span>
+					{@html CARET_DOWN}
 				</div>
 
-				<div class='column'>
-					<div class='top select-leverage' on:click={() => {showModal('Leverage')}} data-intercept="true">
-						{#if $selectedProduct.symbol}
-							{$leverage}×
-						{:else}
-							20×
-						{/if}
-					</div>
-					<div class='bottom'>
-						&nbsp;
-					</div>
+				<div class='selector select-leverage' on:click={() => {showModal('Leverage')}} data-intercept="true">
+					{#if $selectedProduct.symbol}<span>{$leverage}×</span>{:else}<span>20×</span>{/if}{@html CARET_DOWN}
 				</div>
+
+				<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0.0`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
 
 			</div>
 
-			<div class='right'>
+			<div class='bottom'>
 
-				<div class='column'>
-					<div class='top'>
-						<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
-					</div>
-					<div class='bottom'>
-						{#if $margin > 0}
-							<Helper direction='top' text='The actual amount debited from your wallet for this trade (margin).' />{formatToDisplay($margin, 4)} {BASE_SYMBOL} <Helper direction='top' text='Your trade size in USD, equal to margin times leverage.' />${formatToDisplay($prices[1] * $amount, 2)}
-						{:else}
-							<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' /><a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
-						{/if}
-					</div>
+				<div class='left'>
+					<span class='helper'>
+						<Helper direction='top' text='Reference price. Your trade execution price may differ.' />
+					</span>
+					<span>{formatToDisplay($prices[$selectedProductId]) || '...'} {displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}</span>
+				</div>
+
+				<div class='right'>
+					
+					{#if $margin > 0}
+						
+						<span>{formatToDisplay($margin, 4)} {BASE_SYMBOL}</span>
+						<span class='helper'>
+							<Helper direction='top' text='The actual amount debited from your wallet for this trade (margin).' />
+						</span>
+
+						<span>${formatToDisplay($prices[1] * $amount, 2)}</span>
+						<span class='helper'>
+							<Helper direction='top' text='Your trade size in USD, equal to margin times leverage.' />
+						</span>
+
+					{:else}
+
+						<span>
+							<a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
+						</span>
+						<span class='helper'>
+							<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' />
+						</span>
+					
+					{/if}
+				
 				</div>
 
 			</div>

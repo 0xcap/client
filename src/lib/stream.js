@@ -59,7 +59,9 @@ function initWebsocket() {
 	console.log('initWebsocket');
 
 	if (ws) {
-		ws.close(3335,"");
+		try {
+			ws.close(3335,"");
+		} catch(e) {};
 		ws = null;
 		clearTimeout(h);
 	}

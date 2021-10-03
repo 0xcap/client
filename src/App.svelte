@@ -123,6 +123,17 @@
 		width: 100%;
 	}
 
+	:global(input::placeholder) {
+		color: var(--gray-light);
+		opacity: 1;
+	}
+	:global(input::-ms-input-placeholder) {
+		color: var(--gray-light);
+	}
+	:global(input:-ms-input-placeholder) {
+		color: var(--gray-light);
+	}
+
 	:global(button) {
 		text-align: center;
 		cursor: pointer;
@@ -151,19 +162,6 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: 50px;
-	}
-
-	.radial-gradient {
-		position: fixed;
-	    top: 0;
-	    left: 0;
-	    right: 0;
-	    width: 200vw;
-	    height: 200vh;
-		background: radial-gradient(50% 50% at 50% 50%,rgba(0,180,5,0.02) 0,rgba(255,255,255,0) 100%);
-		pointer-events: none;
-		transform: translate(-50vw,-100vh);
-		z-index: -1;
 	}
 
 	main {
@@ -204,7 +202,6 @@
 <EventDetails isActive={$activeModal && $activeModal.name == 'EventDetails'} data={$activeModal.data} />
 <Toasts />
 <div class='grid'>
-	<div class='radial-gradient'></div>
 	<Header />
 	{#if $isUnderMaintenance}
 		<div class='maintenance'>Cap is under maintenance on this Ethereum network. Try Rinkeby.</div>

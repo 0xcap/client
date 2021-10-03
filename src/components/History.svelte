@@ -1,7 +1,7 @@
 <script>
 
 	import { BASE_SYMBOL } from '../lib/constants'
-	import { formatToDisplay, formatPnl } from '../lib/utils'
+	import { formatToDisplay, formatPnl, shortSymbol } from '../lib/utils'
 
 	import { history, sessionTrades } from '../stores/history'
 	import { showModal } from '../stores/modals'
@@ -41,6 +41,10 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
+	}
+
+	.history a {
+		color: var(--gray-light);
 	}
 
 	.header {
@@ -135,7 +139,7 @@
 			<div class='item' on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
 	
 				<div class='info'>
-					<span>{event.product}</span>
+					<span>{shortSymbol(event.product)}</span>
 					<span class='leverage'>{formatToDisplay(event.leverage)}×</span>
 					<span class='price'>{formatToDisplay(event.price)}</span>
 				</div>

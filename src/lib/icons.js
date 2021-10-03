@@ -4,6 +4,8 @@ export const CANCEL_ICON = `<svg viewBox="0 0 512 512">
 <polygon points="512,59.076 452.922,0 256,196.922 59.076,0 0,59.076 196.922,256 0,452.922 59.076,512 256,315.076 452.922,512 
 			512,452.922 315.076,256"/></svg>`;
 
+export const CARET_DOWN = `<svg viewBox="0 0 12 7"><path d="M0.97168 1L6.20532 6L11.439 1" stroke="#ffffff"></path></svg>`;
+
 export const MENU_ICON = `<svg viewBox="0 0 512 512">
 	<circle cx="256" cy="256" r="64"/>
 	<circle cx="256" cy="448" r="64"/>

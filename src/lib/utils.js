@@ -32,6 +32,11 @@ export function shortAddr(_address) {
 	return _address.substring(0,6) + '...' + _address.slice(-4);
 }
 
+export function shortSymbol(symbol) {
+	if (!symbol) return '';
+	return symbol.substring(0,symbol.length-4);
+}
+
 export function formatToDisplay(amount, maxPrecision) {
 	if (isNaN(amount)) return 0;
 	if (!maxPrecision) maxPrecision = 100000;

@@ -36,7 +36,7 @@
 
 </style>
 
-<Modal title='Set Leverage'>
+<Modal title='Set Leverage' doneButton={true}>
 
 	<div class='leverage-select'>
 		<div class='value'>

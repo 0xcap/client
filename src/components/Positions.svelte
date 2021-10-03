@@ -10,7 +10,7 @@
 	import { LOGOS } from '../lib/logos'
 	import { PLUS_ICON } from '../lib/icons'
 	import { getProduct, cancelPosition, cancelOrder } from '../lib/methods'
-	import { formatToDisplay, intify, formatPnl } from '../lib/utils'
+	import { formatToDisplay, intify, formatPnl, shortSymbol } from '../lib/utils'
 
 	let upls = {};
 	let upls_percent = {};
@@ -261,7 +261,7 @@
 						<div class={`direction ${position.isLong ? 'long' : 'short'}`}></div>
 						<div class='product'>
 							<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
-							<span>{position.product}</span>
+							<span>{shortSymbol(position.product)}</span>
 							{#if position.price > 0}
 							<span class='entry'>{formatToDisplay(position.price)}</span>
 							{/if}

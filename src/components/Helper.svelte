@@ -8,7 +8,6 @@
 
 	.container {
 		display: inline-block;
-		margin: 0 6px;
 	}
 
 	.tooltip {
@@ -115,8 +114,6 @@
 		pointer-events: none;
 		transform: translate(0, -50%);
 	}
-
-	
 
 </style>
 
