@@ -79,6 +79,19 @@
 
 <style>
 
+	.arbitrum-link {
+		display: flex;
+		font-size: 90%;
+		line-height: 1.45;
+		padding-bottom: 40px;
+	}
+
+	:global(.arbitrum-link img) {
+		height: 54px;
+		width: 54px;
+		margin-right: 12px;
+	}
+
 	.new-order {
 		display:  grid;
 		grid-auto-flow: row;
@@ -107,7 +120,7 @@
 		border-radius: 14px;
 		padding: 0 var(--base-padding);
 		background-color: rgb(32,32,32);
-		height: 86px;
+		height: 96px;
 	}
 
 	.input-row:hover, .input-row.focused {
@@ -125,7 +138,7 @@
 	}
 
 	.left .column:first-child {
-		margin-right: 10px;
+		margin-right: 8px;
 	}
 
 	.column .top {
@@ -137,7 +150,7 @@
 	}
 
 	.column .bottom {
-		margin-top: 10px;
+		margin-top: 16px;
 		color: var(--gray-light);
 		font-size: 80%;
 	}
@@ -216,22 +229,11 @@
 		background-color: var(--green-dark);
 	}
 
-	.arbitrum-link {
-		display: flex;
-		font-size: 90%;
-		line-height: 1.45;
-		padding: 6px 0;
-	}
-
-	:global(.arbitrum-link img) {
-		height: 54px;
-		width: 54px;
-		margin-right: 8px;
-	}
+	
 
 </style>
 
-<div class='new-order' class:disabled={submitIsPending}>
+<div>
 
 	{#if showArbitrumLink}
 		<div class='arbitrum-link'>
@@ -240,70 +242,73 @@
 		</div>
 	{/if}
 
+	<div class='new-order' class:disabled={submitIsPending}>
 
-	<div class='input-row' class:focused={amountIsFocused}>
+		<div class='input-row' class:focused={amountIsFocused}>
 
-		<div class='left'>
+			<div class='left'>
 
-			<div class='column'>
-				<div class='top' on:click={() => {showModal('Products')}} data-intercept="true">
-					<div class='product-wrap'>
+				<div class='column'>
+					<div class='top' on:click={() => {showModal('Products')}} data-intercept="true">
+						<div class='product-wrap'>
+							{#if $selectedProduct.symbol}
+								<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol} ⌄</span>
+							{:else}
+								<img src={LOGOS[1]} alt={`ETH-USD logo`}><span>ETH-USD</span>
+							{/if}
+						</div>
+					</div>
+					<div class='bottom'>
+						{formatToDisplay($prices[$selectedProductId]) || '...'} {displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}
+					</div>
+				</div>
+
+				<div class='column'>
+					<div class='top select-leverage' on:click={() => {showModal('Leverage')}} data-intercept="true">
 						{#if $selectedProduct.symbol}
-							<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol}</span>
+							{$leverage}×
 						{:else}
-							<img src={LOGOS[1]} alt={`ETH-USD logo`}><span>ETH-USD</span>
+							20×
+						{/if}
+					</div>
+					<div class='bottom'>
+						&nbsp;
+					</div>
+				</div>
+
+			</div>
+
+			<div class='right'>
+
+				<div class='column'>
+					<div class='top'>
+						<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
+					</div>
+					<div class='bottom'>
+						{#if $margin > 0}
+							<Helper direction='top' text='The actual amount debited from your wallet for this trade (margin).' />{formatToDisplay($margin, 4)} {BASE_SYMBOL} <Helper direction='top' text='Your trade size in USD, equal to margin times leverage.' />${formatToDisplay($prices[1] * $amount, 2)}
+						{:else}
+							<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' /><a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
 						{/if}
 					</div>
 				</div>
-				<div class='bottom'>
-					{formatToDisplay($prices[$selectedProductId]) || '...'} {displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}
-				</div>
-			</div>
 
-			<div class='column'>
-				<div class='top select-leverage' on:click={() => {showModal('Leverage')}} data-intercept="true">
-					{#if $selectedProduct.symbol}
-						{$leverage}×
-					{:else}
-						20×
-					{/if}
-				</div>
-				<div class='bottom'>
-					&nbsp;
-				</div>
 			</div>
 
 		</div>
 
-		<div class='right'>
-
-			<div class='column'>
-				<div class='top'>
-					<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
-				</div>
-				<div class='bottom'>
-					{#if $margin > 0}
-						<Helper direction='top' text='The actual amount debited from your wallet for this trade (margin).' />{formatToDisplay($margin, 4)} {BASE_SYMBOL} <Helper direction='top' text='Your trade size in USD, equal to margin times leverage.' />${formatToDisplay($prices[1] * $amount, 2)}
-					{:else}
-						<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' /><a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
-					{/if}
-				</div>
-			</div>
-
+		<div class='buttons'>
+			{#if !$selectedAddress}
+				<button class='button-default' on:click={connectWallet}>Connect a Wallet</button>
+			{:else if $isUnsupported}
+				<button class='disabled'>Switch to Arbitrum to trade</button>
+			{:else}
+				<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
+			{/if}
 		</div>
 
-	</div>
+		<Volume/>
 
-	<div class='buttons'>
-		{#if !$selectedAddress}
-			<button on:click={connectWallet}>Connect a wallet</button>
-		{:else if $isUnsupported}
-			<button class='disabled'>Switch to Arbitrum to trade</button>
-		{:else}
-			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
-		{/if}
 	</div>
-
-	<Volume/>
 
 </div>

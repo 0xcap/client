@@ -34,5 +34,6 @@
 <footer>
 	Cap v{VERSION} | Hosted on IPFS
 
-	<div class="details">Prices provided by {@html CHAINLINK_FULL_ICON}</div>
+	<div class="details">Prices bounded by {@html CHAINLINK_FULL_ICON}</div>
+
 </footer>

@@ -67,7 +67,7 @@
 		justify-content: space-between;
 		background-color: rgba(40,40,40,0.55);
 		overflow: hidden;
-		height: 75px;
+		height: 56px;
 		font-size: 115%;
 		cursor: pointer;
 		padding: 0 var(--base-padding);
@@ -89,23 +89,20 @@
 	}
 
 	.info {
-	}
-
-	.product {
 		display: flex;
 		align-items: center;
 		font-weight: 700;
 	}
 
-	.product .leverage {
-		margin-left: 3px;
+	.leverage {
+		margin-left: 6px;
 		font-weight: 400;
 	}
 
-	.close {
+	.price {
 		color: var(--gray-light);
-		margin-top: 6px;
-		font-size: 80%;
+		margin-left: 6px;
+		font-weight: 400;
 	}
 
 	.pnl {
@@ -139,13 +136,9 @@
 			<div class='item' on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
 	
 				<div class='info'>
-					<div class='product'>
-						<span>{event.product}</span>
-						<span class='leverage'>{formatToDisplay(event.leverage)}×</span>
-					</div>
-					<div class='close'>
-						Closed {formatToDisplay(event.amount)} {BASE_SYMBOL} at {formatToDisplay(event.price)}
-					</div>
+					<span>{event.product}</span>
+					<span class='leverage'>{formatToDisplay(event.leverage)}×</span>
+					<span class='price'>{formatToDisplay(event.price)}</span>
 				</div>
 
 				<div class={`pnl ${event.pnlIsNegative ? 'neg' : 'pos'}`}>
