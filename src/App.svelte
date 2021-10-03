@@ -11,6 +11,7 @@
 	// Modals
 	import Account from './components/Account.svelte'
 	import Products from './components/Products.svelte'
+	import Leverage from './components/Leverage.svelte'
 	import PositionDetails from './components/PositionDetails.svelte'
 	import AddMargin from './components/AddMargin.svelte'
 	import ClosePosition from './components/ClosePosition.svelte'
@@ -180,6 +181,9 @@
 {/if}
 {#if $activeModal && $activeModal.name == 'Products'}
 	<Products />
+{/if}
+{#if $activeModal && $activeModal.name == 'Leverage'}
+	<Leverage />
 {/if}
 {#if $activeModal && $activeModal.name == 'PositionDetails'}
 	<PositionDetails data={$activeModal.data} />

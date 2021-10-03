@@ -1,5 +1,5 @@
 import { get } from 'svelte/store'
-import { prices } from '../stores/prices'
+import { prices, open24h } from '../stores/prices'
 import { products } from '../stores/products'
 import { PRODUCT_TO_ID } from '../lib/constants'
 
@@ -94,7 +94,7 @@ function initWebsocket() {
 		try {
 			const message = JSON.parse(e.data);
 
-			const { type, product_id, sequence, price } = message;
+			const { type, product_id, open_24h, price } = message;
 
 			if (type == 'heartbeat') return heartbeat();
 
@@ -104,9 +104,12 @@ function initWebsocket() {
 			if (product_id) lastTimestamp = Date.now();
 
 			if (type == 'ticker') {
-				//console.log('price', PRODUCT_TO_ID[product_id], price);
 				prices.update((x) => {
 					x[PRODUCT_TO_ID[product_id]] = price;
+					return x;
+				});
+				open24h.update((x) => {
+					x[PRODUCT_TO_ID[product_id]] = open_24h;
 					return x;
 				});
 			}

@@ -140,9 +140,6 @@
 		font-weight: 700;
 		color: var(--green);
 	}
-	.menu a.button:hover {
-		background-color: var(--green-dark);
-	}
 
 	:global(.wallet .menu-icon svg) {
 		height: 18px;

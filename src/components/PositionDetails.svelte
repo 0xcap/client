@@ -44,9 +44,9 @@
 			value: formatToDisplay($prices[data.productId])
 		},
 		{
-			label: 'Amount',
+			label: 'Trade Size',
 			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-			helper: 'Amount equals margin × leverage.'
+			helper: 'Equals margin times leverage.'
 		},
 		{
 			label: 'Margin',

@@ -80,7 +80,7 @@
 
 	.modal-body {
 		overflow-y: scroll;
-		max-height: 80vh;
+		max-height: 85vh;
 	}
 
 </style>

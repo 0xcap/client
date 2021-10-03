@@ -41,9 +41,9 @@
 				helper: 'P/L includes interest charged.'
 			},
 			{
-				label: 'Amount',
+				label: 'Trade Size',
 				value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-				helper: 'Amount equals margin × leverage.'
+				helper: 'Equals margin times leverage.'
 			},
 			{
 				label: 'Margin',

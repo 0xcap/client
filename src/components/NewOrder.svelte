@@ -10,12 +10,13 @@
 	import { selectProduct } from '../lib/helpers'
 	import { LOGOS } from '../lib/logos'
 	import { submitNewPosition } from '../lib/methods'
-	import { formatToDisplay } from '../lib/utils'
+	import { formatToDisplay, displayPricePercentChange } from '../lib/utils'
+	import { connectWallet } from '../lib/wallet'
 
 	import { showModal } from '../stores/modals'
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
 	import { selectedProductId, selectedProduct } from '../stores/products'
-	import { prices } from '../stores/prices'
+	import { prices, open24h } from '../stores/prices'
 	import { showToast } from '../stores/toasts'
 	import { selectedAddress, isTestnet, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
 
@@ -103,56 +104,55 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border: 1px solid rgb(45,45,45);
 		border-radius: 14px;
 		padding: 0 var(--base-padding);
-		background-color: var(--gray-darkest);
-		cursor: text;
-		height: 83px;
+		background-color: rgb(32,32,32);
+		height: 86px;
 	}
 
 	.input-row:hover, .input-row.focused {
 		border-color: rgb(55,55,55);
 	}
 
-	.amount-row {
-		align-items: initial;
-		height: 98px !important;
-	}
-
-	.amount-row > div {
-		flex: 1 1 auto;
-	}
-
-	.top {
-		margin-top: 18px;
+	.left {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
 	}
 
-	.bottom {
-		height: 36px;
+	.right {
+		flex: 1 1 auto;
+		text-align: right;
+	}
+
+	.left .column:first-child {
+		margin-right: 10px;
+	}
+
+	.column .top {
 		display: flex;
-		justify-content: space-between;
+		align-items: center;
+		height: 32px;
+		font-weight: 800;
+		font-size: 130%;
 	}
 
-	.label {
-		font-weight: 600;
-	}
-
-	.sub-label {
+	.column .bottom {
+		margin-top: 10px;
 		color: var(--gray-light);
 		font-size: 80%;
-		margin-top: 5px;
+	}
+
+	.select-leverage {
+		color: var(--blue);
+		cursor: pointer;
+		font-weight: 400 !important;
 	}
 
 	.product-wrap {
 		display: flex;
 		align-items: center;
-		font-size: 115%;
-		font-weight: 800;
 		white-space: nowrap;
+		cursor: pointer;
 	}
 
 	.product-wrap img {
@@ -162,31 +162,15 @@
 		margin-right: 10px;
 	}
 
-	.product-wrap .leverage {
-		margin-left: 3px;
-		font-weight: 400;
-	}
-
 	.input-wrap {
 		position: relative;
 		flex: 1 1 auto;
 	}
 
 	input {
-		font-size: 135%;
+		font-size: inherit;
 		font-weight: 600;
 		text-align: right;
-	}
-
-	.input-label {
-		color: var(--gray-light);
-		font-size: 80%;
-		text-align: right;
-		margin-top: 5px;
-	}
-
-	.input-label.regular {
-		color: #fff;
 	}
 
 	.buttons {
@@ -196,7 +180,8 @@
 	}
 
 	button {
-		padding: var(--base-padding);
+		padding: 0 var(--base-padding);
+		height: 58px;
 		border-radius: 14px;
 		color: var(--gray-darkest);
 		font-weight: 650;
@@ -255,61 +240,63 @@
 		</div>
 	{/if}
 
-	<div class='input-row product-row' on:click={() => {showModal('Products')}} data-intercept="true">
-		<div class='label-wrap'>
-			<div class='label'>Product</div>
-			{#if $selectedAddress}
-			<div class='sub-label'title='Price provided by Chainlink'>
-				Price: {formatToDisplay($prices[$selectedProductId]) || '...'}
-			</div>
-			{/if}
-		</div>
-		<div class='product-wrap'>
-			{#if $selectedProduct.symbol}
-				<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol}</span> <span class='leverage'>{$leverage}×</span>
-			{:else}
-				<img src={LOGOS[1]} alt={`ETH-USD logo`}><span>ETH-USD</span> <span class='leverage'>20×</span>
-			{/if}
-		</div>
-	</div>
 
-	<label class='input-row amount-row' class:focused={amountIsFocused} for='amount'>
+	<div class='input-row' class:focused={amountIsFocused}>
 
-		<div>
+		<div class='left'>
 
-			<div class='top'>
-				<div class='label-wrap'>
-					<div class='label'>Amount<Helper direction='top' text='Enter an amount including leverage.' /></div>
-					
+			<div class='column'>
+				<div class='top' on:click={() => {showModal('Products')}} data-intercept="true">
+					<div class='product-wrap'>
+						{#if $selectedProduct.symbol}
+							<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol}</span>
+						{:else}
+							<img src={LOGOS[1]} alt={`ETH-USD logo`}><span>ETH-USD</span>
+						{/if}
+					</div>
 				</div>
-				<div class='input-wrap'>
-					<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
-					
+				<div class='bottom'>
+					{formatToDisplay($prices[$selectedProductId]) || '...'} {displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}
 				</div>
 			</div>
 
-			<div class='bottom'>
-
-				<div class='sub-label'>
-					Available: <a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
-				</div>
-
-				<div>
-					<div class:regular={$margin > 0} class='input-label'>${formatToDisplay($prices[1] * $amount, 2)}</div>
-					{#if $margin > 0}
-					<div class='input-label'><Helper direction='top' text='Actual balance used from your wallet.' />Margin: {formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>
+			<div class='column'>
+				<div class='top select-leverage' on:click={() => {showModal('Leverage')}} data-intercept="true">
+					{#if $selectedProduct.symbol}
+						{$leverage}×
+					{:else}
+						20×
 					{/if}
 				</div>
-
+				<div class='bottom'>
+					&nbsp;
+				</div>
 			</div>
 
 		</div>
 
-	</label>
+		<div class='right'>
+
+			<div class='column'>
+				<div class='top'>
+					<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
+				</div>
+				<div class='bottom'>
+					{#if $margin > 0}
+						<Helper direction='top' text='The actual amount debited from your wallet for this trade (margin).' />{formatToDisplay($margin, 4)} {BASE_SYMBOL} <Helper direction='top' text='Your trade size in USD, equal to margin times leverage.' />${formatToDisplay($prices[1] * $amount, 2)}
+					{:else}
+						<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' /><a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
+					{/if}
+				</div>
+			</div>
+
+		</div>
+
+	</div>
 
 	<div class='buttons'>
 		{#if !$selectedAddress}
-			<button class='disabled'>Connect a wallet</button>
+			<button on:click={connectWallet}>Connect a wallet</button>
 		{:else if $isUnsupported}
 			<button class='disabled'>Switch to Arbitrum to trade</button>
 		{:else}

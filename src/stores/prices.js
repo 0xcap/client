@@ -8,6 +8,7 @@ export const refreshUserPositions = writable(0);
 export const activeProducts = writable({});
 
 export const prices = writable({});
+export const open24h = writable({});
 
 /*let c, t;
 export const prices = derived([activeProducts, selectedAddress], async ([$activeProducts, $selectedAddress], set) => {

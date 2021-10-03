@@ -36,7 +36,7 @@ export function formatToDisplay(amount, maxPrecision) {
 	if (isNaN(amount)) return 0;
 	if (!maxPrecision) maxPrecision = 100000;
 
-	if ((amount*1 == 0 || amount * 1 >= 1) && (amount * 1).toFixed(3)*1 == Math.round(amount * 1)) return Math.round(amount);
+	if ((amount*1 == 0 || amount * 1 >= 1) && (amount * 1).toFixed(3)*1 == Math.round(amount * 1)) return Math.round(amount).toLocaleString();
 	
 	if (amount * 1 >= 10000 || amount * 1 <= -10000) {
 		return Math.round(amount*1).toLocaleString();
@@ -49,6 +49,17 @@ export function formatToDisplay(amount, maxPrecision) {
 	} else {
 		return (amount * 1).toFixed(Math.min(maxPrecision,6));
 	}
+}
+
+export function displayPricePercentChange(last, open_24h) {
+	if (!last || !open_24h) return '';
+	const diff = (last * 1 - open_24h * 1) / open_24h;
+	let string = '';
+	if (diff >= 0) {
+		string += '+';
+	}
+	string += formatToDisplay(diff*100, 2) + "%" || '';
+	return string;
 }
 
 export function formatPnl(pnl, pnlIsNegative, isPercent) {

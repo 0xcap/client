@@ -93,7 +93,7 @@
 	}
 
 	.positions-list {
-		border-radius: var(--base-radius);
+		border-radius: 8px;
 		overflow: hidden;
 		display: grid;
 		grid-auto-flow: row;
@@ -105,11 +105,11 @@
 		align-items: center;
 		justify-content: space-between;
 		background-color: rgba(23,23,23,0.4);
-		height: 86px;
+		height: 56px;
 		font-size: 115%;
 	}
 	.position:hover {
-		background-color: rgba(23,23,23,0.55);
+		background-color: rgba(23,23,23,0.65);
 	}
 
 	.details {
@@ -121,7 +121,7 @@
 
 	.direction {
 		width: 10px;
-		height: 86px;
+		height: 56px;
 		margin-right: var(--base-padding);
 	}
 
@@ -146,23 +146,10 @@
 		margin-right: 8px;
 	}
 
-	.product .leverage {
-		margin-left: 4px;
-		font-weight: 400;
-	}
-
-	@media (max-width: 600px) {
-		.product .leverage {
-			display: none;
-		}
-	}
-
 	.entry {
 		color: var(--gray-light);
-		margin-top: 8px;
-		font-size: 80%;
-		display: flex;
-		align-items: center;
+		font-weight: 400 !important;
+		margin-left: 6px;
 	}
 
 	.entry-text-mobile {
@@ -188,7 +175,6 @@
 	}
 
 	.upl-wrap {
-		margin-right: 20px;
 		text-align: right;
 	}
 
@@ -214,7 +200,7 @@
 
 	.add-margin, .close {
 		padding: 16px;
-		margin-right: 8px;
+		margin-left: 8px;
 		fill: var(--gray);
 	}
 
@@ -226,10 +212,12 @@
 
 	.add-margin:hover {
 		fill: #fff;
+		background-color: var(--blue);
 	}
 
 	.close:hover {
-		fill: var(--red);
+		fill: #fff;
+		background-color: var(--red);
 	}
 
 	.disabled {
@@ -237,9 +225,9 @@
 	}
 
 	:global(.positions svg) {
-		height: 16px;
+		height: 18px;
 		fill: inherit;
-		margin-bottom: -2px;
+		margin-bottom: -3px;
 	}
 
 	:global(.positions .close svg) {
@@ -271,38 +259,17 @@
 
 					<div class='details' on:click={() => {showModal('PositionDetails', position)}} data-intercept="true">
 						<div class={`direction ${position.isLong ? 'long' : 'short'}`}></div>
-						<div>
-							<div class='product'>
-								<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
-								<span>{position.product}</span>
-								<span class='leverage'>{formatToDisplay(position.leverage)}×</span>
-							</div>
-							<div class='entry'>
-								<span class='entry-text'>
-									{formatToDisplay(position.amount)} {BASE_SYMBOL} {#if position.price > 0} at {formatToDisplay(position.price)}{/if}
-								</span><span class='entry-text-mobile'>
-									{formatToDisplay(position.amount)}@{formatToDisplay(position.price)}
-								</span>
-								
-								{#if position.price * 1 == 0}
-									<Helper direction='right' text='Order being picked up by oracle.' type='opening' /> {#if position.timestamp * 1000 < Date.now() - 5 * 60 * 1000} <a on:click|stopPropagation={() => {_cancelPosition(position.positionId)}}>Cancel</a>
-									{/if}
-								{/if}
-
-								{#if position.closeOrderId}
-									<Helper direction='right' text='Close order being picked up by oracle.' type='closing' />
-									<a on:click|stopPropagation={() => {_cancelOrder(position.closeOrderId)}}>Cancel Close Order</a>
-								{/if}
-								
-								<span class={`upl-entry ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
-									{formatPnl(upls[position.positionId])}
-								</span>
-
-							</div>
+						<div class='product'>
+							<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
+							<span>{position.product}</span>
+							{#if position.price > 0}
+							<span class='entry'>{formatToDisplay(position.price)}</span>
+							{/if}
 						</div>
 					</div>
 
 					<div class='tools'>
+
 						<div class={`upl-wrap ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
 							<div class='upl'>
 								{formatPnl(upls[position.positionId])}
@@ -313,12 +280,25 @@
 							</div>
 							-->
 						</div>
-						<a class='add-margin' class:disabled={position.closeOrderId > 0} on:click={() => {showModal('AddMargin', position)}} data-intercept="true">
-							{@html PLUS_ICON}
-						</a>
-						<a class='close' class:disabled={position.closeOrderId > 0} on:click={() => {showModal('ClosePosition', position)}} data-intercept="true">
-							{@html PLUS_ICON}
-						</a>
+
+						{#if position.price * 1 == 0 || position.closeOrderId > 0}
+							{#if position.price * 1 == 0}
+								<Helper direction='right' text='Order being picked up by oracle.' type='opening' /> {#if position.timestamp * 1000 < Date.now() - 5 * 60 * 1000} <a on:click|stopPropagation={() => {_cancelPosition(position.positionId)}}>Cancel</a>
+								{/if}
+							{/if}
+
+							{#if position.closeOrderId > 0}
+								<Helper direction='right' text='Close order being picked up by oracle.' type='closing' />
+								<a on:click|stopPropagation={() => {_cancelOrder(position.closeOrderId)}}>Cancel Close Order</a>
+							{/if}
+						{:else}
+
+							<a class='close' class:disabled={position.closeOrderId > 0} on:click={() => {showModal('ClosePosition', position)}} data-intercept="true">
+								{@html PLUS_ICON}
+							</a>
+						
+						{/if}
+
 					</div>
 
 				</div>
