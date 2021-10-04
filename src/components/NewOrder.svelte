@@ -97,8 +97,6 @@
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
 		padding: var(--base-padding);
-		background-color: var(--less-black);
-		border-radius: var(--base-radius);
 	}
 
 	.new-order.disabled {
@@ -129,15 +127,13 @@
 		align-items: center;
 		height: 48px;
 		font-weight: 700;
-		font-size: 140%;
+		font-size: 125%;
 	}
 
 	.bottom {
-		margin-top: var(--base-padding);
 		padding-top: var(--base-padding);
 		display: flex;
 		align-items: center;
-		border-top: 1px solid var(--gray);
 	}
 
 	.left {
@@ -214,7 +210,6 @@
 
 	input {
 		flex: 1 1 auto;
-		font-size: 110%;
 		font-weight: 500;
 		text-align: right;
 	}
@@ -231,7 +226,6 @@
 		border-radius: var(--base-radius);
 		color: var(--less-black);
 		font-weight: 700;
-		font-size: 110%;
 	}
 
 	button.disabled {

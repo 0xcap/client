@@ -91,6 +91,10 @@ function initWebsocket(productIds) {
 
 		if (ws.readyState != 1) return;
 
+		heartbeat();
+
+		if (!productIds) product_ids = [];
+
 		let _products = get(products);
 		let product_ids = [];
 		for (const pid of productIds) {
@@ -103,11 +107,9 @@ function initWebsocket(productIds) {
 		    "product_ids": product_ids,
 		    "channels": [
 		    	"heartbeat",
-		        "ticker"
+		    	"ticker"
 		    ]
 		}));
-
-		heartbeat();
 
 	}
 

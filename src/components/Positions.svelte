@@ -74,7 +74,9 @@
 	.positions {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
+		grid-gap: 0;
+		padding: var(--base-padding);
+		border-top: 1px solid var(--gray);
 	}
 
 	.empty {
@@ -86,6 +88,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		padding-bottom: var(--base-padding);
 	}
 
 	.header .title {
@@ -95,21 +98,21 @@
 	.positions-list {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 12px;
+		grid-gap: 0;
+		overflow: hidden;
+		border-top: 1px solid var(--eerie-black);
 	}
 
 	.position {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background-color: var(--less-black);
-		border-radius: var(--base-radius);
-		height: 56px;
-		font-size: 115%;
+		border-bottom: 1px solid var(--eerie-black);
+		height: 63px;
 		overflow: hidden;
 	}
 	.position:hover {
-		background-color: var(--gray);
+		background-color: var(--eerie-black);
 	}
 
 	.details {
@@ -117,11 +120,12 @@
 		align-items: center;
 		cursor: pointer;
 		flex: 1 1 auto;
+		height: 100%;
 	}
 
 	.direction {
 		width: 10px;
-		height: 56px;
+		height: 26px;
 		margin-right: var(--base-padding);
 	}
 
@@ -161,11 +165,8 @@
 	}
 
 	@media (max-width: 600px) {
-		.entry-text {
+		.entry {
 			display: none;
-		}
-		.entry-text-mobile, .upl-entry {
-			display: inline;
 		}
 	}
 
@@ -176,13 +177,6 @@
 
 	.upl-wrap {
 		text-align: right;
-	}
-
-	@media (max-width: 600px) {
-		.upl-wrap {
-			display: none;
-			margin-right: 0;
-		}
 	}
 
 	.upl-percent {
@@ -216,8 +210,7 @@
 	}
 
 	.close:hover {
-		fill: #fff;
-		background-color: var(--red);
+		fill: var(--red);
 	}
 
 	.disabled {

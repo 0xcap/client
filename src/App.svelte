@@ -86,7 +86,7 @@
 		color: #fff;
 		font-family: 'Inter var';
 		font-feature-settings: 'ss01','ss02','ss03','cv01','tnum';
-		font-size: 16.5px;
+		font-size: 18.975px;
 		font-variant: none;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;

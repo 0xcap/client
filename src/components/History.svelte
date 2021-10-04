@@ -40,7 +40,8 @@
 	.history {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
+		grid-gap: 0;
+		padding: var(--base-padding);
 	}
 
 	.history a {

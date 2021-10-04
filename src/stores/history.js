@@ -12,5 +12,5 @@ export const history = derived([selectedAddress], async ([$selectedAddress], set
 		return;
 	}
 	//set(await getTrades($selectedAddress));
-	//set(await fetchHistoryEvents($selectedAddress));
+	set(await fetchHistoryEvents($selectedAddress));
 },[]);

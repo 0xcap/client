@@ -12,7 +12,8 @@
 	.trade {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 80px;
+		background-color: var(--less-black);
+		border-radius: var(--base-radius);
 	}
 </style>
 

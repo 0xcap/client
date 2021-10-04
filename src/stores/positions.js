@@ -34,6 +34,6 @@ export const positions = derived([selectedAddress, sessionPositionIds, refreshUs
 		return self.indexOf(value) === index;
 	});
 
-	//set(await getPositions(uniquePositionIds));
+	set(await getPositions(uniquePositionIds));
 	
 },[]);

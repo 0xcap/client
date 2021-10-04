@@ -51,7 +51,6 @@
 	.search-row input {
 		padding: var(--base-padding);
 		padding-right: 0;
-		font-size: 120%;
 	}
 
 	.search-row .clear {
@@ -83,7 +82,7 @@
 		justify-content: space-between;
 		padding: var(--base-padding);
 		border-bottom: 1px solid var(--eerie-black);
-		font-size: 140%;
+		font-size: 120%;
 		font-weight: 700;
 		cursor: pointer;
 	}
