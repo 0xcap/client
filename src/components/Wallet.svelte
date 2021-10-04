@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte'
 
 	import { CHAIN_DATA, BASE_SYMBOL } from '../lib/constants'
-	import { SPINNER_ICON, MENU_ICON } from '../lib/icons'
+	import { SPINNER_ICON, CARET_DOWN } from '../lib/icons'
 	import { initWallet, connectWallet } from '../lib/wallet'
 	import { formatToDisplay, shortAddr } from '../lib/utils'
 
@@ -146,8 +146,8 @@
 	}
 
 	:global(.wallet .menu-icon svg) {
-		height: 18px;
-		fill: #fff;
+		height: 8px;
+
 	}
 
 </style>
@@ -173,7 +173,7 @@
 	{/if}
 
 	<div class='menu-wrap'>
-		<div class:selected={$menuVisible} class='clickable-item menu-icon' on:click={toggleMenu} data-intercept="true">{@html MENU_ICON}</div>
+		<div class:selected={$menuVisible} class='clickable-item menu-icon' on:click={toggleMenu} data-intercept="true">{@html CARET_DOWN}</div>
 		{#if $menuVisible}
 			<div class='menu'>
 				<a href='https://t.me/capfin' target="_blank" on:click={hideMenu}>Telegram</a>

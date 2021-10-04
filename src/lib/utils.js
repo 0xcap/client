@@ -29,7 +29,7 @@ export function intify(number) {
 
 export function shortAddr(_address) {
 	if (!_address) return;
-	return _address.substring(0,6) + '...' + _address.slice(-4);
+	return _address.substring(0,2) + '…' + _address.slice(-6);
 }
 
 export function shortSymbol(symbol) {
