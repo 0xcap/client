@@ -20,9 +20,6 @@ export function selectProduct(productId, deactivate) {
 	selectedProductId.set(productId);
 	localStorage.setItem('selectedProductId', productId);
 	activateProductPrices(productId);
-	const productSymbol = get(products)[productId];
-	if (productSymbol) location.hash = '/trade/' + productSymbol;
-
 	if (deactivate) {
 		// deactivate unused products = not selected one + not in positions
 		let activeProducts = {};
@@ -56,9 +53,8 @@ export function deactivateProductPrices(productIds) {
 	});
 }
 
-export async function calculateLiquidationPrice(params) {
+export function calculateLiquidationPrice(params) {
 	const { productId, price, leverage, isLong } = params;
-	const productInfo = await getProduct(productId);
 	let liquidationPrice;
 	if (isLong) {
 		liquidationPrice = price * (1 - LIQUIDATION_THRESHOLD / 10000 / leverage);

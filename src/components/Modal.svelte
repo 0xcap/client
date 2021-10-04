@@ -36,7 +36,7 @@
 
 	.modal {
 		width: 460px;
-		border: 1px solid rgb(30,30,30);
+		border: 1px solid var(--gray);
 		border-radius: var(--base-radius);
 		background-color: var(--less-black);
 		overflow: hidden;
@@ -47,7 +47,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 var(--base-padding);
-		height: 62px;
+		height: 60px;
 		background-color: var(--gray);
 	}
 
@@ -62,10 +62,10 @@
 	.done-button {
 		background-color: var(--blue);
 		padding: 6px 10px;
-		border-radius: 14px;
-		font-weight: 650;
+		border-radius: var(--base-radius);
+		font-weight: 600;
 		cursor: pointer;
-		color: var(--gray-darkest);
+		color: var(--less-black);
 	}
 	.done-button:hover {
 		background-color: var(--blue-dark);

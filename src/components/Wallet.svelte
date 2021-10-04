@@ -150,9 +150,7 @@
 
 <div class='wallet'>
 
-	{#if $networkLabel}
-		<div class='network'>{$networkLabel}</div>
-	{:else if $isUnsupported}
+	{#if $isUnsupported}
 		<div class='network'>Unsupported Network</div>
 	{/if}
 

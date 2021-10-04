@@ -47,6 +47,9 @@
 	}
 
 	:global(:root) {
+
+		--eerie-black: #1C1E22;
+
 		--black: rgb(0,4,3);
 		--dim-black: rgba(21, 24, 28, 0.8);
 		--less-black: rgb(21, 24, 28);
@@ -176,6 +179,13 @@
 		padding: 20px;
 		text-align: center;
 		line-height: 1.55;
+	}
+
+	:global(.pos) {
+		color: var(--green) !important;
+	}
+	:global(.neg) {
+		color: var(--red) !important;
 	}
 
 </style>

@@ -7,7 +7,7 @@
 	import { selectProduct } from '../lib/helpers'
 	import { CANCEL_ICON } from '../lib/icons'
 	import { LOGOS } from '../lib/logos'
-	import { formatToDisplay, setCachedLeverage } from '../lib/utils'
+	import { formatToDisplay, setCachedLeverage, shortSymbol } from '../lib/utils'
 	
 	import { hideModal } from '../stores/modals'
 	import { prices } from '../stores/prices'
@@ -45,14 +45,14 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		font-size: 115%;
-		padding: var(--base-padding);
-		border-bottom: 2px solid rgb(55,55,55);
+		border-bottom: 1px solid var(--gray);
 		flex: 1 1 auto;
+		padding-right: var(--base-padding);
 	}
-
-	.search-row.focused {
-
+	.search-row input {
+		padding: var(--base-padding);
+		padding-right: 0;
+		font-size: 120%;
 	}
 
 	.search-row .clear {
@@ -60,9 +60,9 @@
 	}
 
 	:global(.search-row .clear svg) {
-		height: 14px;
-		width: 14px;
-		fill: #fff;
+		height: 12px;
+		width: 12px;
+		fill: var(--gray-light);
 		margin-bottom: -2px;
 		pointer-events: none;
 	}
@@ -83,16 +83,16 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: var(--base-padding);
-		border-bottom: 1px solid rgb(30,30,30);
-		font-size: 115%;
+		border-bottom: 1px solid var(--eerie-black);
+		font-size: 140%;
 		font-weight: 700;
 		cursor: pointer;
 	}
 	.row:not(.selected):not(.search-row):hover {
-		background-color: rgb(30,30,30);
+		background-color: var(--gray);
 	}
 	.row.selected {
-		background-color: rgb(30,30,30);
+		background-color: var(--gray);
 		cursor: default !important;
 	}
 	.row:last-child {
@@ -115,13 +115,10 @@
 		font-weight: 400;
 		color: var(--gray-light);
 	}
-	.price.empty {
-		color: var(--gray-light);
-	}
 
 </style>
 
-<Modal title='Products'>
+<Modal title='Select Product'>
 
 	<div class='search-row' class:focused={searchIsFocused}>
 		<input id='search' type='text' bind:value={query} min=0 max=10000000 on:focus={() => {searchIsFocused = true}} on:blur={() => {searchIsFocused = false}} placeholder="Search..." spellcheck="false" autocomplete="off" autocorrect="off">
@@ -140,7 +137,7 @@
 
 					<div class='product-wrap'>
 						<img src={LOGOS[product.id]} alt={`${product.symbol} logo`}>
-						<span>{product.symbol}</span>
+						<span>{shortSymbol(product.symbol)}</span>
 					</div>
 
 					<div class:empty={!$prices[product.id]} class='price'>{formatToDisplay($prices[product.id])}</div>

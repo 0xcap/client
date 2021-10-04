@@ -5,7 +5,7 @@ import { leverage } from './order'
 
 export const products = writable({});
 
-export const selectedProductId = writable(localStorage.getItem('productId') || 1);
+export const selectedProductId = writable(localStorage.getItem('selectedProductId') || 1);
 
 export const selectedProduct = derived(selectedProductId, async ($selectedProductId, set) => {
 	const product = await getProduct($selectedProductId);

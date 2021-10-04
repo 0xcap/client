@@ -37,11 +37,11 @@ export function shortSymbol(symbol) {
 	return symbol.substring(0,symbol.length-4);
 }
 
-export function formatToDisplay(amount, maxPrecision) {
-	if (isNaN(amount)) return 0;
-	if (!maxPrecision) maxPrecision = 100000;
+export function formatToDisplay(amount, maxPrecision, fixPrecision) {
+	if (amount == undefined || isNaN(amount)) return '';
+	if (!maxPrecision) maxPrecision = 100;
 
-	if ((amount*1 == 0 || amount * 1 >= 1) && (amount * 1).toFixed(3)*1 == Math.round(amount * 1)) return Math.round(amount).toLocaleString();
+	if (!fixPrecision && (amount*1 == 0 || amount * 1 >= 1) && (amount * 1).toFixed(3)*1 == Math.round(amount * 1)) return Math.round(amount).toLocaleString();
 	
 	if (amount * 1 >= 10000 || amount * 1 <= -10000) {
 		return Math.round(amount*1).toLocaleString();
@@ -56,14 +56,14 @@ export function formatToDisplay(amount, maxPrecision) {
 	}
 }
 
-export function displayPricePercentChange(last, open_24h) {
-	if (!last || !open_24h) return '';
-	const diff = (last * 1 - open_24h * 1) / open_24h;
+export function displayPricePercentChange(last, initial) {
+	if (!last || !initial) return '';
+	const diff = (last * 1 - initial * 1) / initial;
 	let string = '';
 	if (diff >= 0) {
 		string += '+';
 	}
-	string += formatToDisplay(diff*100, 2) + "%" || '';
+	string += formatToDisplay(diff*100, 2, true) + "%" || '';
 	return string;
 }
 

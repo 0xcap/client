@@ -128,7 +128,7 @@
 		display: flex;
 		align-items: center;
 		height: 48px;
-		font-weight: 800;
+		font-weight: 700;
 		font-size: 140%;
 	}
 
@@ -137,8 +137,6 @@
 		padding-top: var(--base-padding);
 		display: flex;
 		align-items: center;
-		font-weight: 300;
-		font-size: 90%;
 		border-top: 1px solid var(--gray);
 	}
 
@@ -149,6 +147,18 @@
 
 	.left .helper {
 		margin-right: 6px;
+	}
+
+	.bottom .price {
+		margin-right: 6px;
+	}
+
+	.bottom .price-change {
+
+	}
+
+	.bottom .margin-used {
+		margin-right: 12px;
 	}
 
 	.right {
@@ -195,6 +205,10 @@
 		margin-right: 12px;
 	}
 
+	.select-leverage {
+		font-weight: 500;
+	}
+
 	input {
 		flex: 1 1 auto;
 		font-size: 110%;
@@ -205,12 +219,12 @@
 	.buttons {
 		display: grid;
 		grid-auto-flow: column;
-		grid-gap: var(--semi-padding);
+		grid-gap: var(--base-padding);
 	}
 
 	button {
 		padding: 0 var(--base-padding);
-		height: 58px;
+		height: 62px;
 		border-radius: var(--base-radius);
 		color: var(--less-black);
 		font-weight: 700;
@@ -275,7 +289,11 @@
 				</div>
 
 				<div class='selector select-leverage' on:click={() => {showModal('Leverage')}} data-intercept="true">
-					{#if $selectedProduct.symbol}<span>{$leverage}×</span>{:else}<span>20×</span>{/if}{@html CARET_DOWN}
+					{#if $selectedProduct.symbol}
+						<span>{$leverage}×</span>
+					{:else}
+						<span>20×</span>
+					{/if}{@html CARET_DOWN}
 				</div>
 
 				<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0.0`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
@@ -286,23 +304,25 @@
 
 				<div class='left'>
 					<Helper direction='top' marginRight={true} text='Reference price. Your trade execution price may differ.' />
-					<span>{formatToDisplay($prices[$selectedProductId]) || '...'} {displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}</span>
+					<div class='price'>{formatToDisplay($prices[$selectedProductId], 0, true)}</div>
+					<div class={`price-change ${$prices[$selectedProductId] >= $open24h[$selectedProductId]  ? 'pos' : 'neg'}`}>{displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}</div>
 				</div>
 
 				<div class='right'>
 					
 					{#if $margin > 0}
 						
-						<span>{formatToDisplay($margin, 4)} {BASE_SYMBOL}</span>
-						<Helper direction='top' text='The actual amount debited from your wallet for this trade (margin).' marginLeft={true} marginRight={true} />
-
-						<span>${formatToDisplay($prices[1] * $amount, 2)}</span>
-						<Helper direction='top' text='Your trade size in USD, equal to margin times leverage.' marginLeft={true} />
+						<Helper direction='top' text='The actual amount used from your wallet for this trade (your margin).' marginRight={true} />
+						<div class='margin-used'>{formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>
+						
+						<Helper direction='top' text='Your trade size in USD, equal to your margin times the selected leverage.' marginRight={true} />
+						<div class='trade-size'>${formatToDisplay($prices[1] * $amount, 2)}</div>
 
 					{:else}
 
+						<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' marginRight={true} />
+
 						<a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
-						<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' marginLeft={true} />
 					
 					{/if}
 				

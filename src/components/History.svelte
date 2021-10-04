@@ -113,12 +113,7 @@
 		align-items: center;
 	}
 
-	.pos {
-		color: var(--green);
-	}
-	.neg {
-		color: var(--red);
-	}
+	
 
 </style>
 

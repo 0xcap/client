@@ -27,7 +27,7 @@
 
 	:global(.tooltip svg) {
 		width: 18px;
-		fill: var(--gray-lighter);
+		fill: rgb(75,75,75);
 	}
 
 	.tooltip.opening, .tooltip.closing {
