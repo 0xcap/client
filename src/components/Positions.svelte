@@ -239,7 +239,7 @@
 <div class='positions'>
 
 	{#if count == 0}
-		<div class='empty'>Your positions will appear here.</div>
+
 	{:else}
 
 		<div class='header'>

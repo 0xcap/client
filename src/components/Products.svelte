@@ -7,10 +7,9 @@
 	import { selectProduct } from '../lib/helpers'
 	import { CANCEL_ICON } from '../lib/icons'
 	import { LOGOS } from '../lib/logos'
-	import { formatToDisplay, setCachedLeverage, shortSymbol } from '../lib/utils'
+	import { shortSymbol } from '../lib/utils'
 	
 	import { hideModal } from '../stores/modals'
-	import { prices } from '../stores/prices'
 	import { selectedProductId, selectedProduct, productList } from '../stores/products'
 
 	let searchIsFocused = false;
@@ -111,11 +110,6 @@
 		margin-right: 12px;
 	}
 
-	.price {
-		font-weight: 400;
-		color: var(--gray-light);
-	}
-
 </style>
 
 <Modal title='Select Product'>
@@ -139,8 +133,6 @@
 						<img src={LOGOS[product.id]} alt={`${product.symbol} logo`}>
 						<span>{shortSymbol(product.symbol)}</span>
 					</div>
-
-					<div class:empty={!$prices[product.id]} class='price'>{formatToDisplay($prices[product.id])}</div>
 
 				</div>
 

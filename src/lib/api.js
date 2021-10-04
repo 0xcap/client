@@ -2,6 +2,12 @@ import { formatUnits, formatTrades } from './utils'
 
 const graph_url = 'https://api.thegraph.com/subgraphs/name/0xcap/capv1';
 
+export async function getPrice(product) {
+	const response = await fetch(`https://api.exchange.coinbase.com/products/${product}/ticker`);
+	const json = await response.json();
+	return json.price;
+}
+
 export async function getVolume() {
 	const response = await fetch(graph_url, {
 		method: 'POST',

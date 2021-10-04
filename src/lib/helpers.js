@@ -3,7 +3,7 @@ import { LIQUIDATION_THRESHOLD } from './constants'
 import { getProduct } from './methods'
 import { contract } from '../stores/contracts'
 import { positions } from '../stores/positions'
-import { activeProducts } from '../stores/prices'
+import { activeProducts, prices, open24h } from '../stores/prices'
 import { selectedProductId, products } from '../stores/products'
 import { signer } from '../stores/wallet'
 
@@ -44,7 +44,22 @@ export function activateProductPrices(productId) {
 }
 
 export function deactivateProductPrices(productIds) {
+	console.log('deactivateProductPrices', productIds);
 	activeProducts.update((x) => {
+		for (const productId of productIds) {
+			if (productId == 1) continue; // don't deactivate ETH/USD
+			delete x[productId];
+		}
+		return x;
+	});
+	prices.update((x) => {
+		for (const productId of productIds) {
+			if (productId == 1) continue; // don't deactivate ETH/USD
+			delete x[productId];
+		}
+		return x;
+	});
+	open24h.update((x) => {
 		for (const productId of productIds) {
 			if (productId == 1) continue; // don't deactivate ETH/USD
 			delete x[productId];

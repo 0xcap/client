@@ -1,4 +1,5 @@
 import { get } from 'svelte/store'
+import { getPrice } from './api'
 import { prices, open24h } from '../stores/prices'
 import { products } from '../stores/products'
 import { PRODUCT_TO_ID } from '../lib/constants'
@@ -22,6 +23,24 @@ export async function subscribeToProducts(_productIds) {
 
 	if (_productIds.length > 0 && arrayEquals(_productIds, productIds)) return;
 
+	let newProductsIds = _productIds.filter(x => !productIds.includes(x));
+
+	console.log('newProductsIds', newProductsIds);
+
+	let _products = get(products);
+
+	if (!_products[1]) return;
+
+	for (const pid of newProductsIds) {
+		// fetch price with REST
+		const price = await getPrice(_products[pid]);
+		console.log('got price', pid, price);
+		prices.update((x) => {
+			x[pid] = price;
+			return x;
+		});
+	}
+
 	productIds = _productIds;
 
 	if (!productIds || !productIds.length) return;
@@ -30,8 +49,7 @@ export async function subscribeToProducts(_productIds) {
 		initWebsocket(productIds);
 		return;
 	}
-
-	let _products = get(products);
+	
 	let product_ids = [];
 	for (const pid of productIds) {
 		product_ids.push(_products[pid]);
@@ -44,6 +62,7 @@ export async function subscribeToProducts(_productIds) {
 	    ]
 	}));
 
+	console.log('subscribing', product_ids);
 	ws.send(JSON.stringify({
 	    "type": "subscribe",
 	    "product_ids": product_ids,
@@ -54,9 +73,9 @@ export async function subscribeToProducts(_productIds) {
 
 }
 
-function initWebsocket() {
+function initWebsocket(productIds) {
 
-	console.log('initWebsocket');
+	console.log('initWebsocket', productIds);
 
 	if (ws) {
 		try {
@@ -78,6 +97,7 @@ function initWebsocket() {
 			product_ids.push(_products[pid]);
 		}
 
+		console.log('subscribing2', product_ids);
 		ws.send(JSON.stringify({
 		    "type": "subscribe",
 		    "product_ids": product_ids,

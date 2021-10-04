@@ -152,6 +152,9 @@
 	.bottom .price {
 		margin-right: 6px;
 	}
+	.bottom .price.empty {
+		color: var(--gray-light);
+	}
 
 	.bottom .price-change {
 
@@ -304,7 +307,7 @@
 
 				<div class='left'>
 					<Helper direction='top' marginRight={true} text='Reference price. Your trade execution price may differ.' />
-					<div class='price'>{formatToDisplay($prices[$selectedProductId], 0, true)}</div>
+					<div class='price' class:empty={!$prices[$selectedProductId]}>{formatToDisplay($prices[$selectedProductId], 0, true) || '--'}</div>
 					<div class={`price-change ${$prices[$selectedProductId] >= $open24h[$selectedProductId]  ? 'pos' : 'neg'}`}>{displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}</div>
 				</div>
 

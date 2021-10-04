@@ -213,14 +213,10 @@
 <Toasts />
 <div class='grid'>
 	<Header />
-	{#if $isUnderMaintenance}
-		<div class='maintenance'>Cap is under maintenance on this Ethereum network. Try Rinkeby.</div>
-	{:else}
-		{#if $contractReady}
-		<main>
-			<Trade />
-		</main>
-		{/if}
-	{/if}
+	{#if $contractReady}
+	<main>
+		<Trade />
+	</main>
 	<Footer />
+	{/if}
 </div>
