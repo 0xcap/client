@@ -34,6 +34,7 @@
 	.wallet {
 		display: flex;
 		align-items: center;
+		font-size: 110%;
 	}
 
 	.network {

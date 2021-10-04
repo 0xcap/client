@@ -52,6 +52,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding-bottom: var(--base-padding);
+		font-size: 125%;
 	}
 
 	.header .title {
@@ -61,8 +62,7 @@
 	.history-list {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 0;
-		border-top: 1px solid var(--eerie-black);
+		grid-gap: 6px;
 	}
 
 	.item {
@@ -70,49 +70,71 @@
 		align-items: center;
 		justify-content: space-between;
 		overflow: hidden;
-		border-bottom: 1px solid var(--eerie-black);
-		height: 63px;
+		font-size: 125%;
+		border-radius: var(--base-radius);
+		height: 54px;
 		cursor: pointer;
-		padding: 0 var(--base-padding);;
+		padding: 0 var(--base-padding);
+		background-color: #0D0D0D;
 	}
 	.item:hover {
-		background-color: var(--dim-black);
+		background-color: #121212;
 	}
 
 	.item-more {
-		text-align: center;
-		padding: var(--base-padding);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 var(--base-padding);
 		cursor: pointer;
 		color: var(--gray-light);
+		border-radius: var(--base-radius);
+		height: 50px;
 	}
 	.item-more:hover {
 		color: #fff;
-		background-color: var(--dim-black);
 	}
 
-	.info {
+	.direction {
+		width: 10px;
+		height: 22px;
+		margin-right: 10px;
+		border-radius: var(--base-radius);
+	}
+
+	.direction.long {
+		background-color: var(--green);
+	}
+
+	.direction.short {
+		background-color: var(--red);
+	}
+
+	.details {
 		display: flex;
 		align-items: center;
 		font-weight: 700;
 	}
 
-	.leverage {
-		margin-left: 6px;
-		font-weight: 400;
-	}
-
-	.price {
+	.info {
 		color: var(--gray-light);
-		margin-left: 6px;
-		font-weight: 400;
+		font-weight: 400 !important;
+		margin-left: 10px;
+	}
+	.amount {
+		
+	}
+	.sep {
+		opacity: 0.15;
+	}
+	.price {
+		opacity: 0.25;
 	}
 
 	.pnl {
 		display: flex;
 		align-items: center;
 	}
-
-	
 
 </style>
 
@@ -130,12 +152,14 @@
 	
 		{#each shown_events as event}
 	
-			<div class='item' on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
+			<div class={`item ${event.pnlIsNegative ? 'loss' : 'profit'}`} on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
 	
-				<div class='info'>
+				<div class='details'>
+					<div class={`direction ${event.isLong ? 'long' : 'short'}`}></div>
 					<span>{shortSymbol(event.product)}</span>
-					<span class='leverage'>{formatToDisplay(event.leverage)}×</span>
-					<span class='price'>{formatToDisplay(event.price)}</span>
+					<div class='info'>
+						<span class='amount'>{formatToDisplay(event.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(event.price)}</span>
+					</div>
 				</div>
 
 				<div class={`pnl ${event.pnlIsNegative ? 'neg' : 'pos'}`}>
@@ -147,7 +171,7 @@
 		{/each}
 
 		{#if shown_events.length < $history.length}
-		<div class='item-more' on:click={() => {updateShownEvents()}}>+More</div>
+		<div class='item-more' on:click={() => {updateShownEvents()}}>More</div>
 		{/if}
 	
 	</div>
