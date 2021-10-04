@@ -79,7 +79,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding-bottom: var(--base-padding);
-		font-size: 125%;
+		font-size: 115%;
 	}
 
 	.header .title {
@@ -96,13 +96,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 72px;
-		font-size: 125%;
+		height: 64px;
+		font-size: 115%;
 		border-radius: var(--base-radius);
-		background-color: var(--dim-black);
+		background-color: #0D0D0D;
 	}
 	.position:hover {
-		background-color: var(--less-black);
+		background-color: #121212;
 	}
 
 	.details {
@@ -202,7 +202,7 @@
 	.add-margin, .close {
 		padding: 16px;
 		margin-left: 8px;
-		fill: var(--gray-light);
+		fill: #303030;
 	}
 
 	@media (max-width: 600px) {
@@ -260,7 +260,7 @@
 							<span>{shortSymbol(position.product)}</span>
 							{#if position.price > 0}
 							<div class='info'>
-								<span class='amount'>{formatToDisplay(position.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(position.price)}</span>
+								<span class='amount'>{formatToDisplay(position.amount)} {BASE_SYMBOL}</span>
 							</div>
 							{/if}
 						</div>

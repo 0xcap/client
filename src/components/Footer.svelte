@@ -40,6 +40,6 @@
 
 	<div class='details'>Cap v{VERSION} | Hosted on IPFS</div>
 
-	<div class="details">Prices bounded by {@html CHAINLINK_FULL_ICON}</div>
+	<div class="details">Prices bound by {@html CHAINLINK_FULL_ICON}</div>
 
 </footer>

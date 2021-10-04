@@ -52,7 +52,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding-bottom: var(--base-padding);
-		font-size: 125%;
+		font-size: 115%;
 	}
 
 	.header .title {
@@ -70,7 +70,7 @@
 		align-items: center;
 		justify-content: space-between;
 		overflow: hidden;
-		font-size: 125%;
+		font-size: 115%;
 		border-radius: var(--base-radius);
 		height: 54px;
 		cursor: pointer;
@@ -155,7 +155,7 @@
 			<div class={`item ${event.pnlIsNegative ? 'loss' : 'profit'}`} on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
 	
 				<div class='details'>
-					<div class={`direction ${event.isLong ? 'long' : 'short'}`}></div>
+					<div class={`direction ${event.isLong ? 'short' : 'long'}`}></div>
 					<span>{shortSymbol(event.product)}</span>
 					<div class='info'>
 						<span class='amount'>{formatToDisplay(event.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(event.price)}</span>

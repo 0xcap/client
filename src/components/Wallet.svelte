@@ -50,6 +50,7 @@
 
 	.balance {
 		margin-right: 8px;
+		display: none;
 	}
 
 	@media (max-width: 600px) {

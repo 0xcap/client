@@ -97,7 +97,7 @@
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
 		padding: var(--base-padding);
-		background-color: var(--less-black);
+		background-color: #171717;
 		border-radius: var(--base-radius);
 	}
 
@@ -138,6 +138,7 @@
 		display: flex;
 		align-items: center;
 		border-top: 1px solid var(--gray);
+		font-size: 90%;
 	}
 
 	.left {
@@ -179,7 +180,7 @@
 	.selector {
 		display: flex;
 		align-items: center;
-		background-color: var(--gray);
+		background-color: #1F1F1F;
 		border-radius: var(--base-radius);
 		white-space: nowrap;
 		cursor: pointer;
@@ -187,7 +188,7 @@
 	}
 
 	.selector:hover {
-		background-color: var(--onyx);
+		background-color: #242424;
 	}
 
 	:global(.selector svg) {
@@ -231,7 +232,7 @@
 		border-radius: var(--base-radius);
 		color: var(--less-black);
 		font-weight: 700;
-		font-size: 125%;
+		font-size: 120%;
 	}
 
 	button.disabled {
@@ -309,7 +310,6 @@
 				<div class='left'>
 					<Helper direction='top' marginRight={true} text='Reference price. Your trade execution price may differ.' />
 					<div class='price' class:empty={!$prices[$selectedProductId]}>{formatToDisplay($prices[$selectedProductId], 0, true) || '--'}</div>
-					<div class={`price-change ${$prices[$selectedProductId] >= $open24h[$selectedProductId]  ? 'pos' : 'neg'}`}>{displayPricePercentChange($prices[$selectedProductId], $open24h[$selectedProductId])}</div>
 				</div>
 
 				<div class='right'>

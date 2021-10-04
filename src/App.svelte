@@ -54,10 +54,10 @@
 		--flame: #E04700;
 		--slimy-green: #00B803;
 
-		--black: rgb(0,4,3);
+		--black: #080808;
 		--dim-black: rgba(21, 24, 28, 0.8);
 		--less-black: rgb(21, 24, 28);
-		--gray: rgb(32, 35, 39);
+		--gray: #1C1C1C;
 		--gray-lighter: rgb(55,55,55);
 		--gray-light: rgb(110, 118, 125);
 
