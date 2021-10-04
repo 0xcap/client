@@ -8,7 +8,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: var(--base-padding);
+		padding-top: var(--base-padding);
 	}
 
 	.left {

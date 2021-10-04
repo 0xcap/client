@@ -47,7 +47,7 @@
 		pointer-events: none;
 		transition: all 0.18s ease-out 0.18s;
 		text-indent: 0;
-	    font-size: 1rem;
+	    font-size: inherit;
 	    background-color: var(--less-black);
 	    border: 1px solid var(--gray-lighter);
 	    border-radius: 8px;

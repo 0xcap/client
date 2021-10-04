@@ -12,11 +12,9 @@
 	.trade {
 		display: grid;
 		grid-auto-flow: row;
-		background-color: var(--less-black);
-		border-radius: var(--base-radius);
+		grid-gap: 60px;
 	}
 </style>
-
 
 
 <div class='trade'>

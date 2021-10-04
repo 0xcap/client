@@ -75,8 +75,6 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: 0;
-		padding: var(--base-padding);
-		border-top: 1px solid var(--gray);
 	}
 
 	.empty {
@@ -89,6 +87,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding-bottom: var(--base-padding);
+		font-size: 125%;
 	}
 
 	.header .title {
@@ -98,21 +97,20 @@
 	.positions-list {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 0;
-		overflow: hidden;
-		border-top: 1px solid var(--eerie-black);
+		grid-gap: 6px;
 	}
 
 	.position {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-bottom: 1px solid var(--eerie-black);
-		height: 63px;
-		overflow: hidden;
+		height: 64px;
+		font-size: 125%;
+		border-radius: var(--base-radius);
+		background-color: var(--less-black);
 	}
 	.position:hover {
-		background-color: var(--eerie-black);
+		background-color: var(--gray);
 	}
 
 	.details {
@@ -125,8 +123,10 @@
 
 	.direction {
 		width: 10px;
-		height: 26px;
-		margin-right: var(--base-padding);
+		height: 28px;
+		margin-right: 10px;
+		margin-left: var(--base-padding);
+		border-radius: var(--base-radius);
 	}
 
 	.direction.long {
@@ -144,16 +144,16 @@
 	}
 
 	.product img {
-		width: 24px;
-		height: 24px;
-		border-radius: 24px;
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
 		margin-right: 8px;
 	}
 
 	.entry {
 		color: var(--gray-light);
 		font-weight: 400 !important;
-		margin-left: 6px;
+		margin-left: 10px;
 	}
 
 	.entry-text-mobile {

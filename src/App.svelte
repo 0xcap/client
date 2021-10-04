@@ -49,6 +49,7 @@
 	:global(:root) {
 
 		--eerie-black: #1C1E22;
+		--onyx: #2E3238;
 
 		--black: rgb(0,4,3);
 		--dim-black: rgba(21, 24, 28, 0.8);
@@ -86,7 +87,7 @@
 		color: #fff;
 		font-family: 'Inter var';
 		font-feature-settings: 'ss01','ss02','ss03','cv01','tnum';
-		font-size: 18.975px;
+		font-size: 16.5px;
 		font-variant: none;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
@@ -162,9 +163,7 @@
 	}
 
 	.grid {
-		display: grid;
-		grid-auto-flow: row;
-		grid-gap: 50px;
+
 	}
 
 	main {
@@ -173,6 +172,9 @@
 		padding: 0 var(--base-padding);
 		margin: 0 auto;
 		box-sizing: border-box;
+		display: grid;
+		grid-auto-flow: row;
+		grid-gap: 60px;
 	}
 
 	.maintenance {
@@ -212,11 +214,11 @@
 <EventDetails isActive={$activeModal && $activeModal.name == 'EventDetails'} data={$activeModal.data} />
 <Toasts />
 <div class='grid'>
+	<main>
 	<Header />
 	{#if $contractReady}
-	<main>
 		<Trade />
-	</main>
-	<Footer />
+		<Footer />
 	{/if}
+	</main>
 </div>

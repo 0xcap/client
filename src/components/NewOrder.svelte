@@ -97,6 +97,8 @@
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
 		padding: var(--base-padding);
+		background-color: var(--less-black);
+		border-radius: var(--base-radius);
 	}
 
 	.new-order.disabled {
@@ -131,9 +133,11 @@
 	}
 
 	.bottom {
+		margin-top: var(--base-padding);
 		padding-top: var(--base-padding);
 		display: flex;
 		align-items: center;
+		border-top: 1px solid var(--gray);
 	}
 
 	.left {
@@ -183,7 +187,7 @@
 	}
 
 	.selector:hover {
-		background-color: var(--gray-lighter);
+		background-color: var(--onyx);
 	}
 
 	:global(.selector svg) {
@@ -212,20 +216,22 @@
 		flex: 1 1 auto;
 		font-weight: 500;
 		text-align: right;
+		font-size: 125%;
 	}
 
 	.buttons {
 		display: grid;
 		grid-auto-flow: column;
-		grid-gap: var(--base-padding);
+		grid-gap: var(--semi-padding);
 	}
 
 	button {
 		padding: 0 var(--base-padding);
-		height: 62px;
+		height: 64px;
 		border-radius: var(--base-radius);
 		color: var(--less-black);
 		font-weight: 700;
+		font-size: 125%;
 	}
 
 	button.disabled {
@@ -244,18 +250,20 @@
 	}
 
 	.button-short {
-		color: #3D1300;
+		color: #3D1300;/*#521A00;*/
 		background-color: var(--red);
 	}
 	.button-short:not(.disabled):hover {
-		background-color: #E04700;
+		color: #521A00;
+
 	}
 	.button-long {
-		color: #003D01;
+		color: #003D01;/*#005201;*/
 		background-color: var(--green);
 	}
 	.button-long:not(.disabled):hover {
-		background-color: #00B803;
+		color: #005201;
+
 	}
 
 </style>
@@ -293,7 +301,7 @@
 					{/if}{@html CARET_DOWN}
 				</div>
 
-				<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0.0`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
+				<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" maxlength="10" spellcheck="false" placeholder={`0.0`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
 
 			</div>
 

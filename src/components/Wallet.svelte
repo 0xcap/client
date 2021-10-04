@@ -80,7 +80,7 @@
 		border: 1px solid transparent;
 	}
 	.clickable-item:hover, .clickable-item.selected {
-		border-color: var(--gray);
+		background-color: var(--gray);
 	}
 
 	.has-pending {
@@ -114,14 +114,16 @@
 
 	.menu-wrap {
 		margin-left: 8px;
+		position: relative;
 	}
 
 	.menu {
 		position: absolute;
-		top: 72px;
-		right: var(--base-padding);
-		background-color: rgb(23,23,23);
+		top: 50px;
+		right: 0;
+		background-color: var(--less-black);
 		border-radius: var(--base-radius);
+		border: 1px solid var(--gray-lighter);
 		padding: 6px 0;
 		min-width: 160px;
 		z-index: 102;

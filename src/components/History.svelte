@@ -41,7 +41,6 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: 0;
-		padding: var(--base-padding);
 	}
 
 	.history a {
@@ -52,6 +51,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		padding-bottom: var(--base-padding);
 	}
 
 	.header .title {
@@ -61,27 +61,25 @@
 	.history-list {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 12px;
+		grid-gap: 0;
+		border-top: 1px solid var(--eerie-black);
 	}
 
 	.item {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background-color: var(--dim-black);
 		overflow: hidden;
-		height: 56px;
-		font-size: 115%;
+		border-bottom: 1px solid var(--eerie-black);
+		height: 63px;
 		cursor: pointer;
-		padding: 0 var(--base-padding);
-		border-radius: var(--base-radius);
+		padding: 0 var(--base-padding);;
 	}
 	.item:hover {
-		background-color: var(--gray);
+		background-color: var(--dim-black);
 	}
 
 	.item-more {
-		background-color: var(--dim-black);
 		text-align: center;
 		padding: var(--base-padding);
 		cursor: pointer;
@@ -89,7 +87,7 @@
 	}
 	.item-more:hover {
 		color: #fff;
-		background-color: var(--gray);
+		background-color: var(--dim-black);
 	}
 
 	.info {
