@@ -250,19 +250,18 @@
 	}
 
 	.button-short {
-		color: #3D1300;/*#521A00;*/
+		color: #3D1300;
 		background-color: var(--red);
 	}
 	.button-short:not(.disabled):hover {
-		color: #521A00;
-
+		background-color: var(--flame);
 	}
 	.button-long {
-		color: #003D01;/*#005201;*/
+		color: #003D01;
 		background-color: var(--green);
 	}
 	.button-long:not(.disabled):hover {
-		color: #005201;
+		background-color: var(--slimy-green);
 
 	}
 

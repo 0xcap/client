@@ -51,7 +51,7 @@
 	    background-color: var(--less-black);
 	    border: 1px solid var(--gray-lighter);
 	    border-radius: 8px;
-	    color: rgb(220,220,220);
+	    color: #fff;
 	    content: attr(data-text);
 	    padding: 14px;
 	    position: absolute;

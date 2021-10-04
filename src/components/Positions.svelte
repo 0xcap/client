@@ -8,8 +8,8 @@
 
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { LOGOS } from '../lib/logos'
-	import { PLUS_ICON } from '../lib/icons'
-	import { getProduct, cancelPosition, cancelOrder } from '../lib/methods'
+	import { CANCEL_ICON } from '../lib/icons'
+	import { getProduct } from '../lib/methods'
 	import { formatToDisplay, intify, formatPnl, shortSymbol } from '../lib/utils'
 
 	let upls = {};
@@ -18,13 +18,7 @@
 	let count = 0;
 	$: count = $positions && $positions.length || 0;
 
-	async function _cancelPosition(positionId) {
-		const error = await cancelPosition(positionId);
-	}
-
-	async function _cancelOrder(orderId) {
-		const error = await cancelOrder(orderId);
-	}
+	
 
 	async function calculateUPLs(_prices) {
 		totalUPL = 0;
@@ -45,10 +39,8 @@
 		if (latestPrice) {
 			const productInfo = await getProduct(position.productId);
 			if (position.isLong) {
-				latestPrice = latestPrice * (1 - productInfo.fee/100);
 				upl = position.margin * position.leverage * (latestPrice * 1 - position.price * 1) / position.price;
 			} else {
-				latestPrice = latestPrice * (1 + productInfo.fee/100);
 				upl = position.margin * position.leverage * (position.price * 1 - latestPrice * 1) / position.price;
 			}
 			// Add interest
@@ -97,20 +89,20 @@
 	.positions-list {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 6px;
+		grid-gap: 12px;
 	}
 
 	.position {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 64px;
+		height: 72px;
 		font-size: 125%;
 		border-radius: var(--base-radius);
-		background-color: var(--less-black);
+		background-color: var(--dim-black);
 	}
 	.position:hover {
-		background-color: var(--gray);
+		background-color: var(--less-black);
 	}
 
 	.details {
@@ -150,10 +142,19 @@
 		margin-right: 8px;
 	}
 
-	.entry {
+	.info {
 		color: var(--gray-light);
 		font-weight: 400 !important;
 		margin-left: 10px;
+	}
+	.entry {
+		
+	}
+	.sep {
+		opacity: 0.15;
+	}
+	.price {
+		opacity: 0.25;
 	}
 
 	.entry-text-mobile {
@@ -192,6 +193,12 @@
 		color: var(--red) !important;
 	}
 
+	.status {
+		color: var(--onyx2);
+		padding-right: var(--base-padding);
+		margin-left: 10px;
+	}
+
 	.add-margin, .close {
 		padding: 16px;
 		margin-left: 8px;
@@ -223,10 +230,6 @@
 		margin-bottom: -3px;
 	}
 
-	:global(.positions .close svg) {
-		transform: rotate(45deg);
-	}
-
 </style>
 
 <div class='positions'>
@@ -256,7 +259,9 @@
 							<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
 							<span>{shortSymbol(position.product)}</span>
 							{#if position.price > 0}
-							<span class='entry'>{formatToDisplay(position.price)}</span>
+							<div class='info'>
+								<span class='entry'>{formatToDisplay(position.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(position.price)}</span>
+							</div>
 							{/if}
 						</div>
 					</div>
@@ -276,18 +281,21 @@
 
 						{#if position.price * 1 == 0 || position.closeOrderId > 0}
 							{#if position.price * 1 == 0}
-								<Helper direction='right' text='Order being picked up by oracle.' type='opening' /> {#if position.timestamp * 1000 < Date.now() - 5 * 60 * 1000} <a on:click|stopPropagation={() => {_cancelPosition(position.positionId)}}>Cancel</a>
-								{/if}
+								<div class='status'>
+									Settling
+								</div>
 							{/if}
 
 							{#if position.closeOrderId > 0}
-								<Helper direction='right' text='Close order being picked up by oracle.' type='closing' />
-								<a on:click|stopPropagation={() => {_cancelOrder(position.closeOrderId)}}>Cancel Close Order</a>
+								<div class='status'>
+									Closing
+								</div>
 							{/if}
+
 						{:else}
 
 							<a class='close' class:disabled={position.closeOrderId > 0} on:click={() => {showModal('ClosePosition', position)}} data-intercept="true">
-								{@html PLUS_ICON}
+								{@html CANCEL_ICON}
 							</a>
 						
 						{/if}

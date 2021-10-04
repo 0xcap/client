@@ -50,6 +50,9 @@
 
 		--eerie-black: #1C1E22;
 		--onyx: #2E3238;
+		--onyx2: #373C43;
+		--flame: #E04700;
+		--slimy-green: #00B803;
 
 		--black: rgb(0,4,3);
 		--dim-black: rgba(21, 24, 28, 0.8);

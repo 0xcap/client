@@ -7,6 +7,7 @@
 
 	import { BASE_SYMBOL, PRICE_DECIMALS } from '../lib/constants'
 	import { calculateLiquidationPrice } from '../lib/helpers'
+	import { cancelPosition, cancelOrder } from '../lib/methods'
 	import { formatUnits, formatToDisplay } from '../lib/utils'
 
 	import { prices } from '../stores/prices'
@@ -19,6 +20,17 @@
 		const lp = await calculateLiquidationPrice(data);
 		liquidationPrice = lp && lp.toFixed(PRICE_DECIMALS);
 	});
+
+	async function _cancelPosition(positionId) {
+		const error = await cancelPosition(positionId);
+	}
+
+	async function _cancelOrder(orderId) {
+		const error = await cancelOrder(orderId);
+	}
+
+	// <a on:click|stopPropagation={() => {_cancelOrder(position.closeOrderId)}}>Cancel</a>
+	//<a on:click|stopPropagation={() => {_cancelPosition(position.positionId)}}>Cancel</a>
 
 	let rows;
 	$: rows = [
@@ -62,6 +74,8 @@
 			value: "~" + formatToDisplay(liquidationPrice)
 		}
 	];
+
+
 
 </script>
 
