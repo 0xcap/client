@@ -23,7 +23,6 @@
 		text-align: center;
 		padding-top: var(--base-padding);
 		color: rgb(70,70,70);
-		font-size: 80%;
 	}
 
 	:global(.details svg) {
@@ -38,8 +37,8 @@
 
 	<Volume/>
 
-	<div class='details'>Cap v{VERSION} | Hosted on IPFS</div>
+	<div class="details">Cap is hosted on IPFS. Prices bound by {@html CHAINLINK_FULL_ICON}</div>
 
-	<div class="details">Prices bound by {@html CHAINLINK_FULL_ICON}</div>
+	<div class='details'>v{VERSION}</div>
 
 </footer>

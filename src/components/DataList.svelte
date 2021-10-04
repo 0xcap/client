@@ -6,6 +6,8 @@
 
 	import { BASE_SYMBOL } from '../lib/constants'
 
+	import { showModal } from '../stores/modals'
+
 	export let data;
 	export let value = '';
 
@@ -100,6 +102,8 @@
 							{@html row.value}
 						{:else if row.isEmpty}
 							-
+						{:else if row.addMargin}
+							<a on:click={() => {showModal('AddMargin', row.data)}} data-intercept="true">Add</a> {row.value}
 						{:else}
 							{row.value}
 						{/if}

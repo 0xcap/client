@@ -179,7 +179,7 @@
 				<a href='https://t.me/capfin' target="_blank" on:click={hideMenu}>Telegram</a>
 				<a href='https://twitter.com/CapDotFinance' target="_blank" on:click={hideMenu}>Twitter</a>
 				<a href='https://github.com/0xcap' target="_blank" on:click={hideMenu}>Github</a>
-				<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x43044f861ec040db59a7e324c40507addb673142' target="_blank" on:click={hideMenu}>Buy CAP</a>	
+				<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x031d35296154279dc1984dcd93e392b1f946737b' target="_blank" on:click={hideMenu}>Buy CAP</a>	
 			</div>
 		{/if}
 	</div>

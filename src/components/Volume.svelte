@@ -1,6 +1,6 @@
 <script>
 
-	import { onMount } from 'svelte'
+	import { onMount, onDestroy } from 'svelte'
 
 	import { getVolume } from '../lib/api'
 	import { BASE_SYMBOL } from '../lib/constants'
@@ -15,6 +15,14 @@
 		activateProductPrices(1); // ETH-USD
 		const res = await getVolume();
 		volume = res.volume;
+		setInterval(async () => {
+			const res = await getVolume();
+			volume = res.volume;
+		}, 20*1000);
+	});
+
+	onDestroy(() => {
+		clearInterval(v);
 	});
 
 </script>

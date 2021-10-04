@@ -8,8 +8,8 @@
 
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { LOGOS } from '../lib/logos'
+	import { getUPL } from '../lib/helpers'
 	import { CANCEL_ICON } from '../lib/icons'
-	import { getProduct } from '../lib/methods'
 	import { formatToDisplay, intify, formatPnl, shortSymbol } from '../lib/utils'
 
 	let upls = {};
@@ -23,38 +23,13 @@
 	async function calculateUPLs(_prices) {
 		totalUPL = 0;
 		for (const position of $positions) {
-			const upl = await getUPL(position);
+			const upl = await getUPL(position, _prices[position.productId]);
 			upls[position.positionId] = upl;
 			if (!upl) continue;
 			upls_percent[position.positionId] = (100 * upl * 1 / position.margin);
 			totalUPL += upl * 1;
 		}
 		totalUPL = totalUPL.toFixed(4);
-	}
-
-	async function getUPL(position) {
-		let latestPrice = $prices[position.productId];
-		let upl = 0;
-		if (position.price * 1 == 0) return undefined;
-		if (latestPrice) {
-			const productInfo = await getProduct(position.productId);
-			if (position.isLong) {
-				upl = position.margin * position.leverage * (latestPrice * 1 - position.price * 1) / position.price;
-			} else {
-				upl = position.margin * position.leverage * (position.price * 1 - latestPrice * 1) / position.price;
-			}
-			// Add interest
-			let interest;
-			let now = parseInt(Date.now() / 1000);
-			if (position.isSettling || now < position.timestamp * 1 + 1800) {
-				interest = 0;
-			} else {
-				interest = position.margin * position.leverage * ((productInfo.interest * 1 || 0) / 100) * (now - position.timestamp * 1) / (360 * 24 * 3600);
-			}
-			if (interest < 0) interest = 0;
-			upl -= interest;
-		}
-		return upl;
 	}
 
 	$: calculateUPLs($prices);
@@ -260,7 +235,7 @@
 							<span>{shortSymbol(position.product)}</span>
 							{#if position.price > 0}
 							<div class='info'>
-								<span class='amount'>{formatToDisplay(position.amount)} {BASE_SYMBOL}</span>
+								<span class='amount'>{formatToDisplay(position.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(position.price)}</span>
 							</div>
 							{/if}
 						</div>

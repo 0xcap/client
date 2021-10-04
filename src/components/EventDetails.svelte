@@ -41,6 +41,10 @@
 				helper: 'P/L includes interest charged.'
 			},
 			{
+				label: 'P/L %',
+				value: `${formatPnl(100*data.pnl/data.margin, data.pnlIsNegative, true)}%`
+			},
+			{
 				label: 'Trade Size',
 				value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
 				helper: 'Equals margin times leverage.'

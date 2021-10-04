@@ -77,7 +77,7 @@
 			isEmpty: closePercent == 0
 		},
 		{
-			label: 'Amount after Close',
+			label: 'Position Size after Close',
 			value: `${formatToDisplay(newAmount)} ${BASE_SYMBOL}`,
 			isEmpty: newAmount * 1 == data.amount * 1
 		},
