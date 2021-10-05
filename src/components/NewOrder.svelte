@@ -16,7 +16,7 @@
 	import { showModal } from '../stores/modals'
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
 	import { selectedProductId, selectedProduct } from '../stores/products'
-	import { prices, open24h } from '../stores/prices'
+	import { prices } from '../stores/prices'
 	import { showToast } from '../stores/toasts'
 	import { selectedAddress, isTestnet, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
 
@@ -101,6 +101,13 @@
 		border-radius: var(--base-radius);
 	}
 
+	@media (max-width: 600px) {
+		.new-order {
+			grid-gap: 12px;
+			padding: 12px;
+		}
+	}
+
 	.new-order.disabled {
 		pointer-events: none;
 	}
@@ -139,6 +146,13 @@
 		align-items: center;
 		border-top: 1px solid var(--gray);
 		font-size: 90%;
+	}
+
+	@media (max-width: 600px) {
+		.bottom {
+			margin-top: 12px;
+			padding-top: 12px;
+		}
 	}
 
 	.left {
@@ -209,6 +223,15 @@
 		margin-right: 12px;
 	}
 
+	@media (max-width: 600px) {
+		.selector {
+			padding: 10px 8px;
+		}
+		.product-wrap {
+			margin-right: 6px;
+		}
+	}
+
 	.select-leverage {
 		font-weight: 500;
 	}
@@ -226,6 +249,12 @@
 		grid-gap: var(--semi-padding);
 	}
 
+	@media (max-width: 600px) {
+		.buttons {
+			grid-gap: 12px;
+		}
+	}
+
 	button {
 		padding: 0 var(--base-padding);
 		height: 64px;
@@ -233,6 +262,13 @@
 		color: var(--less-black);
 		font-weight: 700;
 		font-size: 120%;
+	}
+
+	@media (max-width: 600px) {
+		button {
+			height: 58px;
+			font-size: 110%;
+		}
 	}
 
 	button.disabled {

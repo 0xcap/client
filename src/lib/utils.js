@@ -2,7 +2,6 @@ import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 
 import { CHAIN_DATA, PRICE_DECIMALS, BASE_SYMBOL } from './constants'
-import { activateProductPrices } from './helpers'
 
 import { hideMenu } from '../stores/menu'
 import { hideModal } from '../stores/modals'
@@ -102,7 +101,6 @@ export function formatPositions(positions, positionIds) {
 			productId: p.productId,
 			closeOrderId: p.closeOrderId
 		});
-		activateProductPrices(p.productId);
 		i++;
 	}
 	formattedPositions.reverse();

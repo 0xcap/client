@@ -1,81 +1,25 @@
 import { get } from 'svelte/store'
 import { getPrice } from './api'
-import { prices, open24h } from '../stores/prices'
+import { prices } from '../stores/prices'
 import { products } from '../stores/products'
 import { PRODUCT_TO_ID } from '../lib/constants'
 
 let ws;
-let lastTimestamp = 0;
+let lastTimestamp = {};
 let h;
 
-let productIds = [];
-
-function arrayEquals(a, b) {
-  return Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index]);
+function heartbeat() {
+	clearTimeout(h);
+	h = setTimeout(() => {
+		console.log('Terminating, reconnecting socket...');
+		if (ws) ws.close(1000,"");
+		initWebsocket();
+	}, 15 * 1000);
 }
 
-export async function subscribeToProducts(_productIds) {
+export function initWebsocket() {
 
-	console.log('subscribeToProducts', _productIds);
-
-	if (_productIds.length > 0 && arrayEquals(_productIds, productIds)) return;
-
-	let newProductsIds = _productIds.filter(x => !productIds.includes(x));
-
-	console.log('newProductsIds', newProductsIds);
-
-	let _products = get(products);
-
-	if (!_products[1]) return;
-
-	for (const pid of newProductsIds) {
-		// fetch price with REST
-		const price = await getPrice(_products[pid]);
-		console.log('got price', pid, price);
-		prices.update((x) => {
-			x[pid] = price;
-			return x;
-		});
-	}
-
-	productIds = _productIds;
-
-	if (!productIds || !productIds.length) return;
-
-	if (!ws || ws.readyState != 1) {
-		initWebsocket(productIds);
-		return;
-	}
-	
-	let product_ids = [];
-	for (const pid of productIds) {
-		product_ids.push(_products[pid]);
-	}
-
-	ws.send(JSON.stringify({
-	    "type": "unsubscribe",
-	    "channels": [
-	        "ticker"
-	    ]
-	}));
-
-	console.log('subscribing', product_ids);
-	ws.send(JSON.stringify({
-	    "type": "subscribe",
-	    "product_ids": product_ids,
-	    "channels": [
-	        "ticker"
-	    ]
-	}));
-
-}
-
-function initWebsocket() {
-
-	console.log('initWebsocket', productIds);
+	console.log('initWebsocket');
 
 	if (ws) {
 		try {
@@ -93,18 +37,9 @@ function initWebsocket() {
 
 		heartbeat();
 
-		if (!productIds) productIds = [];
-
-		let _products = get(products);
-		let product_ids = [];
-		for (const pid of productIds) {
-			product_ids.push(_products[pid]);
-		}
-
-		console.log('subscribing2', product_ids);
 		ws.send(JSON.stringify({
 		    "type": "subscribe",
-		    "product_ids": product_ids,
+		    "product_ids": ['BTC-USD', 'ETH-USD'],
 		    "channels": [
 		    	"heartbeat",
 		    	"ticker"
@@ -122,21 +57,18 @@ function initWebsocket() {
 
 			if (type == 'heartbeat') return heartbeat();
 
-			// TODO: this should be per product
-			if (lastTimestamp > Date.now() - 1000) return; // throttle to 1 per sec
+			if (!product_id || type != 'ticker') return;
 
-			if (product_id) lastTimestamp = Date.now();
+			if (!lastTimestamp[product_id]) lastTimestamp[product_id] = 0;
 
-			if (type == 'ticker') {
-				prices.update((x) => {
-					x[PRODUCT_TO_ID[product_id]] = price;
-					return x;
-				});
-				open24h.update((x) => {
-					x[PRODUCT_TO_ID[product_id]] = open_24h;
-					return x;
-				});
-			}
+			if (lastTimestamp[product_id] > Date.now() - 1000) return; // throttle to 1 per sec
+
+			lastTimestamp[product_id] = Date.now();
+
+			prices.update((x) => {
+				x[PRODUCT_TO_ID[product_id]] = price;
+				return x;
+			});
 
 		} catch(e) {
 			console.error(e);
@@ -164,13 +96,6 @@ function initWebsocket() {
 		console.log('Websocket error', e);
 	}
 
-	function heartbeat() {
-		clearTimeout(h);
-		h = setTimeout(() => {
-			console.log('Terminating, reconnecting socket...');
-			ws.close(1000,"");
-			initWebsocket();
-		}, 15 * 1000);
-	}
+	
 
 }

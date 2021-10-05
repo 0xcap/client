@@ -4,10 +4,8 @@
 
 	export let title;
 	export let text;
-	export let direction;
 	export let marginRight = false;
 	export let marginLeft = false;
-	export let type = 'default';
 
 </script>
 

@@ -40,6 +40,8 @@
 		<span title='Cap is hosted on IPFS'>{@html IPFS_LOGO}</span> <span title='Trade execution prices are bound by Chainlink'>{@html CHAINLINK_FULL_ICON}</span>
 	</div>
 
+	<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x031d35296154279dc1984dcd93e392b1f946737b' target="_blank">Buy CAP</a>	
+
 	<div class='details'>v{VERSION}</div>
 
 </footer>

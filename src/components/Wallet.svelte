@@ -5,7 +5,7 @@
 	import { CHAIN_DATA, BASE_SYMBOL } from '../lib/constants'
 	import { SPINNER_ICON, CARET_DOWN } from '../lib/icons'
 	import { initWallet, connectWallet } from '../lib/wallet'
-	import { formatToDisplay, shortAddr } from '../lib/utils'
+	import { formatToDisplay, shortAddr, addrLink } from '../lib/utils'
 
 	import { toggleMenu, menuVisible, hideMenu } from '../stores/menu'
 	import { showModal } from '../stores/modals'
@@ -34,7 +34,6 @@
 	.wallet {
 		display: flex;
 		align-items: center;
-		font-size: 110%;
 	}
 
 	.network {
@@ -50,7 +49,6 @@
 
 	.balance {
 		margin-right: 8px;
-		display: none;
 	}
 
 	@media (max-width: 600px) {
@@ -75,13 +73,13 @@
 		display: flex;
 		align-items: center;
 		border-radius: var(--base-radius);
-		cursor: pointer;
 		background-color: var(--less-black);
 		padding: 0 12px;
 		height: 36px;
 		border: 1px solid transparent;
+		color: inherit;
 	}
-	.clickable-item:hover, .clickable-item.selected {
+	.clickable-item:hover {
 		background-color: var(--gray);
 	}
 
@@ -114,42 +112,6 @@
 		background-color: var(--blue-dark);
 	}
 
-	.menu-wrap {
-		margin-left: 8px;
-		position: relative;
-	}
-
-	.menu {
-		position: absolute;
-		top: 50px;
-		right: 0;
-		background-color: var(--less-black);
-		border-radius: var(--base-radius);
-		border: 1px solid var(--gray-lighter);
-		padding: 6px 0;
-		min-width: 160px;
-		z-index: 102;
-	}
-
-	.menu a {
-		display: block;
-		padding: 8px 16px;
-		color: rgb(180,180,180);
-	}
-	.menu a:hover {
-		color: #fff;
-	}
-
-	.menu a.button {
-		font-weight: 700;
-		color: var(--green);
-	}
-
-	:global(.wallet .menu-icon svg) {
-		height: 8px;
-
-	}
-
 </style>
 
 <div class='wallet'>
@@ -163,25 +125,13 @@
 			<div class='balance'>
 				{formatToDisplay($userBaseBalance)} {BASE_SYMBOL}
 			</div>
-			<div class='clickable-item address-wrap' on:click={() => {showModal('Account')}} data-intercept="true">
+			<a class='clickable-item address-wrap' href={addrLink($selectedAddress)} target="_blank">
 				{#if $hasPending}<div class:floating={scrolled} class='has-pending'>{@html SPINNER_ICON}</div>{/if}
 				<div class='address'>{shortAddr($selectedAddress)}</div>
-			</div>
+			</a>
 		{/if}
 	{:else}
 		<button on:click={connectWallet}>Connect Wallet</button>
 	{/if}
-
-	<div class='menu-wrap'>
-		<div class:selected={$menuVisible} class='clickable-item menu-icon' on:click={toggleMenu} data-intercept="true">{@html CARET_DOWN}</div>
-		{#if $menuVisible}
-			<div class='menu'>
-				<a href='https://t.me/capfin' target="_blank" on:click={hideMenu}>Telegram</a>
-				<a href='https://twitter.com/CapDotFinance' target="_blank" on:click={hideMenu}>Twitter</a>
-				<a href='https://github.com/0xcap' target="_blank" on:click={hideMenu}>Github</a>
-				<a class='button' href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x031d35296154279dc1984dcd93e392b1f946737b' target="_blank" on:click={hideMenu}>Buy CAP</a>	
-			</div>
-		{/if}
-	</div>
 
 </div>

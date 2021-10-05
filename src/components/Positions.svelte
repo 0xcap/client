@@ -121,6 +121,12 @@
 		font-weight: 400 !important;
 		margin-left: 10px;
 	}
+	@media (max-width: 600px) {
+		.info {
+			display: none;
+		}
+	}
+
 	.entry {
 		
 	}

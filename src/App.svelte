@@ -9,7 +9,6 @@
 	import Trade from './pages/Trade.svelte'
 
 	// Modals
-	import Account from './components/Account.svelte'
 	import Products from './components/Products.svelte'
 	import Leverage from './components/Leverage.svelte'
 	import PositionDetails from './components/PositionDetails.svelte'
@@ -17,21 +16,20 @@
 	import ClosePosition from './components/ClosePosition.svelte'
 	import EventDetails from './components/EventDetails.svelte'
 
-	import { subscribeToProducts } from './lib/stream'
+	import { initWebsocket } from './lib/stream'
 	import { initEventListeners } from './lib/events'
 	import { hidePopoversOnClick } from './lib/utils'
 
 	import { contractReady } from './stores/contracts'
 	import { activeModal } from './stores/modals'
-	import { activeProducts } from './stores/prices'
 	import { selectedAddress, chainId, isUnderMaintenance } from './stores/wallet'
 
 	onMount(async () => {
 		hidePopoversOnClick();
+		initWebsocket();
 	});
 
 	$: initEventListeners($selectedAddress, $chainId);
-	$: subscribeToProducts(Object.keys($activeProducts));
 
 </script>
 
@@ -195,9 +193,6 @@
 
 </style>
 
-{#if $activeModal && $activeModal.name == 'Account'}
-	<Account />
-{/if}
 {#if $activeModal && $activeModal.name == 'Products'}
 	<Products />
 {/if}
