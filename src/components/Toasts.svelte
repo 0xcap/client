@@ -41,7 +41,8 @@
 	.body {
 		padding-right: var(--base-padding);
 		word-break: break-word;
-		font-weight: 700;
+		font-weight: 650;
+		line-height: 1.4;
 	}
 
 	:global(.toast .close svg) {

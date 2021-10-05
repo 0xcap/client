@@ -3,14 +3,10 @@ const DEFAULT_ERROR = "Unidentified error. Check your browser console for more d
 
 const ERROR_STRINGS = {
 	'User denied': null,
-	'exceeds balance': "You don't have enough funds to complete this transaction.",
+	'exceeds balance': "Insufficient funds to complete this transaction.",
 	'!position': 'Position not found.',
-	'!cap': 'Stake exceeds vault cap.',
-	'!period': "Can't redeem outside redemption period.",
 	'!margin': "Margin or amount is too low (min: 0.001 ETH).",
 	'!leverage': "Leverage is too low.",
-	'!locked': "User is locked.",
-	'!vault-active': "Vault is paused.",
 	'!product-active': "Product is paused.",
 	'!max-leverage': "Leverage is too high.",
 	'!price': "Price is unavailable.",
@@ -21,8 +17,6 @@ const ERROR_STRINGS = {
 	'!exposure-short': "There are too many shorts on this product right now. Try again later.",
 	'!low-leverage': "Leverage would be too low. Try adding less margin.",
 	'!vault-insufficient': "Not enough funds in the vault to complete this trade. Try again later.",
-	'!max-drawdown': "Max daily drawdown on the vault is already reached. Try again later.",
-	'!staked': "Amount exceeds what is available in the vault",
 	'gas': "Insufficient funds or gas. Deposit more funds into your wallet or try adjusting the gas limit.",
 	'nonce': 'Invalid transaction nonce. Try resetting your Metamask account.',
 	'InsufficientTxFunds': "You don't have enough funds to complete this transaction."

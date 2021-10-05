@@ -308,7 +308,7 @@
 			<div class='bottom'>
 
 				<div class='left'>
-					<Helper direction='top' marginRight={true} text='Reference price. Your trade execution price may differ.' />
+					<Helper marginRight={true} title='Reference Price' text="Trade execution price may differ." />
 					<div class='price' class:empty={!$prices[$selectedProductId]}>{formatToDisplay($prices[$selectedProductId], 0, true) || '--'}</div>
 				</div>
 
@@ -316,15 +316,15 @@
 					
 					{#if $margin > 0}
 						
-						<Helper direction='top' text='Your margin is the actual amount debited from your wallet for this trade.' marginRight={true} />
+						<Helper title='Margin' text='Actual amount debited from your wallet for this trade.' marginRight={true} />
 						<div class='margin-used'>{formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>
 						
-						<Helper direction='top' text='Your trade size in USD, equal to your margin times the selected leverage.' marginRight={true} />
+						<Helper title='Trade Size' text='Equal to margin times leverage.' marginRight={true} />
 						<div class='trade-size'>${formatToDisplay($prices[1] * $amount, 2)}</div>
 
 					{:else}
 
-						<Helper direction='top' text='Amount available to trade, equal to your wallet balance times leverage.' marginRight={true} />
+						<Helper title='Buying Power' text='Equal to your wallet balance times leverage.' marginRight={true} />
 
 						<a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
 					

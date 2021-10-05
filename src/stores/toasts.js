@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store'
 import { parseErrorToString } from '../lib/errors'
 
-export const toast = writable({message: 'Order submitted.', type: 'success'});
+export const toast = writable(null);
 
 let timer;
 
