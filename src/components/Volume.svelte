@@ -10,12 +10,13 @@
 	import { prices } from '../stores/prices'
 
 	let volume;
-
+	let v;
+	
 	onMount(async () => {
 		activateProductPrices(1); // ETH-USD
 		const res = await getVolume();
 		volume = res.volume;
-		setInterval(async () => {
+		v = setInterval(async () => {
 			const res = await getVolume();
 			volume = res.volume;
 		}, 20*1000);
@@ -34,11 +35,15 @@
 		text-align: center;
 	}
 
+	.label {
+		opacity: 0.5;
+		padding-bottom: 6px;
+	}
 </style>
 
+{#if volume}
 <div class='volume'>
-	Volume: {#if volume}
-		{formatToDisplay(volume)} {BASE_SYMBOL} {#if $prices[1]}(${formatToDisplay($prices[1] * volume)}){/if}
-	{:else}...
-	{/if}
+	<div class='label'>Protocol Volume</div>
+	<div class='value'>{formatToDisplay(volume)} {BASE_SYMBOL} {#if $prices[1]}(${formatToDisplay($prices[1] * volume)}){/if}</div>
 </div>
+{/if}

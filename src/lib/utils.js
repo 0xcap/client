@@ -43,7 +43,7 @@ export function formatToDisplay(amount, maxPrecision, fixPrecision) {
 
 	if (!fixPrecision && (amount*1 == 0 || amount * 1 >= 1) && (amount * 1).toFixed(3)*1 == Math.round(amount * 1)) return Math.round(amount).toLocaleString();
 	
-	if (amount * 1 >= 10000 || amount * 1 <= -10000) {
+	if (amount * 1 >= 1000 || amount * 1 <= -1000) {
 		return Math.round(amount*1).toLocaleString();
 	} else if (amount * 1 >= 100 || amount * 1 <= -100) {
 		return (amount * 1).toFixed(2);
@@ -155,7 +155,7 @@ export function formatEvent(ev) {
 
 	if (ev.event == 'ClosePosition') {
 
-		const { positionId, orderId, user, productId, price, entryPrice, margin, leverage, pnl, pnlIsNegative, isFullClose, wasLiquidated } = ev.args;
+		const { positionId, orderId, user, productId, isLong, price, entryPrice, margin, leverage, pnl, pnlIsNegative, isFullClose, wasLiquidated } = ev.args;
 
 		return {
 			type: 'ClosePosition',
@@ -168,6 +168,7 @@ export function formatEvent(ev) {
 			leverage: formatUnits(leverage),
 			amount: formatUnits(margin) * formatUnits(leverage),
 			pnl: formatUnits(pnl),
+			isLong,
 			pnlIsNegative,
 			isFullClose,
 			wasLiquidated,

@@ -12,69 +12,9 @@
 	import { hideModal } from '../stores/modals'
 	import { selectedProductId, selectedProduct, productList } from '../stores/products'
 
-	let searchIsFocused = false;
-
-	let _productListDisplayed = [];
-
-	let query;
-	function search(query) {
-		if (!query) {
-			_productListDisplayed = $productList;
-			return;
-		}
-		let productsToKeep = [];
-		for (const p of $productList) {
-			if (p.symbol.toLowerCase().includes(query.toLowerCase())) productsToKeep.push(p);
-		}
-		_productListDisplayed = productsToKeep;
-	}
-
-	$: search(query);
-	
-	onMount(() => {
-		_productListDisplayed = $productList;
-		document.getElementById('search').focus();
-	});
-
 </script>
 
 <style>
-
-	.search-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		border-bottom: 1px solid var(--gray);
-		flex: 1 1 auto;
-		padding-right: var(--base-padding);
-	}
-	.search-row input {
-		padding: var(--base-padding);
-		padding-right: 0;
-	}
-
-	.search-row .clear {
-		cursor: pointer;
-	}
-
-	:global(.search-row .clear svg) {
-		height: 12px;
-		width: 12px;
-		fill: var(--gray-light);
-		margin-bottom: -2px;
-		pointer-events: none;
-	}
-
-	.product-list {
-		overflow-y: scroll;
-		height: 80vh;
-	}
-
-	.no-results {
-		color: var(--gray-light);
-		padding: var(--base-padding);
-		text-align: center;
-	}
 
 	.row {
 		display: flex;
@@ -111,34 +51,19 @@
 
 </style>
 
-<Modal title='Select Product'>
+<Modal title='Select Product' noHeader={true}>
 
-	<div class='search-row' class:focused={searchIsFocused}>
-		<input id='search' type='text' bind:value={query} min=0 max=10000000 on:focus={() => {searchIsFocused = true}} on:blur={() => {searchIsFocused = false}} placeholder="Search..." spellcheck="false" autocomplete="off" autocorrect="off">
-		{#if query}<span class='clear' on:click={() => {query = undefined}} data-intercept="true">{@html CANCEL_ICON}</span>{/if}
-	</div>
+	{#each $productList as product}
 
-	<div class='product-list no-scrollbar'>
+		<div class='row' class:selected={product.id == $selectedProductId} on:click={() => {selectProduct(product.id, true); hideModal()}} data-intercept="true">
 
-		{#if !_productListDisplayed.length}
-			<div class='no-results'>No products found.</div>
-		{:else}
+			<div class='product-wrap'>
+				<img src={LOGOS[product.id]} alt={`${product.symbol} logo`}>
+				<span>{shortSymbol(product.symbol)}</span>
+			</div>
 
-			{#each _productListDisplayed as product}
+		</div>
 
-				<div class='row' class:selected={product.id == $selectedProductId} on:click={() => {selectProduct(product.id, true); hideModal()}} data-intercept="true">
-
-					<div class='product-wrap'>
-						<img src={LOGOS[product.id]} alt={`${product.symbol} logo`}>
-						<span>{shortSymbol(product.symbol)}</span>
-					</div>
-
-				</div>
-
-			{/each}
-
-		{/if}
-
-	</div>
+	{/each}
 
 </Modal>

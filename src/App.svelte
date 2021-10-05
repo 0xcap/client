@@ -106,7 +106,7 @@
 	}
 
 	:global(a) {
-		color: var(--blue);
+		color: var(--green);
 		text-decoration: none;
 		cursor: pointer;
 	}

@@ -73,7 +73,7 @@ export async function subscribeToProducts(_productIds) {
 
 }
 
-function initWebsocket(productIds) {
+function initWebsocket() {
 
 	console.log('initWebsocket', productIds);
 
@@ -93,7 +93,7 @@ function initWebsocket(productIds) {
 
 		heartbeat();
 
-		if (!productIds) product_ids = [];
+		if (!productIds) productIds = [];
 
 		let _products = get(products);
 		let product_ids = [];

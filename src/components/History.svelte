@@ -96,18 +96,17 @@
 	}
 
 	.direction {
-		width: 10px;
-		height: 22px;
 		margin-right: 10px;
-		border-radius: var(--base-radius);
+		font-weight: 800;
+		font-size: 115%;
 	}
 
 	.direction.long {
-		background-color: var(--green);
+		color: var(--green);
 	}
 
 	.direction.short {
-		background-color: var(--red);
+		color: var(--red);
 	}
 
 	.details {
@@ -155,7 +154,7 @@
 			<div class={`item ${event.pnlIsNegative ? 'loss' : 'profit'}`} on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
 	
 				<div class='details'>
-					<div class={`direction ${event.isLong ? 'short' : 'long'}`}></div>
+					<div class={`direction ${event.isLong ? 'short' : 'long'}`}>{event.isLong ? '↓' : '↑'}</div>
 					<span>{shortSymbol(event.product)}</span>
 					<div class='info'>
 						<span class='amount'>{formatToDisplay(event.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(event.price)}</span>

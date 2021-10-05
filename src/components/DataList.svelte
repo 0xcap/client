@@ -45,7 +45,7 @@
 	}
 
 	.input-row.focused {
-		border-color: var(--blue);
+		border-color: var(--green);
 	}
 
 	input {
@@ -71,12 +71,12 @@
 	}
 
 	.clickable {
-		color: var(--blue);
+		color: var(--green);
 		cursor: pointer;
 	}
 
 	:global(.row .value svg) {
-		fill: var(--blue);
+		fill: var(--green);
 		height: 16px;
 		margin-bottom: -3px;
 	}
@@ -90,7 +90,7 @@
 			<div class='row input-row' class:focused={amountIsFocused}>
 				<div class='label'>{row.label}</div>
 				<div class='value input-wrap'>
-					<input id='amount' type=number bind:value={value} min=0 max=10000000 on:keyup={row.onKeyUp} on:focus={() => {amountIsFocused = true}} on:blur={() => {amountIsFocused = false}} placeholder={`0 ${BASE_SYMBOL}`}> 
+					<input id='amount' type=number bind:value={value} min=0 max=10000000 on:keyup={row.onKeyUp} on:focus={() => {amountIsFocused = true}} on:blur={() => {amountIsFocused = false}} placeholder={`0.0 ${BASE_SYMBOL}`}> 
 				</div>
 			</div>
 		{:else}
@@ -103,7 +103,7 @@
 						{:else if row.isEmpty}
 							-
 						{:else if row.addMargin}
-							<a on:click={() => {showModal('AddMargin', row.data)}} data-intercept="true">Add</a> {row.value}
+							{row.value} (<a on:click={() => {showModal('AddMargin', row.data)}} data-intercept="true">add</a>)
 						{:else}
 							{row.value}
 						{/if}

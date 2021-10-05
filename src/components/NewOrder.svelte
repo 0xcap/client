@@ -316,7 +316,7 @@
 					
 					{#if $margin > 0}
 						
-						<Helper direction='top' text='The actual amount used from your wallet for this trade (your margin).' marginRight={true} />
+						<Helper direction='top' text='Your margin is the actual amount debited from your wallet for this trade.' marginRight={true} />
 						<div class='margin-used'>{formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>
 						
 						<Helper direction='top' text='Your trade size in USD, equal to your margin times the selected leverage.' marginRight={true} />

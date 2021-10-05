@@ -114,6 +114,5 @@ export async function getInterest(position) {
 			interest = position.margin * position.leverage * ((productInfo.interest * 1 || 0) / 100) * (now - position.timestamp * 1) / (360 * 24 * 3600);
 		}
 		if (interest < 0) interest = 0;
-		console.log('interest', interest);
 		return -1 * interest;
 }

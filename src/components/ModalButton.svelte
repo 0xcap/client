@@ -13,15 +13,16 @@
 	}
 
 	button {
-		background-color: var(--blue);
+		background-color: var(--green);
 		color: var(--gray-darkest);
-		padding: var(--base-padding);
-		border-radius: 14px;
-		font-weight: 650;
+		padding: 0 var(--base-padding);
+		height: 64px;
+		border-radius: var(--base-radius);
+		font-weight: 700;
 		font-size: 115%;
 	}
 	button:hover {
-		background-color: var(--blue-dark);
+		background-color: var(--green-dark);
 	}
 
 	button.disabled {

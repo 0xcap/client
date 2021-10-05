@@ -75,6 +75,7 @@
 		font-size: 115%;
 		border-radius: var(--base-radius);
 		background-color: #0D0D0D;
+		cursor: pointer;
 	}
 	.position:hover {
 		background-color: #121212;
@@ -83,25 +84,23 @@
 	.details {
 		display: flex;
 		align-items: center;
-		cursor: pointer;
 		flex: 1 1 auto;
 		height: 100%;
 	}
 
 	.direction {
-		width: 10px;
-		height: 28px;
-		margin-right: 10px;
 		margin-left: var(--base-padding);
-		border-radius: var(--base-radius);
+		margin-right: 10px;
+		font-weight: 800;
+		font-size: 115%;
 	}
 
 	.direction.long {
-		background-color: var(--green);
+		color: var(--green);
 	}
 
 	.direction.short {
-		background-color: var(--red);
+		color: var(--red);
 	}
 
 	.product {
@@ -207,85 +206,82 @@
 
 </style>
 
+{#if count > 0}
 <div class='positions'>
 
-	{#if count == 0}
+	<div class='header'>
+		<div class='title'>Positions</div>
+		{#if count > 1}
+			<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{formatPnl(totalUPL)}</div>
+		{/if}
+	</div>
 
-	{:else}
+	<div class='positions-list'>
 
-		<div class='header'>
-			<div class='title'>Positions</div>
-			{#if count > 1}
-				<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{formatPnl(totalUPL)}</div>
-			{/if}
-		</div>
+		{#each $positions as position}
+			
+			{#if position.margin * 1 > 0}
 
-		<div class='positions-list'>
+			<div class='position' on:click={() => {showModal('PositionDetails', position)}} data-intercept="true">
 
-			{#each $positions as position}
-				
-				{#if position.margin * 1 > 0}
-
-				<div class='position'>
-
-					<div class='details' on:click={() => {showModal('PositionDetails', position)}} data-intercept="true">
-						<div class={`direction ${position.isLong ? 'long' : 'short'}`}></div>
-						<div class='product'>
-							<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
-							<span>{shortSymbol(position.product)}</span>
-							{#if position.price > 0}
-							<div class='info'>
-								<span class='amount'>{formatToDisplay(position.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(position.price)}</span>
-							</div>
-							{/if}
+				<div class='details'>
+					<div class={`direction ${position.isLong ? 'long' : 'short'}`}>
+						{position.isLong ? '↑' : '↓'}
+					</div>
+					<div class='product'>
+						<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
+						<span>{shortSymbol(position.product)}</span>
+						{#if position.price > 0}
+						<div class='info'>
+							<span class='amount'>{formatToDisplay(position.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(position.price)}</span>
 						</div>
+						{/if}
+					</div>
+				</div>
+
+				<div class='tools'>
+
+					<div class={`upl-wrap ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
+						<div class='upl'>
+							{formatPnl(upls[position.positionId])}
+						</div>
+						<!--
+						<div class='upl-percent'>
+							{formatPnl(upls_percent[position.positionId], undefined, true)}%
+						</div>
+						-->
 					</div>
 
-					<div class='tools'>
-
-						<div class={`upl-wrap ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
-							<div class='upl'>
-								{formatPnl(upls[position.positionId])}
+					{#if position.price * 1 == 0 || position.closeOrderId > 0}
+						{#if position.price * 1 == 0}
+							<div class='status'>
+								Settling
 							</div>
-							<!--
-							<div class='upl-percent'>
-								{formatPnl(upls_percent[position.positionId], undefined, true)}%
-							</div>
-							-->
-						</div>
-
-						{#if position.price * 1 == 0 || position.closeOrderId > 0}
-							{#if position.price * 1 == 0}
-								<div class='status'>
-									Settling
-								</div>
-							{/if}
-
-							{#if position.closeOrderId > 0}
-								<div class='status'>
-									Closing
-								</div>
-							{/if}
-
-						{:else}
-
-							<a class='close' class:disabled={position.closeOrderId > 0} on:click={() => {showModal('ClosePosition', position)}} data-intercept="true">
-								{@html CANCEL_ICON}
-							</a>
-						
 						{/if}
 
-					</div>
+						{#if position.closeOrderId > 0}
+							<div class='status'>
+								Closing
+							</div>
+						{/if}
+
+					{:else}
+
+						<a class='close' class:disabled={position.closeOrderId > 0} on:click|stopPropagation={() => {showModal('ClosePosition', position)}} data-intercept="true">
+							{@html CANCEL_ICON}
+						</a>
+					
+					{/if}
 
 				</div>
 
-				{/if}
+			</div>
 
-			{/each}
+			{/if}
 
-		</div>
+		{/each}
 
-	{/if}
+	</div>
 
-	
 </div>
+{/if}

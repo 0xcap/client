@@ -39,45 +39,36 @@
 		const upl = await getUPL(data, _prices[data.productId]);
 		const interest = await getInterest(data);
 
+		const liquidatingSoon = data.isLong ? _prices[data.productId] <= liquidationPrice : _prices[data.productId] >= liquidationPrice;
+
 		rows = [
 			{
 				label: 'ID',
 				value: data.positionId
 			},
 			{
-				label: 'Submitted',
+				label: 'Date',
 				value: new Date(data.timestamp * 1000).toLocaleString()
+			},
+			{
+				label: 'Product',
+				value: data.product
 			},
 			{
 				label: 'Direction',
 				value: data.isLong ? 'Long' : 'Short'
 			},
 			{
-				label: 'Entry Price',
-				value: data.price ? formatToDisplay(data.price) : 'Settling',
-				helper: 'Price includes fees.'
-			},
-			{
-				label: 'Current Price',
-				value: formatToDisplay(_prices[data.productId])
-			},
-			{
-				label: 'Unrealized P/L',
-				value: formatPnl(upl)
-			},
-			{
-				label: 'Unrealized P/L %',
-				value: `${formatPnl(100*upl/data.margin, upl < 0, true)}%`
+				label: 'Execution Price',
+				value: data.price ? formatToDisplay(data.price) : 'Settling'
 			},
 			{
 				label: 'Trade Size',
-				value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-				helper: 'Equals margin times leverage.'
+				value: `${formatToDisplay(data.amount)}`,
 			},
 			{
 				label: 'Margin',
-				value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
-				helper: 'Real balance used from your wallet.',
+				value: `${formatToDisplay(data.margin)}`,
 				addMargin: true,
 				data: data
 			},
@@ -86,12 +77,18 @@
 				value: `${formatToDisplay(data.leverage)}×`
 			},
 			{
+				label: 'Unrealized P/L',
+				value: `${formatPnl(upl)} (${formatPnl(100*upl/data.margin, upl < 0, true)}%)`,
+				hasError: liquidatingSoon
+			},
+			{
 				label: 'Accrued Interest',
 				value: interest ? formatToDisplay(interest) : '0'
 			},
 			{
 				label: 'Liquidation Price',
-				value: "~" + formatToDisplay(liquidationPrice)
+				value: "~" + formatToDisplay(liquidationPrice),
+				hasError: liquidatingSoon
 			}
 		];
 	}
@@ -112,7 +109,7 @@
 	}
 </style>
 
-<Modal title={`${data.product} Position`}>
+<Modal noHeader={true}>
 	{#if data.price * 1 == 0 || data.closeOrderId > 0}
 		{#if data.price * 1 == 0}
 			<div class='status'>

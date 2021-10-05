@@ -66,18 +66,18 @@
 			onKeyUp: calculateAmounts
 		},
 		{
-			label: 'Current Amount',
+			label: 'Current Position Size',
 			value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
 			dim: true,
 			onclick: setMaxAmount
 		},
 		{
-			label: 'Close Percent',
+			label: 'Closing',
 			value: `${formatToDisplay(closePercent, 2)}%`,
 			isEmpty: closePercent == 0
 		},
 		{
-			label: 'Position Size after Close',
+			label: 'Position Size after Closing',
 			value: `${formatToDisplay(newAmount)} ${BASE_SYMBOL}`,
 			isEmpty: newAmount * 1 == data.amount * 1
 		},
@@ -89,7 +89,7 @@
 
 </style>
 
-<Modal title='Close Position'>
+<Modal title='Close' noHeader={true}>
 	<DataList data={rows} bind:value={amount} />
-	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} action={_submitOrder} label='Close Position' />
+	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} action={_submitOrder} label='Close' />
 </Modal>

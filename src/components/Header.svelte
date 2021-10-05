@@ -28,7 +28,7 @@
 
 <header>
 	<div class='left'>
-		<a class='logo' href='/'><img src='/img/logo.svg' alt='Cap logo' /></a>
+		<img src='/img/logo.svg' title='Cap logo' alt='Cap logo' />
 	</div>
 	<Wallet/>
 </header>

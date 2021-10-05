@@ -68,38 +68,19 @@
 			onKeyUp: calculateAmounts
 		},
 		{
-			label: 'Current Margin',
-			value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
-			dim: true
+			label: 'Current / New Margin',
+			value: `${formatToDisplay(data.margin)} / ${formatToDisplay(newMargin)}`
 		},
 		{
-			label: 'New Margin',
-			value: `${formatToDisplay(newMargin)} ${BASE_SYMBOL}`,
-			isEmpty: !(newMargin*1)
-		},
-		{
-			label: 'Current Leverage',
-			value: `${formatToDisplay(data.leverage)}×`,
-			dim: true
-		},
-		{
-			label: 'New Leverage',
-			value: `${formatToDisplay(newLeverage)}×`,
-			isEmpty: !(newLeverage*1),
+			label: 'Current / New Leverage',
+			value: `${formatToDisplay(data.leverage)}× / ${formatToDisplay(newLeverage)}×`,
 			hasError: newLeverage * 1 < 1
 		},
 		{
-			label: 'Current Liquidation Price',
-			value: formatToDisplay(currentLiquidationPrice),
-			dim: true,
-			isEmpty: !(currentLiquidationPrice*1)
-		},
-		{
-			label: 'New Liquidation Price',
-			value: formatToDisplay(newLiquidationPrice),
-			isEmpty: !(newLiquidationPrice*1),
+			label: 'Current / New Liquidation Price',
+			value: `${formatToDisplay(currentLiquidationPrice)} / ${formatToDisplay(newLiquidationPrice)}`,
 			hasError: newLiquidationPrice * 1 <= 0
-		},
+		}
 	];
 
 </script>
@@ -107,7 +88,7 @@
 <style>
 </style>
 
-<Modal title='Add to Position'>
+<Modal title='Add Margin' noHeader={true}>
 	<DataList data={rows} bind:value={margin} />
 	<ModalButton isDisabled={!canSubmit} isPending={submitIsPending} action={_submitOrder} label='Add Margin' />
 </Modal>

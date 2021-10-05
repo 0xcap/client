@@ -18,45 +18,40 @@
 				value: data.positionId
 			},
 			{
-				label: 'Closed',
+				label: 'Date',
 				value: data.timestamp ? new Date(data.timestamp * 1000).toLocaleString() : null
 			},
 			{
+				label: 'Product',
+				value: data.product
+			},
+			{
 				label: 'Direction',
-				value: data.isLong ? 'Closed Short' : 'Closed Long'
+				value: data.isLong ? 'Close Short' : 'Close Long'
 			},
 			{
 				label: 'Entry Price',
 				value: formatToDisplay(data.entryPrice),
-				helper: 'Price includes fees.'
 			},
 			{
 				label: 'Close Price',
 				value: formatToDisplay(data.price),
-				helper: 'Price includes fees.'
-			},
-			{
-				label: 'Profit or Loss',
-				value: `${formatPnl(data.pnl, data.pnlIsNegative)} ${BASE_SYMBOL}`,
-				helper: 'P/L includes interest charged.'
-			},
-			{
-				label: 'P/L %',
-				value: `${formatPnl(100*data.pnl/data.margin, data.pnlIsNegative, true)}%`
 			},
 			{
 				label: 'Trade Size',
-				value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-				helper: 'Equals margin times leverage.'
+				value: `${formatToDisplay(data.amount)}`,
 			},
 			{
 				label: 'Margin',
-				value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
-				helper: 'Real balance used from your wallet.'
+				value: `${formatToDisplay(data.margin)}`,
 			},
 			{
 				label: 'Leverage',
 				value: `${formatToDisplay(data.leverage)}×`
+			},
+			{
+				label: 'Profit or Loss',
+				value: `${formatPnl(data.pnl, data.pnlIsNegative)} (${formatPnl(100*data.pnl/data.margin, data.pnlIsNegative, true)}%)`
 			},
 			{
 				label: 'Was Liquidated',
@@ -78,6 +73,6 @@
 <style>
 </style>
 
-<Modal isActive={isActive} title={`${data && data.product} Trade`}>
+<Modal isActive={isActive} noHeader={true}>
 	<DataList data={rows} />
 </Modal>

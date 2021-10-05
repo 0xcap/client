@@ -29,7 +29,6 @@
 
 	let liquidationPriceShort, liquidationPriceLong;
 	function calcLiqPrices(_leverage, price) {
-		console.log('_leverage, price', _leverage, price);
 		liquidationPriceShort = calculateLiquidationPrice({
 			productId: $selectedProductId,
 			price,

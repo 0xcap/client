@@ -4,9 +4,10 @@
 
 	import { hideModal } from '../stores/modals'
 
-	export let title;
+	export let title = '';
 	export let doneButton = false;
 	export let isActive;
+	export let noHeader = false;
 
 	if (isActive == undefined) isActive = true;
 
@@ -60,7 +61,7 @@
 	}
 
 	.done-button {
-		background-color: var(--blue);
+		background-color: var(--green);
 		padding: 6px 10px;
 		border-radius: var(--base-radius);
 		font-weight: 600;
@@ -68,7 +69,7 @@
 		color: var(--less-black);
 	}
 	.done-button:hover {
-		background-color: var(--blue-dark);
+		background-color: var(--green-dark);
 	}
 
 	:global(.modal-close svg) {
@@ -89,6 +90,7 @@
 
 	<div class='modal' data-intercept="true">
 
+		{#if !noHeader}
 		<div class='modal-header'>
 			<div class='modal-title'>{title}</div>
 			{#if doneButton}
@@ -97,6 +99,7 @@
 			<span class='modal-close' on:click={hideModal}>{@html CANCEL_ICON}</span>
 			{/if}
 		</div>
+		{/if}
 
 		<div class='modal-body no-scrollbar'>
 			<slot></slot>
