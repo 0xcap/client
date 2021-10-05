@@ -233,7 +233,7 @@
 						<span>{shortSymbol(position.product)}</span>
 						{#if position.price > 0}
 						<div class='info'>
-							<span class='amount'>{formatToDisplay(position.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(position.price)}</span>
+							<span class='amount'>{formatToDisplay(position.amount, 0, true)}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(position.price)}</span>
 						</div>
 						{/if}
 					</div>

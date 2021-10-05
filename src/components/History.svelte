@@ -157,7 +157,7 @@
 					<div class={`direction ${event.isLong ? 'short' : 'long'}`}>{event.isLong ? '↓' : '↑'}</div>
 					<span>{shortSymbol(event.product)}</span>
 					<div class='info'>
-						<span class='amount'>{formatToDisplay(event.amount)} {BASE_SYMBOL}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(event.price)}</span>
+						<span class='amount'>{formatToDisplay(event.amount, 0, true)}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(event.price)}</span>
 					</div>
 				</div>
 
