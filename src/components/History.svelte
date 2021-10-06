@@ -159,7 +159,7 @@
 			<div class={`item ${event.pnlIsNegative ? 'loss' : 'profit'}`} on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
 	
 				<div class='details'>
-					<div class={`direction ${event.isLong ? 'short' : 'long'}`}>{event.isLong ? '↓' : '↑'}</div>
+					<div class={`direction ${event.isLong ? 'long' : 'short'}`}>{event.isLong ? '↑' : '↓'}</div>
 					<span>{shortSymbol(event.product)}</span>
 					<div class='info'>
 						<span class='amount'>{formatToDisplay(event.amount, 0, true)}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(event.price)}</span>

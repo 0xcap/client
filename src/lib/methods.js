@@ -107,10 +107,10 @@ export async function addMargin(positionId, margin, productId) {
 	}
 }
 
-export async function closePosition(positionId, margin, amount, releaseMargin, productId, isFullClose) {
+export async function closePosition(positionId, margin, amount, productId, isFullClose) {
 	const product = await getProduct(productId);
 	try {
-		const tx = await getContract(true).submitCloseOrder(positionId, parseUnits(margin), releaseMargin || false);
+		const tx = await getContract(true).submitCloseOrder(positionId, parseUnits(margin));
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Close position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`

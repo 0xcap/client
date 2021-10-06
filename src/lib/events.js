@@ -70,7 +70,7 @@ async function handleEvent() {
 		// From TX checker only
 		completeTransaction(ev.transactionHash);
 		console.log('Close order succeeded', ev);
-		if (acceptToasts) showToast('Order submitted.', 'success');
+		if (acceptToasts) showToast('Close order submitted.', 'success');
 		refreshUserPositions.update(n => n + 1);
 		//initQuickPositionsRefresh();
 	} else if (ev.event == 'ClosePosition') {

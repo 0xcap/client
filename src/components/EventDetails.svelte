@@ -27,7 +27,7 @@
 			},
 			{
 				label: 'Direction',
-				value: data.isLong ? 'Close Short' : 'Close Long'
+				value: data.isLong ? 'Close Long' : 'Close Short'
 			},
 			{
 				label: 'Entry Price',

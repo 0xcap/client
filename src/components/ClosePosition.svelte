@@ -51,7 +51,6 @@
 			data.positionId,
 			marginToSubmit,
 			amount,
-			false,
 			data.productId,
 			closePercent >= 100
 		);
@@ -72,7 +71,7 @@
 			onclick: setMaxAmount
 		},
 		{
-			label: 'Closing',
+			label: 'Closing % of Total',
 			value: `${formatToDisplay(closePercent, 2)}%`,
 			isEmpty: closePercent == 0
 		},

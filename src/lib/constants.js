@@ -21,14 +21,14 @@ const TRADING_ABI = [
 
 	"function submitNewPosition(uint256 productId, bool isLong, uint256 leverage) payable",
 	"function addMargin(uint256 positionId) payable",
-	"function submitCloseOrder(uint256 positionId, uint256 margin, bool releaseMargin)",
+	"function submitCloseOrder(uint256 positionId, uint256 margin)",
 	"function cancelPosition(uint256 positionId)",
 	"function cancelOrder(uint256 orderId)",
 
 	"event OpenOrder(uint256 indexed positionId, address indexed user, uint256 indexed productId)",
 	"event NewPosition(uint256 indexed positionId, address indexed user, uint256 indexed productId, bool isLong, uint256 price, uint256 margin, uint256 leverage)",
 	"event AddMargin(uint256 indexed positionId, address indexed user, uint256 margin, uint256 newMargin, uint256 newLeverage)",
-	"event ClosePosition(uint256 positionId, address indexed user, uint256 indexed productId, bool indexed isFullClose, uint256 price, uint256 entryPrice, uint256 margin, uint256 leverage, uint256 pnl, bool pnlIsNegative, bool wasLiquidated)"
+	"event ClosePosition(uint256 positionId, address indexed user, uint256 indexed productId, bool indexed isFullClose, bool isLong, uint256 price, uint256 entryPrice, uint256 margin, uint256 leverage, uint256 pnl, bool pnlIsNegative, bool wasLiquidated)"
 ];
 
 export const PRODUCT_TO_ID = {
@@ -46,7 +46,7 @@ export const CHAIN_DATA = {
 		id: 31337,
 		label: 'Localhost',
 		contract: {
-			address: '0x286B8DecD5ED79c962b2d8F4346CD97FF0E2C352',
+			address: '0x10e38eE9dd4C549b61400Fc19347D00eD3edAfC4',
 			abi: TRADING_ABI
 		},
 		products: {

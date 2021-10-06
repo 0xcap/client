@@ -115,7 +115,7 @@
 <div class='wallet'>
 
 	{#if $isUnsupported}
-		<div class='network'>Unsupported Network</div>
+		<div class='network'>Wrong Network</div>
 	{:else}
 
 		{#if $selectedAddress}

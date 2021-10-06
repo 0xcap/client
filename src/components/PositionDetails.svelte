@@ -108,11 +108,9 @@
 	.status {
 		padding: var(--base-padding);
 		text-align: center;
-		border-bottom: 2px solid rgb(55,55,55);
+		background-color: var(--jet);
 	}
 	.status a {
-		color: inherit;
-		text-decoration: underline;
 	}
 </style>
 
@@ -120,13 +118,13 @@
 	{#if data.price * 1 == 0 || data.closeOrderId > 0}
 		{#if data.price * 1 == 0}
 			<div class='status'>
-				Status: Settling. <a on:click={_cancelPosition}>Cancel</a>
+				Status: Settling. <a on:click={_cancelPosition}>Cancel Order</a>
 			</div>
 		{/if}
 
 		{#if data.closeOrderId > 0}
 			<div class='status'>
-				Status: Closing. <a on:click={_cancelOrder}>Cancel</a>
+				Status: Closing. <a on:click={_cancelOrder}>Cancel Close Order</a>
 			</div>
 		{/if}
 
