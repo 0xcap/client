@@ -2,6 +2,7 @@ import { get } from 'svelte/store'
 import { getPrice } from './api'
 import { prices } from '../stores/prices'
 import { products } from '../stores/products'
+import { selectedAddress } from '../stores/wallet'
 import { PRODUCT_TO_ID } from '../lib/constants'
 
 let ws;
@@ -19,7 +20,7 @@ function heartbeat() {
 
 export function initWebsocket(_address) {
 
-	if (!_address) return;
+	if (!_address && !get(selectedAddress)) return;
 
 	console.log('initWebsocket');
 

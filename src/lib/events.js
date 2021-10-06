@@ -57,6 +57,7 @@ async function handleEvent() {
 		// From TX checker only
 		completeTransaction(ev.transactionHash);
 		refreshUserPositions.update(n => n + 1);
+		refreshUserBaseBalance.update(n => n + 1);
 	} else if (ev.event == 'NewPosition') {
 		// From listener only - oracle triggered
 		refreshUserPositions.update(n => n + 1);
