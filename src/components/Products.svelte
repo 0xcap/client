@@ -21,16 +21,16 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: var(--base-padding);
-		border-bottom: 1px solid var(--eerie-black);
+		border-bottom: 1px solid var(--jet-dim);
 		font-size: 120%;
 		font-weight: 700;
 		cursor: pointer;
 	}
 	.row:not(.selected):not(.search-row):hover {
-		background-color: var(--gray);
+		background-color: var(--jet);
 	}
 	.row.selected {
-		background-color: var(--gray);
+		background-color: var(--jet);
 		cursor: default !important;
 	}
 	.row:last-child {

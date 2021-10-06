@@ -37,9 +37,9 @@
 
 	.modal {
 		width: 460px;
-		border: 1px solid var(--gray);
+		border: 1px solid var(--jet-dim);
 		border-radius: var(--base-radius);
-		background-color: var(--less-black);
+		background-color: var(--eerie-black);
 		overflow: hidden;
 	}
 
@@ -49,11 +49,11 @@
 		justify-content: space-between;
 		padding: 0 var(--base-padding);
 		height: 60px;
-		background-color: var(--gray);
+		background-color: var(--jet);
 	}
 
 	.modal-title {
-		font-weight: 600;
+		font-weight: 700;
 	}
 
 	.modal-close {
@@ -61,15 +61,12 @@
 	}
 
 	.done-button {
-		background-color: var(--green);
-		padding: 6px 10px;
-		border-radius: var(--base-radius);
-		font-weight: 600;
+		font-weight: 700;
 		cursor: pointer;
-		color: var(--less-black);
+		color: var(--green);
 	}
 	.done-button:hover {
-		background-color: var(--green-dark);
+		color: var(--green-dim);
 	}
 
 	:global(.modal-close svg) {

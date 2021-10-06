@@ -60,7 +60,7 @@
 			},
 			{
 				label: 'Execution Price',
-				value: data.price ? formatToDisplay(data.price) : 'Settling'
+				value: data.price * 1 > 0 ? formatToDisplay(data.price) : 'Settling'
 			},
 			{
 				label: 'Trade Size',
@@ -75,8 +75,11 @@
 			{
 				label: 'Leverage',
 				value: `${formatToDisplay(data.leverage)}×`
-			},
-			{
+			}
+		];
+
+		if (data.price * 1 > 0) {
+			rows.push({
 				label: 'Unrealized P/L',
 				value: `${formatPnl(upl)} (${formatPnl(100*upl/data.margin, upl < 0, true)}%)`,
 				hasError: liquidatingSoon
@@ -89,8 +92,8 @@
 				label: 'Liquidation Price',
 				value: "~" + formatToDisplay(liquidationPrice),
 				hasError: liquidatingSoon
-			}
-		];
+			});
+		}
 	}
 
 	$: setRows($prices);

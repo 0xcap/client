@@ -46,13 +46,24 @@
 
 	:global(:root) {
 
-		--eerie-black: #1C1E22;
-		--onyx: #2E3238;
-		--onyx2: #373C43;
-		--flame: #E04700;
-		--slimy-green: #00B803;
+		--red: #FF5000;
+		--red-dim: #E04700;
+		--red-dark: #3D1300;
+		--green: #00C805;
+		--green-dim: #00B803;
+		--green-dark: #003D01;
 
-		--black: #080808;
+		--rich-black: #080808;
+		--eerie-black: #1A1A1A;
+		--jet-dim: #212121;
+		--jet: #292929;
+		--onyx: #3D3D3D;
+		--dim-gray: #616161;
+		--sonic-silver: #707070;
+
+		--onyx2: #373C43;
+
+		
 		--dim-black: rgba(21, 24, 28, 0.8);
 		--less-black: rgb(21, 24, 28);
 		--gray: #1C1C1C;
@@ -66,10 +77,6 @@
 
 		--blue: rgb(88,201,242);
 		--blue-dark: rgb(65,194,241);
-		--red: rgb(255,80,0);
-		--red-dark: rgb(235,80,0);
-		--green: rgb(0,200,5);
-		--green-dark: rgb(0,180,5);
 		--pink: rgb(225,80,221);
 		--orange: rgb(253,167,20);
 		--base-padding: 20px;
@@ -84,7 +91,7 @@
 	}
 
 	:global(html) {
-		background-color: var(--black);
+		background-color: var(--rich-black);
 		color: #fff;
 		font-family: 'Inter var';
 		font-feature-settings: 'ss01','ss02','ss03','cv01','tnum';
@@ -129,14 +136,14 @@
 	}
 
 	:global(input::placeholder) {
-		color: var(--gray-light);
+		color: var(--dim-gray);
 		opacity: 1;
 	}
 	:global(input::-ms-input-placeholder) {
-		color: var(--gray-light);
+		color: var(--dim-gray);
 	}
 	:global(input:-ms-input-placeholder) {
-		color: var(--gray-light);
+		color: var(--dim-gray);
 	}
 
 	:global(button) {

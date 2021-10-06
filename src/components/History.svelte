@@ -27,7 +27,7 @@
 	function updateShownEvents(_all_events) {
 		if (!_all_events) _all_events = all_events;
 		if (!_all_events || !_all_events.length) return;
-		shown_events = _all_events.slice(0, current_index * 7);
+		shown_events = _all_events.slice(0, current_index * 5);
 		current_index++;
 	}
 

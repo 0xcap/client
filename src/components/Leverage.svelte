@@ -77,6 +77,7 @@
 	.range-container {
 		padding: var(--base-padding);
 		padding-top: 0;
+		border-bottom: 1px solid var(--jet-dim);
 	}
 
 	.range {
@@ -85,7 +86,7 @@
 		background: var(--gray);
 		outline: none;
 		border: none;
-		height: 20px;
+		height: 18px;
 		border-radius: var(--base-radius);
 		max-width: 100%;
 		overflow: hidden;
@@ -95,8 +96,8 @@
 	.range::-webkit-slider-thumb {
 		-webkit-appearance: none;
 		appearance: none;
-		width: 20px;
-		height: 20px;
+		width: 18px;
+		height: 18px;
 		border-radius: 50%;
 		cursor: ew-resize;
 		background: var(--gray-light);

@@ -27,7 +27,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-bottom: 1px solid rgb(30,30,30);
+		border-bottom: 1px solid var(--jet-dim);
 		padding: var(--base-padding);
 	}
 
@@ -36,11 +36,11 @@
 	}
 
 	.input-row {
-		border-bottom: 2px solid rgb(55,55,55);
+		border-bottom: 2px solid var(--jet-dim);
 	}
 
 	.input-row .label {
-		font-weight: 600;
+		font-weight: 700;
 		color: #fff !important;
 	}
 
@@ -59,7 +59,7 @@
 	.label {
 		display: flex;
 		align-items: center;
-		color: var(--gray-light);
+		color: var(--sonic-silver);
 	}
 
 	.error {
@@ -67,7 +67,7 @@
 	}
 
 	.dim {
-		color: var(--gray-light);
+		color: var(--dim-gray);
 	}
 
 	.clickable {

@@ -73,18 +73,18 @@
 		display: flex;
 		align-items: center;
 		border-radius: var(--base-radius);
-		background-color: var(--less-black);
+		background-color: var(--eerie-black);
 		padding: 0 12px;
 		height: 36px;
 		border: 1px solid transparent;
 		color: inherit;
 	}
 	.clickable-item:hover {
-		background-color: var(--gray);
+		background-color: var(--jet);
 	}
 
 	.has-pending {
-		color: var(--blue);
+		color: var(--green);
 		margin-right: 6px;
 	}
 	:global(.wallet .has-pending svg) {
@@ -100,8 +100,8 @@
 	}
 
 	button {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
+		background-color: var(--green);
+		color: var(--green-dark);
 		padding: 8px 16px;
 		border-radius: var(--base-radius);
 		font-weight: 700;
@@ -109,7 +109,7 @@
 		white-space: nowrap;
 	}
 	button:hover {
-		background-color: var(--blue-dark);
+		background-color: var(--green-dim);
 	}
 
 </style>

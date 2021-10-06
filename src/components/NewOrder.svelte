@@ -97,7 +97,7 @@
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
 		padding: var(--base-padding);
-		background-color: #171717;
+		background-color: var(--eerie-black);
 		border-radius: var(--base-radius);
 	}
 
@@ -144,7 +144,7 @@
 		padding-top: var(--base-padding);
 		display: flex;
 		align-items: center;
-		border-top: 1px solid var(--gray);
+		border-top: 1px solid var(--jet-dim);
 		font-size: 90%;
 	}
 
@@ -168,7 +168,7 @@
 		margin-right: 6px;
 	}
 	.bottom .price.empty {
-		color: var(--gray-light);
+		color: var(--dim-gray);
 	}
 
 	.bottom .price-change {
@@ -177,6 +177,16 @@
 
 	.bottom .margin-used {
 		margin-right: 12px;
+		border-bottom: 1px dashed var(--dim-gray);
+	}
+
+	.bottom .trade-size {
+		border-bottom: 1px dashed var(--dim-gray);
+	}
+
+	.sep {
+		color: var(--jet);
+		margin: 0 12px;
 	}
 
 	.right {
@@ -194,7 +204,7 @@
 	.selector {
 		display: flex;
 		align-items: center;
-		background-color: #1F1F1F;
+		background-color: var(--jet);
 		border-radius: var(--base-radius);
 		white-space: nowrap;
 		cursor: pointer;
@@ -202,7 +212,7 @@
 	}
 
 	.selector:hover {
-		background-color: #242424;
+		background-color: var(--onyx);
 	}
 
 	:global(.selector svg) {
@@ -278,27 +288,19 @@
 		cursor: default;
 	}
 
-	.button-default {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-	}
-	.button-default:not(.disabled):hover {
-		background-color: var(--blue-dark);
-	}
-
 	.button-short {
-		color: #3D1300;
+		color: var(--red-dark);
 		background-color: var(--red);
 	}
 	.button-short:not(.disabled):hover {
-		background-color: var(--flame);
+		background-color: var(--red-dim);
 	}
 	.button-long {
-		color: #003D01;
+		color: var(--green-dark);
 		background-color: var(--green);
 	}
 	.button-long:not(.disabled):hover {
-		background-color: var(--slimy-green);
+		background-color: var(--green-dim);
 
 	}
 
@@ -344,26 +346,21 @@
 			<div class='bottom'>
 
 				<div class='left'>
-					<Helper marginRight={true} title='Reference Price' text="Trade execution price may differ." />
-					<div class='price' class:empty={!$prices[$selectedProductId]}>{formatToDisplay($prices[$selectedProductId], 0, true) || '--'}</div>
+					<Helper title='Reference Price' text="Execution price differs based on market conditions." label={formatToDisplay($prices[$selectedProductId], 0, true) || null} />
 				</div>
 
 				<div class='right'>
 					
 					{#if $margin > 0}
 						
-						<Helper title='Margin' text='Actual amount debited from your wallet for this trade.' marginRight={true} />
-						<div class='margin-used'>{formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>
-						
-						<Helper title='Trade Size' text='Equal to margin times leverage.' marginRight={true} />
-						<div class='trade-size'>${formatToDisplay($prices[1] * $amount, 2)}</div>
+						<Helper title='Margin' text='Balance used for this trade.' label={`${formatToDisplay($margin, 4)} ${BASE_SYMBOL}`} />
+						<div class='sep'>|</div>
+						<Helper title='Trade Size (USD)' text='Margin × leverage.' small={true} label={`$${formatToDisplay($prices[1] * $amount, 2)}`} />
 
 					{:else}
 
-						<Helper title='Buying Power' text='Equal to your wallet balance times leverage.' marginRight={true} />
-
-						<a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
-					
+						<Helper title='Buying Power' text='Wallet balance × leverage.' label={`${formatToDisplay($buyingPower)} ${BASE_SYMBOL}`}/>
+	
 					{/if}
 				
 				</div>
@@ -374,7 +371,7 @@
 
 		<div class='buttons'>
 			{#if !$selectedAddress}
-				<button class='button-default' on:click={connectWallet}>Connect a Wallet</button>
+				<button class='button-long' on:click={connectWallet}>Connect a Wallet</button>
 			{:else if $isUnsupported}
 				<button class='disabled'>Switch to Arbitrum to trade</button>
 			{:else}
