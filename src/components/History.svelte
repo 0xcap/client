@@ -44,7 +44,7 @@
 	}
 
 	.history a {
-		color: var(--gray-light);
+		color: var(--dim-gray);
 	}
 
 	.header {
@@ -52,11 +52,11 @@
 		align-items: center;
 		justify-content: space-between;
 		padding-bottom: var(--base-padding);
-		font-size: 115%;
 	}
 
 	.header .title {
 		font-weight: 700;
+		font-size: 115%;
 	}
 
 	.history-list {
@@ -75,10 +75,10 @@
 		height: 54px;
 		cursor: pointer;
 		padding: 0 var(--base-padding);
-		background-color: #0D0D0D;
+		background-color: var(--rich-black-fogra);
 	}
 	.item:hover {
-		background-color: #121212;
+		background-color: var(--eerie-black);
 	}
 
 	.item-more {
@@ -87,7 +87,7 @@
 		justify-content: center;
 		padding: 0 var(--base-padding);
 		cursor: pointer;
-		color: var(--gray-light);
+		color: var(--dim-gray);
 		border-radius: var(--base-radius);
 		height: 50px;
 	}
@@ -116,7 +116,7 @@
 	}
 
 	.info {
-		color: var(--gray-light);
+		color: var(--sonic-silver);
 		font-weight: 400 !important;
 		margin-left: 10px;
 	}
@@ -129,10 +129,10 @@
 		
 	}
 	.sep {
-		opacity: 0.15;
+		opacity: 0.2;
 	}
 	.price {
-		opacity: 0.25;
+		opacity: 0.35;
 	}
 
 	.pnl {

@@ -15,7 +15,7 @@
 
 	import { showModal } from '../stores/modals'
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
-	import { selectedProductId, selectedProduct } from '../stores/products'
+	import { selectedProductId, selectedProduct, products } from '../stores/products'
 	import { prices } from '../stores/prices'
 	import { showToast } from '../stores/toasts'
 	import { selectedAddress, isTestnet, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
@@ -56,7 +56,11 @@
 			first_call = false;
 			return;
 		}
-		if (isUnsupported || address && balance == 0 || !address && !balance) {
+		if (!address || isUnsupported) {
+			showArbitrumLink = false;
+			return;
+		}
+		if (!isUnsupported && address && balance === 0) {
 			showArbitrumLink = true;
 		} else {
 			showArbitrumLink = false;
@@ -70,7 +74,7 @@
 
 		setTimeout(() => {
 			checkArbitrumLink($selectedAddress, $userBaseBalance, $isUnsupported);
-		}, 750);
+		}, 1000);
 	});
 
 	$: checkArbitrumLink($selectedAddress, $userBaseBalance, $isUnsupported);
@@ -81,15 +85,20 @@
 
 	.arbitrum-link {
 		display: flex;
-		font-size: 90%;
-		line-height: 1.45;
-		padding-bottom: 40px;
+		align-items: center;
+		justify-content: center;
+		line-height: 1.4;
+		background-color: var(--rich-black-fogra);
+		padding: var(--base-padding);
+		border-radius: var(--base-radius);
+		margin-bottom: 60px;
+		font-weight: 600;
 	}
 
 	:global(.arbitrum-link img) {
-		height: 54px;
-		width: 54px;
-		margin-right: 12px;
+		height: 32px;
+		width: 32px;
+		margin-right: 10px;
 	}
 
 	.new-order {
@@ -282,8 +291,8 @@
 	}
 
 	button.disabled {
-		background-color: var(--gray-darkest);
-		color: var(--gray-light);
+		background-color: var(--jet-dim);
+		color: var(--dim-gray);
 		pointer-events: none;
 		cursor: default;
 	}
@@ -310,8 +319,8 @@
 
 	{#if showArbitrumLink}
 		<div class='arbitrum-link'>
-			<div><img src='/img/arbitrum-logo.svg' alt='Arbitrum logo' /></div>
-			<div>Arbitrum is a Layer 2 network that works just like Ethereum except it's faster and cheaper. You must first <strong><a href='https://bridge.arbitrum.io' target='_blank'>bridge↗</a></strong> ETH into Arbitrum to start trading on Cap.</div>
+			<img src='/img/arbitrum-logo.svg' alt='Arbitrum logo' />
+			<div><strong><a href='https://bridge.arbitrum.io' target='_blank'>Bridge↗</a></strong> ETH into Arbitrum to start trading.</div>
 		</div>
 	{/if}
 
@@ -322,27 +331,20 @@
 			<div class='top'>
 
 				<div class='selector product-wrap' on:click={() => {showModal('Products')}} data-intercept="true">
-					{#if $selectedProduct.symbol}
-						<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}>
-					{:else}
-						<img src={LOGOS[1]} alt={`ETH-USD logo`}><span>ETH</span>
-					{/if}
-					<span>{shortSymbol($selectedProduct.symbol)}</span>
+					<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}>
+					<span>{shortSymbol($selectedProduct.symbol || $products[$selectedProductId])}</span>
 					{@html CARET_DOWN}
 				</div>
 
 				<div class='selector select-leverage' on:click={() => {showModal('Leverage')}} data-intercept="true">
-					{#if $selectedProduct.symbol}
-						<span>{$leverage}×</span>
-					{:else}
-						<span>20×</span>
-					{/if}{@html CARET_DOWN}
+					<span>{$leverage}×</span>{@html CARET_DOWN}
 				</div>
 
 				<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" maxlength="10" spellcheck="false" placeholder={`0.0`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
 
 			</div>
 
+			{#if $selectedAddress}
 			<div class='bottom'>
 
 				<div class='left'>
@@ -366,16 +368,17 @@
 				</div>
 
 			</div>
+			{/if}
 
 		</div>
 
 		<div class='buttons'>
-			{#if !$selectedAddress}
-				<button class='button-long' on:click={connectWallet}>Connect a Wallet</button>
-			{:else if $isUnsupported}
+			{#if $isUnsupported}
 				<button class='disabled'>Switch to Arbitrum to trade</button>
+			{:else if !$selectedAddress}
+				<button class='disabled'>Connect to Arbitrum to trade</button>
 			{:else}
-				<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
+				<button class:disabled={submitIsPending || !$selectedAddress} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending || !$selectedAddress} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
 			{/if}
 		</div>
 

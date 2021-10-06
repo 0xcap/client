@@ -12,6 +12,7 @@
 	import { leverage } from '../stores/order'
 	import { prices } from '../stores/prices'
 	import { selectedProduct, selectedProductId } from '../stores/products'
+	import { selectedAddress } from '../stores/wallet'
 
 	let maxLeverage;
 	$: maxLeverage = $selectedProduct.maxLeverage * 1 || 100
@@ -121,9 +122,11 @@
 		<div class='range-container'>
 			<input class='range' id='range' type=range bind:value={$leverage} min=1 max={maxLeverage}> 
 		</div>
+		{#if $selectedAddress}
 		<div class='details'>
 			<DataList data={rows} />
 		</div>
+		{/if}
 	</div>
 
 </Modal>

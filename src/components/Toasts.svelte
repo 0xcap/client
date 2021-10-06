@@ -23,17 +23,16 @@
 		display: flex;
 		justify-content: space-between;
 		padding: 12px;
-		background-color: #0D0D0D;
 		max-width: 420px;
 	}
 
 	.toast.error {
-		background-color: #290400;
-		color: #FF1900;
-		fill: #FF1900;
+		background-color: var(--red-dark);
+		color: var(--red);
+		fill: var(--red);
 	}
 	.toast.success {
-		background-color: #002901;
+		background-color: var(--green-dark);
 		fill: var(--green);
 		color: var(--green);
 	}

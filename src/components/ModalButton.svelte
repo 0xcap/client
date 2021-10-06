@@ -14,7 +14,7 @@
 
 	button {
 		background-color: var(--green);
-		color: var(--gray-darkest);
+		color: var(--green-dark);
 		padding: 0 var(--base-padding);
 		height: 64px;
 		border-radius: var(--base-radius);
@@ -22,12 +22,12 @@
 		font-size: 115%;
 	}
 	button:hover {
-		background-color: var(--green-dark);
+		background-color: var(--green-dim);
 	}
 
 	button.disabled {
-		background-color: var(--gray-dark);
-		color: var(--gray-light);
+		background-color: var(--jet-dim);
+		color: var(--dim-gray);
 		pointer-events: none;
 		cursor: default;
 	}

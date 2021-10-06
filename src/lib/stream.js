@@ -17,7 +17,9 @@ function heartbeat() {
 	}, 15 * 1000);
 }
 
-export function initWebsocket() {
+export function initWebsocket(_address) {
+
+	if (!_address) return;
 
 	console.log('initWebsocket');
 

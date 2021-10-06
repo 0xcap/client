@@ -26,9 +26,9 @@
 
 	onMount(async () => {
 		hidePopoversOnClick();
-		initWebsocket();
 	});
 
+	$: initWebsocket($selectedAddress);
 	$: initEventListeners($selectedAddress, $chainId);
 
 </script>
@@ -48,12 +48,13 @@
 
 		--red: #FF5000;
 		--red-dim: #E04700;
-		--red-dark: #3D1300;
+		--red-dark: #421500;
 		--green: #00C805;
 		--green-dim: #00B803;
-		--green-dark: #003D01;
+		--green-dark: #004201;
 
 		--rich-black: #080808;
+		--rich-black-fogra: #0F0F0F;
 		--eerie-black: #1A1A1A;
 		--jet-dim: #212121;
 		--jet: #292929;

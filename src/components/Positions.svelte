@@ -18,8 +18,6 @@
 	let count = 0;
 	$: count = $positions && $positions.length || 0;
 
-	
-
 	async function calculateUPLs(_prices) {
 		totalUPL = 0;
 		for (const position of $positions) {
@@ -42,11 +40,6 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: 0;
-	}
-
-	.empty {
-		color: var(--gray-light);
-		text-align: center;
 	}
 
 	.header {
@@ -74,11 +67,11 @@
 		height: 64px;
 		font-size: 115%;
 		border-radius: var(--base-radius);
-		background-color: #0D0D0D;
+		background-color: var(--rich-black-fogra);
 		cursor: pointer;
 	}
 	.position:hover {
-		background-color: #121212;
+		background-color: var(--eerie-black);
 	}
 
 	.details {
@@ -117,7 +110,7 @@
 	}
 
 	.info {
-		color: var(--gray-light);
+		color: var(--sonic-silver);
 		font-weight: 400 !important;
 		margin-left: 10px;
 	}
@@ -131,10 +124,10 @@
 		
 	}
 	.sep {
-		opacity: 0.15;
+		opacity: 0.2;
 	}
 	.price {
-		opacity: 0.25;
+		opacity: 0.35;
 	}
 
 	.entry-text-mobile {
@@ -174,26 +167,15 @@
 	}
 
 	.status {
-		color: var(--onyx2);
+		color: var(--dim-gray);
 		padding-right: var(--base-padding);
 		margin-left: 10px;
 	}
 
-	.add-margin, .close {
+	.close {
 		padding: 16px;
 		margin-left: 8px;
-		fill: #303030;
-	}
-
-	@media (max-width: 600px) {
-		.add-margin, .close {
-			margin-right: 0;
-		}
-	}
-
-	.add-margin:hover {
-		fill: #fff;
-		background-color: var(--blue);
+		fill: var(--dim-gray);
 	}
 
 	.close:hover {
@@ -218,7 +200,7 @@
 	<div class='header'>
 		<div class='title'>Positions</div>
 		{#if count > 1}
-			<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{formatPnl(totalUPL)}</div>
+			<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{formatPnl(totalUPL*1 || undefined)}</div>
 		{/if}
 	</div>
 

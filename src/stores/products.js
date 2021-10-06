@@ -8,9 +8,9 @@ export const products = writable({});
 export const selectedProductId = writable(localStorage.getItem('selectedProductId') || 1);
 
 export const selectedProduct = derived(selectedProductId, async ($selectedProductId, set) => {
-	const product = await getProduct($selectedProductId);
+	let product = await getProduct($selectedProductId);
 	if (!product) return;
-	leverage.set(getCachedLeverage($selectedProductId) || product.maxLeverage * 1);
+	leverage.set(getCachedLeverage($selectedProductId) || product.maxLeverage * 1 || 25);
 	set(product);
 }, {});
 

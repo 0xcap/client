@@ -38,12 +38,10 @@
 
 	.network {
 		color: var(--orange);
-		margin-right: 16px;
 	}
 
 	@media (max-width: 600px) {
 		.network {
-			margin-right: 8px;
 		}
 	}
 
@@ -118,20 +116,20 @@
 
 	{#if $isUnsupported}
 		<div class='network'>Unsupported Network</div>
-	{/if}
-
-	{#if $selectedAddress}
-		{#if !$isUnsupported}
-			<div class='balance'>
-				{formatToDisplay($userBaseBalance)} {BASE_SYMBOL}
-			</div>
-			<a class='clickable-item address-wrap' href={addrLink($selectedAddress)} target="_blank">
-				{#if $hasPending}<div class:floating={scrolled} class='has-pending'>{@html SPINNER_ICON}</div>{/if}
-				<div class='address'>{shortAddr($selectedAddress)}</div>
-			</a>
-		{/if}
 	{:else}
-		<button on:click={connectWallet}>Connect Wallet</button>
+
+		{#if $selectedAddress}
+				<div class='balance'>
+					{formatToDisplay($userBaseBalance)} {BASE_SYMBOL}
+				</div>
+				<a class='clickable-item address-wrap' href={addrLink($selectedAddress)} target="_blank">
+					{#if $hasPending}<div class:floating={scrolled} class='has-pending'>{@html SPINNER_ICON}</div>{/if}
+					<div class='address'>{shortAddr($selectedAddress)}</div>
+				</a>
+		{:else}
+			<button on:click={connectWallet}>Connect Wallet</button>
+		{/if}
+
 	{/if}
 
 </div>

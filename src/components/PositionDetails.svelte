@@ -63,6 +63,10 @@
 				value: data.price * 1 > 0 ? formatToDisplay(data.price) : 'Settling'
 			},
 			{
+				label: 'Current Price',
+				value: formatToDisplay(_prices[data.productId])
+			},
+			{
 				label: 'Trade Size',
 				value: `${formatToDisplay(data.amount, 0, true)}`,
 			},
