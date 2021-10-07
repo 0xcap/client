@@ -2,18 +2,12 @@ import { get } from 'svelte/store'
 import { LIQUIDATION_THRESHOLD } from './constants'
 import { getProduct } from './methods'
 import { contract } from '../stores/contracts'
-import { positions } from '../stores/positions'
-import { prices } from '../stores/prices'
-import { selectedProductId, products } from '../stores/products'
+import { selectedProductId } from '../stores/products'
 import { signer } from '../stores/wallet'
 
 export function getContract(withSigner) {
   if (withSigner) return get(contract).connect(get(signer));
   return get(contract);
-}
-
-export function getContractAddress(name) {
-  return get(contract).address;
 }
 
 export function selectProduct(productId, deactivate) {

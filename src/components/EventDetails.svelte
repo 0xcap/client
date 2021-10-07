@@ -3,7 +3,6 @@
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 
-	import { BASE_SYMBOL } from '../lib/constants'
 	import { EXTERNAL_ICON } from '../lib/icons'
 	import { txLink, formatToDisplay, formatPnl } from '../lib/utils'
 

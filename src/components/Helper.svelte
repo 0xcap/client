@@ -1,7 +1,5 @@
 <script>
 
-	import { HELP_ICON } from '../lib/icons'
-
 	export let label;
 	export let title;
 	export let text;

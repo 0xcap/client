@@ -2,10 +2,10 @@
 
 	import { onMount } from 'svelte'
 
-	import { BASE_SYMBOL, PRICE_DECIMALS } from '../lib/constants'
+	import { PRICE_DECIMALS } from '../lib/constants'
 	import { calculateLiquidationPrice } from '../lib/helpers'
 	import { addMargin } from '../lib/methods'
-	import { formatToDisplay, intify } from '../lib/utils'
+	import { formatToDisplay } from '../lib/utils'
 	
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'

@@ -1,3 +1,4 @@
+import { V1_VOLUME } from './constants'
 import { formatUnits, formatTrades } from './utils'
 
 const graph_url = 'https://api.thegraph.com/subgraphs/name/0xcap/capv2';
@@ -25,8 +26,9 @@ export async function getVolume() {
 		})
 	});
 	const json = await response.json();
+	console.log('json', json);
 	return {
-		volume: formatUnits(json.data.vault.cumulativeVolume)
+		volume: formatUnits(V1_VOLUME + 1 * json.data.vault.cumulativeVolume)
 	};
 }
 

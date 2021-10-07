@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { getContract } from './helpers'
 
 import { refreshUserPositions, sessionPositionIds } from '../stores/positions'
-import { refreshUserBaseBalance, userBaseAllowance, selectedAddress } from '../stores/wallet'
+import { refreshUserBaseBalance, selectedAddress } from '../stores/wallet'
 import { sessionTrades, history } from '../stores/history'
 import { showToast } from '../stores/toasts'
 
@@ -17,17 +17,6 @@ let acceptToasts = false;
 setTimeout(() => {
 	acceptToasts = true;
 }, 4000);
-
-let q;
-function initQuickPositionsRefresh() {
-	let i = 0;
-	let q = setInterval(() => {
-		console.log('initQuickPositionsRefresh', i);
-		refreshUserPositions.update(n => n + 1);
-		i++;
-		if (i >= 40) clearInterval(q);
-	}, 2000);
-}
 
 export async function handleTransactionEvent(ev) {
 	handleEvent(ev);
@@ -50,7 +39,6 @@ async function handleEvent() {
 			return arr;
 		});
 		console.log('position_id', position_id);
-		//initQuickPositionsRefresh();
 		if (acceptToasts) showToast('Order submitted.', 'success');
 		refreshUserBaseBalance.update(n => n + 1);
 	} else if (ev.event == 'CancelPosition') {
@@ -73,7 +61,6 @@ async function handleEvent() {
 		console.log('Close order succeeded', ev);
 		if (acceptToasts) showToast('Close order submitted.', 'success');
 		refreshUserPositions.update(n => n + 1);
-		//initQuickPositionsRefresh();
 	} else if (ev.event == 'ClosePosition') {
 		// From listener only - oracle triggered
 

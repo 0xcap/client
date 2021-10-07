@@ -1,11 +1,8 @@
 <script>
 
-	import { onMount } from 'svelte'
-
 	import Modal from './Modal.svelte'
 
 	import { selectProduct } from '../lib/helpers'
-	import { CANCEL_ICON } from '../lib/icons'
 	import { LOGOS } from '../lib/logos'
 	import { shortSymbol } from '../lib/utils'
 	

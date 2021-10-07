@@ -1,6 +1,4 @@
 <script>
-	import { fade, fly } from 'svelte/transition'
-
 	import { toast, hideToast } from '../stores/toasts'
 	import { CANCEL_ICON } from '../lib/icons'
 </script>

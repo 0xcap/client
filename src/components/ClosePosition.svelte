@@ -2,7 +2,7 @@
 
 	import { BASE_SYMBOL, MIN_MARGIN } from '../lib/constants'
 	import { closePosition } from '../lib/methods'
-	import { formatToDisplay, intify } from '../lib/utils'
+	import { formatToDisplay } from '../lib/utils'
 
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'

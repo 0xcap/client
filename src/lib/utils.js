@@ -1,14 +1,12 @@
 import { ethers } from 'ethers'
 import { get } from 'svelte/store'
 
-import { CHAIN_DATA, PRICE_DECIMALS, BASE_SYMBOL } from './constants'
+import { CHAIN_DATA, PRICE_DECIMALS } from './constants'
 
-import { hideMenu } from '../stores/menu'
 import { hideModal } from '../stores/modals'
-import { products, selectedProductId } from '../stores/products'
+import { products } from '../stores/products'
 import { hideToast } from '../stores/toasts'
 import { chainId } from '../stores/wallet'
-
 
 export function formatUnits(number, units) {
   return ethers.utils.formatUnits(number || 0, units || 8);
@@ -19,11 +17,6 @@ export function parseUnits(number, units) {
   	number = number.toFixed(units || 8);
   }
   return ethers.utils.parseUnits(number, units || 8);
-}
-
-export function intify(number) {
-	if (parseInt(number * 1) == number * 1) return parseInt(number);
-	return number;
 }
 
 export function shortAddr(_address) {
@@ -252,14 +245,12 @@ export function hidePopoversOnClick() {
       if (interceptor) return true;
 
       hideModal();
-      hideMenu();
 
   });
 
   window.addEventListener('keydown', (ev) => {
   	if (ev.key == 'Escape') {
   		hideModal();
-  		hideMenu();
   		hideToast();
   	}
   })

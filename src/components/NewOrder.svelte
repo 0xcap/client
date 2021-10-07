@@ -4,21 +4,19 @@
 
 	import Helper from './Helper.svelte'
 
-
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
 	import { CARET_DOWN } from '../lib/icons'
 	import { LOGOS } from '../lib/logos'
 	import { submitNewPosition } from '../lib/methods'
-	import { formatToDisplay, displayPricePercentChange, shortSymbol } from '../lib/utils'
-	import { connectWallet } from '../lib/wallet'
+	import { formatToDisplay, shortSymbol } from '../lib/utils'
 
 	import { showModal } from '../stores/modals'
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
-	import { selectedProductId, selectedProduct, products } from '../stores/products'
 	import { prices } from '../stores/prices'
+	import { selectedProductId, selectedProduct, products } from '../stores/products'
 	import { showToast } from '../stores/toasts'
-	import { selectedAddress, isTestnet, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
+	import { selectedAddress, isUnsupported, userBaseBalance } from '../stores/wallet'
 
 	let submitIsPending = false;
 	async function _submitOrder(isLong) {
@@ -125,21 +123,6 @@
 		opacity: 0.6;
 	}
 
-	.new-order a {
-		color: inherit;
-	}
-
-	.product-row {
-		cursor: pointer !important;
-	}
-
-	.input-row {
-		border-radius: var(--base-radius);
-	}
-
-	.input-row.focused {
-	}
-
 	.top {
 		display: flex;
 		align-items: center;
@@ -178,10 +161,6 @@
 	}
 	.bottom .price.empty {
 		color: var(--dim-gray);
-	}
-
-	.bottom .price-change {
-
 	}
 
 	.bottom .margin-used {
@@ -278,7 +257,6 @@
 		padding: 0 var(--base-padding);
 		height: 64px;
 		border-radius: var(--base-radius);
-		color: var(--less-black);
 		font-weight: 700;
 		font-size: 120%;
 	}

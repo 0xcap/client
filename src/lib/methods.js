@@ -1,8 +1,8 @@
 import { get } from 'svelte/store'
 
-import { PRICE_DECIMALS, BASE_SYMBOL, ADDRESS_ZERO } from './constants'
+import { PRICE_DECIMALS, BASE_SYMBOL } from './constants'
 import { handleTransactionEvent } from './events'
-import { getContract, getContractAddress } from './helpers'
+import { getContract } from './helpers'
 import { formatUnits, parseUnits, formatProduct, formatPositions, formatToDisplay } from './utils'
 
 import { hideModal } from '../stores/modals'

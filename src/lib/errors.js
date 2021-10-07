@@ -1,4 +1,3 @@
-
 const DEFAULT_ERROR = "Unidentified error. Check your browser console for more details.";
 
 const ERROR_STRINGS = {

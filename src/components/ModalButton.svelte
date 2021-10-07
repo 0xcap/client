@@ -8,7 +8,7 @@
 <style>
 
 	.button-wrap {
-		border-top: 1px solid rgb(30,30,30);
+		border-top: 1px solid var(--jet-dim);
 		padding: var(--base-padding);
 	}
 
@@ -24,7 +24,7 @@
 	button:hover {
 		background-color: var(--green-dim);
 	}
-
+	
 	button.disabled {
 		background-color: var(--jet-dim);
 		color: var(--dim-gray);

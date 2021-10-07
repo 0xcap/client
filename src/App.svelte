@@ -6,7 +6,9 @@
 	import Header from './components/Header.svelte'
 	import Footer from './components/Footer.svelte'
 
-	import Trade from './pages/Trade.svelte'
+	import NewOrder from './components/NewOrder.svelte'
+	import Positions from './components/Positions.svelte'
+	import History from './components/History.svelte'
 
 	// Modals
 	import Products from './components/Products.svelte'
@@ -22,7 +24,7 @@
 
 	import { contractReady } from './stores/contracts'
 	import { activeModal } from './stores/modals'
-	import { selectedAddress, chainId, isUnderMaintenance } from './stores/wallet'
+	import { isUnsupported, selectedAddress, chainId } from './stores/wallet'
 
 	onMount(async () => {
 		hidePopoversOnClick();
@@ -61,30 +63,15 @@
 		--onyx: #3D3D3D;
 		--dim-gray: #616161;
 		--sonic-silver: #707070;
-
-		--onyx2: #373C43;
-
-		
-		--dim-black: rgba(21, 24, 28, 0.8);
-		--less-black: rgb(21, 24, 28);
-		--gray: #1C1C1C;
-		--gray-lighter: rgb(55,55,55);
-		--gray-light: rgb(110, 118, 125);
-
-		--black-almost: rgba(23,23,23,0.55);
-		--gray-darkest: rgb(30,30,30);
-		--gray-between: rgb(40,40,40);
-		--gray-dark: rgb(55,55,55);
-
-		--blue: rgb(88,201,242);
-		--blue-dark: rgb(65,194,241);
-		--pink: rgb(225,80,221);
 		--orange: rgb(253,167,20);
+		
 		--base-padding: 20px;
 		--semi-padding: 16px;
 		--base-radius: 8px;
 		--container-width: 580px;
+
 	}
+
 	@supports (font-variation-settings: normal) {
 	  :global(:root) {
 	  	font-family: 'Inter var', sans-serif;
@@ -106,9 +93,6 @@
 	:global(body) {
 		padding: 0;
 		margin: 0;
-	}
-	:global(.overflow-hidden) {
-		overflow: hidden;
 	}
 
 	:global(a) {
@@ -171,10 +155,6 @@
 		-ms-overflow-style: none;  /* IE 10+ */
 	}
 
-	.grid {
-
-	}
-
 	main {
 		width: 100%;
 		max-width: var(--container-width);
@@ -184,12 +164,6 @@
 		display: grid;
 		grid-auto-flow: row;
 		grid-gap: 60px;
-	}
-
-	.maintenance {
-		padding: 20px;
-		text-align: center;
-		line-height: 1.55;
 	}
 
 	:global(.pos) {
@@ -218,13 +192,16 @@
 {/if}
 
 <EventDetails isActive={$activeModal && $activeModal.name == 'EventDetails'} data={$activeModal.data} />
+
 <Toasts />
-<div class='grid'>
-	<main>
+<main>
 	<Header />
 	{#if $contractReady}
-		<Trade />
+		<NewOrder />
+		{#if !$isUnsupported}
+			<Positions />
+			<History />
+		{/if}
 		<Footer />
 	{/if}
-	</main>
-</div>
+</main>

@@ -15,10 +15,6 @@
 		display: flex;
 		align-items: center;
 	}
-	
-	.logo {
-		margin-right: 16px;
-	}
 
 	img {
 		height: 20px;

@@ -1,6 +1,5 @@
 <script>
 
-	import { BASE_SYMBOL } from '../lib/constants'
 	import { formatToDisplay, formatPnl, shortSymbol } from '../lib/utils'
 
 	import { history, sessionTrades } from '../stores/history'
@@ -43,10 +42,6 @@
 		grid-gap: 0;
 	}
 
-	.history a {
-		color: var(--dim-gray);
-	}
-
 	.header {
 		display: flex;
 		align-items: center;
@@ -57,6 +52,10 @@
 	.header .title {
 		font-weight: 700;
 		font-size: 115%;
+	}
+
+	.header a {
+		color: var(--dim-gray);
 	}
 
 	.history-list {
@@ -95,6 +94,12 @@
 		color: #fff;
 	}
 
+	.details {
+		display: flex;
+		align-items: center;
+		font-weight: 700;
+	}
+
 	.direction {
 		margin-right: 10px;
 		font-weight: 800;
@@ -109,12 +114,6 @@
 		color: var(--red);
 	}
 
-	.details {
-		display: flex;
-		align-items: center;
-		font-weight: 700;
-	}
-
 	.info {
 		color: var(--sonic-silver);
 		font-weight: 400 !important;
@@ -125,12 +124,7 @@
 			display: none;
 		}
 	}
-	.amount {
-		
-	}
-	.sep {
-		opacity: 0.2;
-	}
+
 	.price {
 		margin-left: 10px;
 		opacity: 0.35;

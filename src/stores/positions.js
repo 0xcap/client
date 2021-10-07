@@ -1,9 +1,8 @@
 import { writable, derived } from 'svelte/store'
-import { getPositions } from '../lib/methods'
-
-import { fetchPositionIdsFromEvents } from '../lib/events'
 
 import { getPositionIDs } from '../lib/api'
+import { fetchPositionIdsFromEvents } from '../lib/events'
+import { getPositions } from '../lib/methods'
 
 import { selectedAddress } from './wallet'
 

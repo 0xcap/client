@@ -2,12 +2,11 @@
 
 	import { onMount } from 'svelte'
 
-	import { CHAIN_DATA, BASE_SYMBOL } from '../lib/constants'
-	import { SPINNER_ICON, CARET_DOWN } from '../lib/icons'
+	import { BASE_SYMBOL } from '../lib/constants'
+	import { SPINNER_ICON } from '../lib/icons'
 	import { initWallet, connectWallet } from '../lib/wallet'
 	import { formatToDisplay, shortAddr, addrLink } from '../lib/utils'
 
-	import { toggleMenu, menuVisible, hideMenu } from '../stores/menu'
 	import { showModal } from '../stores/modals'
 	import { hasPending, checkPendingTransactions } from '../stores/transactions'
 	import { selectedAddress, chainId, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'

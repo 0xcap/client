@@ -1,11 +1,8 @@
 <script>
 
-	import { CANCEL_ICON } from '../lib/icons'
-
 	import { hideModal } from '../stores/modals'
 
 	export let title = '';
-	export let doneButton = false;
 	export let isActive;
 	export let noHeader = false;
 
@@ -56,10 +53,6 @@
 		font-weight: 700;
 	}
 
-	.modal-close {
-		cursor: pointer;
-	}
-
 	.done-button {
 		font-weight: 700;
 		cursor: pointer;
@@ -67,13 +60,6 @@
 	}
 	.done-button:hover {
 		color: var(--green-dim);
-	}
-
-	:global(.modal-close svg) {
-		height: 14px;
-		width: 14px;
-		margin-top: 4px;
-		fill: #fff;
 	}
 
 	.modal-body {
@@ -90,11 +76,7 @@
 		{#if !noHeader}
 		<div class='modal-header'>
 			<div class='modal-title'>{title}</div>
-			{#if doneButton}
 			<span class='done-button' on:click={hideModal}>Done</span>
-			{:else}
-			<span class='modal-close' on:click={hideModal}>{@html CANCEL_ICON}</span>
-			{/if}
 		</div>
 		{/if}
 

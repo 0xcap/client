@@ -1,8 +1,7 @@
 <script>
 
-	import { onMount, onDestroy } from 'svelte'
+	import { onMount } from 'svelte'
 
-	import Helper from './Helper.svelte'
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 
@@ -84,7 +83,7 @@
 	.range {
 		-webkit-appearance: none;
 		appearance: none;
-		background: var(--gray);
+		background: var(--jet);
 		outline: none;
 		border: none;
 		height: 18px;
@@ -101,15 +100,11 @@
 		height: 18px;
 		border-radius: 50%;
 		cursor: ew-resize;
-		background: var(--gray-light);
-		border: 3px solid var(--gray);
+		background: var(--sonic-silver);
+		border: 3px solid var(--jet-dim);
 		box-shadow: -407px 0 0 400px var(--green);
 	}
 	/*, .range::-moz-range-thumb, .range::-ms-thumb*/
-
-	.details {
-
-	}
 
 </style>
 

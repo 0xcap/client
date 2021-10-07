@@ -1,18 +1,13 @@
 <script>
 
-	import { onMount, onDestroy } from 'svelte'
-
-	import Helper from './Helper.svelte'
-
 	import { showModal } from '../stores/modals'
 	import { positions, refreshUserPositions } from '../stores/positions'
 	import { prices } from '../stores/prices'
 
-	import { BASE_SYMBOL } from '../lib/constants'
 	import { LOGOS } from '../lib/logos'
 	import { getUPL } from '../lib/helpers'
 	import { CANCEL_ICON } from '../lib/icons'
-	import { formatToDisplay, intify, formatPnl, shortSymbol } from '../lib/utils'
+	import { formatToDisplay, formatPnl, shortSymbol } from '../lib/utils'
 
 	let upls = {};
 	let upls_percent = {};
@@ -133,29 +128,9 @@
 		}
 	}
 
-	.entry {
-		
-	}
-	.sep {
-		opacity: 0.2;
-	}
 	.price {
 		margin-left: 10px;
 		opacity: 0.35;
-	}
-
-	.entry-text-mobile {
-		display: none;
-	}
-
-	.upl-entry {
-		display: none;
-	}
-
-	@media (max-width: 600px) {
-		.entry {
-			display: none;
-		}
 	}
 
 	.tools {
@@ -165,19 +140,6 @@
 
 	.upl-wrap {
 		text-align: right;
-	}
-
-	.upl-percent {
-		margin-top: 10px;
-		font-size: 80%;
-		display: none;
-	}
-
-	.pos {
-		color: var(--green) !important;
-	}
-	.neg {
-		color: var(--red) !important;
 	}
 
 	.status {
@@ -194,10 +156,6 @@
 
 	.close:hover {
 		fill: var(--red);
-	}
-
-	.disabled {
-		pointer-events: none;
 	}
 
 	:global(.positions svg) {
@@ -247,11 +205,6 @@
 						<div class='upl'>
 							{formatPnl(upls[position.positionId])}
 						</div>
-						<!--
-						<div class='upl-percent'>
-							{formatPnl(upls_percent[position.positionId], undefined, true)}%
-						</div>
-						-->
 					</div>
 
 					{#if position.price * 1 == 0 || position.closeOrderId > 0}
@@ -269,7 +222,7 @@
 
 					{:else}
 
-						<a class='close' class:disabled={position.closeOrderId > 0} on:click|stopPropagation={() => {showModal('ClosePosition', position)}} data-intercept="true">
+						<a class='close' on:click|stopPropagation={() => {showModal('ClosePosition', position)}} data-intercept="true">
 							{@html CANCEL_ICON}
 						</a>
 					

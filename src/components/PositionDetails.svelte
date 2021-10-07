@@ -5,10 +5,10 @@
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 
-	import { BASE_SYMBOL, PRICE_DECIMALS } from '../lib/constants'
+	import { PRICE_DECIMALS } from '../lib/constants'
 	import { getUPL, getInterest, calculateLiquidationPrice } from '../lib/helpers'
 	import { cancelPosition, cancelOrder } from '../lib/methods'
-	import { formatUnits, formatToDisplay, formatPnl } from '../lib/utils'
+	import { formatToDisplay, formatPnl } from '../lib/utils'
 
 	import { prices } from '../stores/prices'
 

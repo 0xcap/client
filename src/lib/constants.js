@@ -1,10 +1,10 @@
 export const VERSION = '2';
 
+export const V1_VOLUME = 76000 * 10**8;
+
 export const BASE_SYMBOL = 'ETH';
 
 export const LIQUIDATION_THRESHOLD = 8000;
-
-export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 
 export const DEFAULT_CHAIN_ID = 42161; // Arbitrum
 
@@ -14,7 +14,6 @@ export const MIN_MARGIN = 0.001;
 
 // ABIS
 const TRADING_ABI = [
-
 	"function getChainlinkPrice(uint256 productId) view returns(uint256)",
 	"function getProduct(uint256 productId) view returns(tuple(address feed, uint56 maxLeverage, uint16 fee, uint16 interest, bool isActive, uint64 maxExposure, uint64 openInterestLong, uint64 openInterestShort, uint32 oracleMaxDeviation, uint32 minTradeDuration))",
 	"function getPositions(uint256[] calldata positionIds) view returns(tuple(uint40 closeOrderId, uint24 productId, uint64 leverage, uint64 price, uint64 margin, address owner, uint88 timestamp, bool isLong)[] _positions)",

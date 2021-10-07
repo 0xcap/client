@@ -2,8 +2,6 @@
 
 	import { onMount } from 'svelte'
 
-	import Helper from './Helper.svelte'
-
 	import { BASE_SYMBOL } from '../lib/constants'
 
 	import { showModal } from '../stores/modals'
@@ -96,7 +94,7 @@
 		{:else}
 			{#if row.value !== null}
 				<div class='row'>
-					<div class='label'>{row.label}{#if row.helper}<Helper marginLeft={true} text={row.helper} direction='right' />{/if}</div>
+					<div class='label'>{row.label}</div>
 					<div class:error={!row.isEmpty && row.hasError} class:dim={row.dim} class:clickable={Boolean(row.onclick)} on:click={row.onclick} class='value'>
 						{#if row.renderHTML}
 							{@html row.value}
