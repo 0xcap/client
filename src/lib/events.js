@@ -133,12 +133,12 @@ export async function fetchPositionIdsFromEvents(address) {
 	if (!tradingContract) return;
 
 	const filter_open = tradingContract.filters.OpenOrder(null, address);
-	const _events_open = await tradingContract.queryFilter(filter_open, -10000);
+	const _events_open = await tradingContract.queryFilter(filter_open, -1000);
 
 	console.log('_events_open', _events_open);
 
 	const filter_new = tradingContract.filters.NewPosition(null, address);
-	const _events_new = await tradingContract.queryFilter(filter_new, -10000);
+	const _events_new = await tradingContract.queryFilter(filter_new, -1000);
 
 	console.log('_events_new', _events_new);
 	let formattedHistoryEvents = await fetchHistoryEvents(address);
@@ -179,7 +179,7 @@ export async function fetchHistoryEvents(address) {
 	const tradingContract = getContract();
 	if (!tradingContract) return [];
 	const filter = tradingContract.filters.ClosePosition(null, address);
-	const _events = await tradingContract.queryFilter(filter, -10000);
+	const _events = await tradingContract.queryFilter(filter, -1000);
 	let formattedEvents = [];
 	for (const ev of _events) {
 		formattedEvents.unshift(formatEvent(ev));

@@ -1,6 +1,6 @@
 import { formatUnits, formatTrades } from './utils'
 
-const graph_url = 'https://api.thegraph.com/subgraphs/name/0xcap/capv1';
+const graph_url = 'https://api.thegraph.com/subgraphs/name/0xcap/capv2';
 
 export async function getPrice(product) {
 	const response = await fetch(`https://api.exchange.coinbase.com/products/${product}/ticker`);

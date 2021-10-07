@@ -18,8 +18,9 @@ export const positions = derived([selectedAddress, sessionPositionIds, refreshUs
 	}
 	if (!$sessionPositionIds.length) {
 		// first load, fetch position ids for user
-		const position_ids = [];//await getPositionIDs($selectedAddress);
-		// tmp when graph doesn't work - comment out in prod
+		const position_ids = await getPositionIDs($selectedAddress);
+		
+		// when graph is delayed, fetch from events
 		const _position_ids = await fetchPositionIdsFromEvents($selectedAddress);
 
 		const all_pos_ids = (position_ids || []).concat(_position_ids || []);

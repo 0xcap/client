@@ -36,8 +36,8 @@
 
 	let r;
 	function monitorPositions(_count) {
-		if (!_count) return;
 		clearInterval(r);
+		if (!_count) return;
 		r = setInterval(() => {
 			refreshUserPositions.update(n => n + 1);
 		}, 5000);

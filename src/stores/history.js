@@ -11,6 +11,6 @@ export const history = derived([selectedAddress], async ([$selectedAddress], set
 		set([]);
 		return;
 	}
-	//set(await getTrades($selectedAddress));
-	set(await fetchHistoryEvents($selectedAddress)); // tmp when graph doesn't work - comment out in prod
+	set(await getTrades($selectedAddress));
+	//set(await fetchHistoryEvents($selectedAddress)); // tmp when graph doesn't work - comment out in prod
 },[]);
