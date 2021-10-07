@@ -1,9 +1,11 @@
 <script>
 
+	import { onMount, onDestroy } from 'svelte'
+
 	import Helper from './Helper.svelte'
 
 	import { showModal } from '../stores/modals'
-	import { positions } from '../stores/positions'
+	import { positions, refreshUserPositions } from '../stores/positions'
 	import { prices } from '../stores/prices'
 
 	import { BASE_SYMBOL } from '../lib/constants'
@@ -31,6 +33,17 @@
 	}
 
 	$: calculateUPLs($prices);
+
+	let r;
+	function monitorPositions(_count) {
+		if (!_count) return;
+		clearInterval(r);
+		r = setInterval(() => {
+			refreshUserPositions.update(n => n + 1);
+		}, 5000);
+	}
+
+	$: monitorPositions(count);
 
 </script>
 
@@ -127,6 +140,7 @@
 		opacity: 0.2;
 	}
 	.price {
+		margin-left: 10px;
 		opacity: 0.35;
 	}
 
@@ -221,7 +235,7 @@
 						<span>{shortSymbol(position.product)}</span>
 						{#if position.price > 0}
 						<div class='info'>
-							<span class='amount'>{formatToDisplay(position.amount, 0, true)}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(position.price)}</span>
+							<span class='amount'>{formatToDisplay(position.amount, 0, true)}</span><span class='price'>{formatToDisplay(position.price)}</span>
 						</div>
 						{/if}
 					</div>

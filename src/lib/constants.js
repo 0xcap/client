@@ -46,7 +46,7 @@ export const CHAIN_DATA = {
 		id: 31337,
 		label: 'Localhost',
 		contract: {
-			address: '0x10e38eE9dd4C549b61400Fc19347D00eD3edAfC4',
+			address: '0xdB05A386810c809aD5a77422eb189D36c7f24402',
 			abi: TRADING_ABI
 		},
 		products: {
@@ -65,17 +65,12 @@ export const CHAIN_DATA = {
 		label: 'Arbitrum',
 		explorer: 'https://arbiscan.io',
 		contract: {
-			address: '0x9BC357bc5b312AaCD41a84F3C687F031B8786853',
+			address: '0xA55Eee92a46A50A4C65908F28A0BE966D3e71633',
 			abi: TRADING_ABI
 		},
 		products: {
 			1: 'ETH-USD',
-			2: 'BTC-USD',
-			3: 'LINK-USD',
-			4: 'AAVE-USD',
-			5: 'SUSHI-USD',
-			6: 'UNI-USD',
-			7: 'YFI-USD'
+			2: 'BTC-USD'
 		}
 	},
 	'xx1': { // Ethereum mainnet

@@ -132,6 +132,7 @@
 		opacity: 0.2;
 	}
 	.price {
+		margin-left: 10px;
 		opacity: 0.35;
 	}
 
@@ -142,7 +143,7 @@
 
 </style>
 
-{#if $history.length}
+{#if shown_events.length}
 <div class='history'>
 
 	<div class='header'>
@@ -162,7 +163,7 @@
 					<div class={`direction ${event.isLong ? 'long' : 'short'}`}>{event.isLong ? '↑' : '↓'}</div>
 					<span>{shortSymbol(event.product)}</span>
 					<div class='info'>
-						<span class='amount'>{formatToDisplay(event.amount, 0, true)}</span> <span class='sep'>|</span> <span class='price'>{formatToDisplay(event.price)}</span>
+						<span class='amount'>{formatToDisplay(event.amount, 0, true)}</span><span class='price'>{formatToDisplay(event.price)}</span>
 					</div>
 				</div>
 
