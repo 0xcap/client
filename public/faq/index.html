@@ -1,0 +1,151 @@
+<html>
+	<head>
+		<title>Cap FAQ</title>
+
+		<style>
+		body {
+			padding: 30px;
+			font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+			background-color: #1A1A1A;
+			color: #e8e8e8;
+		}
+
+		.container {
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		.logo img {
+			height: 30px;
+		}
+
+		a, a:visited, a:active {
+			color: #00C805;
+		}
+
+		p {
+			line-height: 1.55;
+		}
+
+		ul li {
+			line-height: 1.55;
+		}
+		h2 {
+			padding-top: 26px;
+		}
+		</style>
+	</head>
+
+	<body>
+
+		<div class='container'>
+
+			<div class='logo'>
+				<a href='https://cap.finance'><img src='https://cap.finance/img/logo.svg' title='Cap logo' alt='Cap logo' /></a>
+			</div>
+
+			<h1>FAQ</h1>
+
+			<h2>What's Cap?</h2>
+
+			<p><a href='https://cap.finance'>Cap</a> is a decentralized leverage trading protocol.</p>
+
+			<p>You go long if you expect price to go up or short if you expect it to go down. Leverage multiplies profits and losses.</p>
+
+			<p>Margin, trade size, profits, and losses are in ETH.</p>
+
+			<h2>How do I get started?</h2>
+
+				<ul>
+					<li><a href='https://bridge.arbitrum.io'>Bridge</a> some ETH into Arbitrum.</li>
+					<li><a href='https://cap.finance'>Trade</a> directly from your wallet.</li>
+				</ul>
+
+			<h2>Why Cap?</h2>
+
+				<ul>
+					<li><strong>Fast</strong>. Orders are executed and settled within a few seconds.</li>
+					<li><strong>Cheap</strong>. Contracts are ultra gas optimized and there are no trading fees beyond the quoted spread.</li>
+					<li><strong>Easy</strong>. Start trading in seconds directly from your Metamask wallet.</li>
+				</ul>
+
+			<h2>How does it work?</h2>
+
+				<p>Your newly submitted order is stored in the trading contract. The oracle contract then prices and executes your order. When you close your position in profit, the treasury contract vault pays you. When you close at a loss, you pay the vault.</p>
+
+				<p>Protocol revenue is equal to trader losses minus profits.</p>
+
+			<h2>How are prices determined?</h2>
+
+				<p>You can think of Cap as a decentralized OTC trading desk. You submit an order and that order is filled based on a quote provided by the oracle contract, which takes into account market conditions like volatility. This quote is bound by a max deviation based on Chainlink prices to maintain trustlessness.</p>
+
+			<h2>How is profit calculated?</h2>
+
+				<p>Profit or loss is calculated by multiplying the price movement percent by your position size. For example, if you have a 10 ETH long position on BTC/USD and price rises 10%, you make 1 ETH (10 ETH x 10%).</p>
+
+			<h2>How is liquidation price calculated?</h2>
+
+				<p>Your position becomes liquidatable when it reaches 80% loss.</p>
+
+			<h2>What's the minimum margin?</h2>
+
+				<p>0.001 ETH. Multiply by your selected leverage to get the minimum order size.</p>
+
+			<h2>How can I use Cap?</h2>
+
+				<p>Cap is a set of contracts deployed on Arbitrum, an Ethereum layer 2 network. You can use Cap at <a href='https://cap.finance'>cap.finance</a>, <a href='https://cap.eth.link'>cap.eth.link</a>, or by running the <a href='https://github.com/0xcap/client'>Cap UI</a> on your local machine.</p>
+
+			<h2>What's the CAP token?</h2>
+
+				<p><a href='https://etherscan.io/token/0x43044f861ec040db59a7e324c40507addb673142'>CAP</a> is the protocol's native token. There are 100,000 CAP in circulation.</p>
+
+				<p>Protocol revenue is deposited into the treasury which uses its excess balance (beyond a safety threshold) to buy back CAP at market price, distributing revenue to CAP holders.</p>
+
+				<p>Bought back CAP is held in the treasury and can be sold over-the-counter if required in edge case scenarios such as a vault shortage.</p>
+
+				<p>You can buy CAP on Arbitrum (L2) <a href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x031d35296154279dc1984dcd93e392b1f946737b'>here</a>.</p>
+
+				<p>You can buy CAP on Ethereum mainnet (L1) <a href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x43044f861ec040db59a7e324c40507addb673142'>here</a>.</p>
+
+			<h2>Where are Cap contracts deployed?</h2>
+
+				<ul>
+					<li>Trading: <a href='https://arbiscan.io/address/0xA55Eee92a46A50A4C65908F28A0BE966D3e71633'>0xA55Eee92a46A50A4C65908F28A0BE966D3e71633</a></li>
+					<li>Oracle: <a href='https://arbiscan.io/address/0x08AAcc8FA22133b97324765B973704Ca286a6D76'>0x08AAcc8FA22133b97324765B973704Ca286a6D76</a></li>
+					<li>Treasury: <a href='https://arbiscan.io/address/0x1058AFe66BB5b79C295CCCE51016586949Bc4e8d'>0x1058AFe66BB5b79C295CCCE51016586949Bc4e8d</a></li>
+				</ul>
+
+			<h2>Can I use Cap to trade programatically?</h2>
+
+				<p>Yes. Cap contracts can be interacted with permissionlessly. Check the Trading contract's source code <a href='https://github.com/0xcap/protocol/blob/main/contracts/Trading.sol'>here</a>.</p>
+
+				<p>Use:</p>
+
+				<ul>
+					<li>submitNewPosition to submit a new long or short order;</li>
+					<li>submitCloseOrder to submit a close position order;</li>
+					<li>addMargin to add margin to an open position.</li>
+				</ul>
+
+			<h2>I'm getting an error while trading?</h2>
+
+				<p>"Too many longs/shorts" means the market is too imbalanced right now to accept your order. You can usually submit an order in the opposite direction or wait a while till the market is more balanced.</p>
+
+			<h2>My submitted order was cancelled or disappeared?</h2>
+
+				<p>This occurs if your order was not able to be filled within the max settlement time (10 minutes).</p>
+
+			<h2>Who's behind Cap?</h2>
+
+				<p>Cap is built and maintained by an anonymous group of developers.</p>
+
+			<h2>How can I stay in the loop?</h2>
+
+				<p>Cap is fully community-driven! Find community members on <a href='https://t.me/capfin'>Telegram</a> and <a href='https://twitter.com/CapDotFinance'>Twitter</a>.</p>
+
+		</div>
+
+	</body>
+
+</html>
+	

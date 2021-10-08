@@ -108,7 +108,7 @@
 
 </style>
 
-<Modal title='Select Leverage' doneButton={true}>
+<Modal title='Select Leverage'>
 
 	<div class='leverage-select'>
 		<div class='value'>
