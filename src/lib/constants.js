@@ -67,7 +67,12 @@ export const CHAIN_DATA = {
 		},
 		products: {
 			1: 'ETH-USD',
-			2: 'BTC-USD'
+			2: 'BTC-USD',
+			3: 'LINK-USD',
+			4: 'AAVE-USD',
+			5: 'SUSHI-USD',
+			6: 'UNI-USD',
+			7: 'YFI-USD'
 		}
 	},
 	'xx1': { // Ethereum mainnet
