@@ -79,7 +79,7 @@
 	}
 
 	:global(html) {
-		background-color: var(--rich-black);
+		background-color: var(--rich-black-fogra);
 		color: #fff;
 		font-family: 'Inter var';
 		font-feature-settings: 'ss01','ss02','ss03','cv01','tnum';
