@@ -1,13 +1,18 @@
 import { get } from 'svelte/store'
 import { getPrice } from './api'
 import { prices } from '../stores/prices'
-import { products } from '../stores/products'
+import { selectedProductId, products } from '../stores/products'
 import { selectedAddress } from '../stores/wallet'
-import { PRODUCT_TO_ID } from '../lib/constants'
+import { PRODUCT_TO_ID } from './constants'
+import { formatToDisplay, shortSymbol } from './utils'
 
 let ws;
 let lastTimestamp = {};
 let h;
+
+function setTitle(product, price) {
+	document.title = `${shortSymbol(product)} ${formatToDisplay(price,0,true)} | Cap`;
+}
 
 function heartbeat() {
 	clearTimeout(h);
@@ -68,10 +73,16 @@ export function initWebsocket(_address) {
 
 			lastTimestamp[product_id] = Date.now();
 
+			const pid = PRODUCT_TO_ID[product_id];
+
 			prices.update((x) => {
-				x[PRODUCT_TO_ID[product_id]] = price;
+				x[pid] = price;
 				return x;
 			});
+
+			if (pid == get(selectedProductId)) {
+				setTitle(product_id, price);
+			}
 
 		} catch(e) {
 			console.error(e);
