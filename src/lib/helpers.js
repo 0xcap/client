@@ -2,7 +2,7 @@ import { get } from 'svelte/store'
 import { LIQUIDATION_THRESHOLD } from './constants'
 import { getProduct } from './methods'
 import { contract } from '../stores/contracts'
-import { selectedProductId } from '../stores/products'
+import { selectedProductId, products } from '../stores/products'
 import { signer } from '../stores/wallet'
 
 export function getContract(withSigner) {
@@ -11,6 +11,7 @@ export function getContract(withSigner) {
 }
 
 export function selectProduct(productId, deactivate) {
+	if (!get(products)[productId]) productId = 1;
 	selectedProductId.set(productId);
 	localStorage.setItem('selectedProductId', productId);
 }
