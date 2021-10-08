@@ -24,6 +24,7 @@
 			upls_percent[position.positionId] = (100 * upl * 1 / position.margin);
 			totalUPL += upl * 1;
 		}
+		if (isNaN(totalUPL)) totalUPL = 0;
 		totalUPL = totalUPL.toFixed(4);
 	}
 
