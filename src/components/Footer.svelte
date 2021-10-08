@@ -10,8 +10,6 @@
 
 	import { prices } from '../stores/prices'
 
-	// TODO: link to docs
-
 	let volume;
 	let v;
 	
@@ -82,6 +80,10 @@
 		<div class='value'>{formatToDisplay(volume)} {BASE_SYMBOL} {#if $prices[1]}(${formatToDisplay($prices[1] * volume)}){/if}</div>
 	</div>
 	{/if}
+
+	<div class='details'>
+		<a href='/faq' target='blank'>FAQ</a>
+	</div>
 
 	<div class="details">
 		<span title='Cap is hosted on IPFS'>{@html IPFS_LOGO}</span> <span title='Trade execution prices are bound by Chainlink'>{@html CHAINLINK_FULL_ICON}</span>
