@@ -86,7 +86,7 @@
 		align-items: center;
 		justify-content: center;
 		line-height: 1.4;
-		background-color: var(--rich-black-fogra);
+		background-color: var(--eerie-black);
 		padding: var(--base-padding);
 		border-radius: var(--base-radius);
 		margin-bottom: 60px;
