@@ -40,6 +40,11 @@
 
 	$: monitorPositions(count);
 
+	let timeoutDone = false;
+	setTimeout(() => {
+		timeoutDone = true;
+	}, 5000);
+
 </script>
 
 <style>
@@ -164,6 +169,10 @@
 		margin-bottom: -3px;
 	}
 
+	.v1 {
+		text-align: center;
+	}
+
 </style>
 
 {#if count > 0}
@@ -238,5 +247,9 @@
 
 	</div>
 
+</div>
+{:else if timeoutDone}
+<div class='v1'>
+	<a href='https://v1.cap.finance' target='_blank'>Looking for v1 positions?</a>
 </div>
 {/if}

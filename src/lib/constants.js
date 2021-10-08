@@ -1,6 +1,6 @@
 export const VERSION = '2';
 
-export const V1_VOLUME = 76000 * 10**8;
+export const V1_VOLUME = 78000 * 10**8;
 
 export const BASE_SYMBOL = 'ETH';
 

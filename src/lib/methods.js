@@ -53,7 +53,7 @@ export async function getChainlinkPrice(productId) {
 }
 
 export async function getPositions(positionIds) {
-	console.log('getPositions', positionIds);
+	//console.log('getPositions', positionIds);
 	if (!positionIds.length) return;
 	return formatPositions(await getContract().getPositions(positionIds), positionIds);
 }

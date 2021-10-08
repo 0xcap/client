@@ -26,7 +26,7 @@ async function handleEvent() {
 
 	const ev = arguments[arguments.length - 1];
 
-	console.log('got event', Date.now(), ev);
+	//console.log('got event', Date.now(), ev);
 
 	//console.log('handling event', ev);
 
@@ -38,7 +38,7 @@ async function handleEvent() {
 			arr.push(position_id);
 			return arr;
 		});
-		console.log('position_id', position_id);
+		//console.log('position_id', position_id);
 		if (acceptToasts) showToast('Order submitted.', 'success');
 		refreshUserBaseBalance.update(n => n + 1);
 	} else if (ev.event == 'CancelPosition') {
@@ -58,7 +58,7 @@ async function handleEvent() {
 	} else if (ev.event == 'CloseOrder') {
 		// From TX checker only
 		completeTransaction(ev.transactionHash);
-		console.log('Close order succeeded', ev);
+		//console.log('Close order succeeded', ev);
 		if (acceptToasts) showToast('Close order submitted.', 'success');
 		refreshUserPositions.update(n => n + 1);
 	} else if (ev.event == 'ClosePosition') {
@@ -110,7 +110,7 @@ let history_cache = {timestamp: 0, items: []};
 
 export async function fetchPositionIdsFromEvents(address) {
 
-	console.log('fetchPositionIdsFromEvents', address);
+	//console.log('fetchPositionIdsFromEvents', address);
 
 	// get recent past OpenOrder, NewPosition and ClosePosition events and determine which position ids are still active for this user
 	// populate history using closeposition events
@@ -122,12 +122,12 @@ export async function fetchPositionIdsFromEvents(address) {
 	const filter_open = tradingContract.filters.OpenOrder(null, address);
 	const _events_open = await tradingContract.queryFilter(filter_open, -1000);
 
-	console.log('_events_open', _events_open);
+	//console.log('_events_open', _events_open);
 
 	const filter_new = tradingContract.filters.NewPosition(null, address);
 	const _events_new = await tradingContract.queryFilter(filter_new, -1000);
 
-	console.log('_events_new', _events_new);
+	//console.log('_events_new', _events_new);
 	let formattedHistoryEvents = await fetchHistoryEvents(address);
 	let full_close_ids = {};
 	for (const ev of formattedHistoryEvents) {
@@ -147,7 +147,7 @@ export async function fetchPositionIdsFromEvents(address) {
 		if (!full_close_ids[positionId]) new_position_ids[positionId] = true;
 	}
 
-	console.log('new_position_ids', new_position_ids);
+	//console.log('new_position_ids', new_position_ids);
 
 	return Object.keys(new_position_ids);
 
@@ -155,7 +155,7 @@ export async function fetchPositionIdsFromEvents(address) {
 
 export async function fetchHistoryEvents(address) {
 
-	console.log('fetchHistoryEvents', address);
+	//console.log('fetchHistoryEvents', address);
 
 	if (!address) return [];
 

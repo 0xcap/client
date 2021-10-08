@@ -1,7 +1,7 @@
 import { V1_VOLUME } from './constants'
 import { formatUnits, formatTrades } from './utils'
 
-const graph_url = 'https://api.thegraph.com/subgraphs/name/0xcap/capv2';
+const graph_url = 'https://api.thegraph.com/subgraphs/name/0xcap/cap2';
 
 export async function getPrice(product) {
 	const response = await fetch(`https://api.exchange.coinbase.com/products/${product}/ticker`);
@@ -26,7 +26,6 @@ export async function getVolume() {
 		})
 	});
 	const json = await response.json();
-	console.log('json', json);
 	return {
 		volume: formatUnits(V1_VOLUME + 1 * json.data.vault.cumulativeVolume)
 	};
