@@ -1,82 +1,63 @@
 <script>
-	import { fade, fly } from 'svelte/transition'
-
-	import { toasts, hideToast } from '../stores/toasts'
+	import { toast, hideToast } from '../stores/toasts'
 	import { CANCEL_ICON } from '../lib/icons'
 </script>
 
 <style>
+
 	.toast-container {
 		position: fixed;
-		bottom: var(--base-padding);
-		left: var(--base-padding);
+		top: var(--base-padding);
+		left: 0;
+		right: 0;
 		z-index: 101;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
-	.toast-wrapper {
-		display: grid;
-		grid-auto-flow: row;
-		grid-gap: 16px;
-		max-width: 280px;
-	}
+
 	.toast {
-		background-color: rgb(23,23,23);
-		border-radius: 8px;
+		border-radius: var(--base-radius);
 		display: flex;
 		justify-content: space-between;
-		padding: 16px;
-	}
-
-	.body {
-		padding-right: var(--base-padding);
-	}
-
-	.title {
-		font-weight: 700;
-		text-transform: capitalize;
-		margin-bottom: 4px;
-	}
-	.text {
-		line-height: 1.45;
-		word-break: break-word
+		padding: 12px;
+		max-width: 420px;
 	}
 
 	.toast.error {
-		border: 2px solid var(--red);
+		background-color: var(--red-dark);
 		color: var(--red);
 		fill: var(--red);
 	}
 	.toast.success {
-		border: 2px solid var(--green);
-		color: var(--green);
+		background-color: var(--green-dark);
 		fill: var(--green);
-	}
-	.toast.transaction {
-		border: 2px solid var(--blue);
-		color: var(--blue);
-		fill: var(--blue);
+		color: var(--green);
 	}
 
-	:global(.toast-wrapper .close svg) {
+	.body {
+		padding-right: var(--base-padding);
+		word-break: break-word;
+		font-weight: 650;
+		line-height: 1.4;
+	}
+
+	:global(.toast .close svg) {
 		height: 14px;
 		width:  14px;
 		margin-bottom: -2px;
 		fill: inherit;
 	}
+
 </style>
 
+{#if $toast}
 <div class='toast-container'>
-	<div class='toast-wrapper'>
-		{#each $toasts as toast}
-			<div transition:fly="{{ x: -100, duration: 250 }}" class={`toast ${toast.type || 'error'}`} data-intercept="true">
-				<div class='body'>
-					<div class='title'>{toast.type}</div>
-					<div class='text'>{toast.message}</div>
-				</div>
-				<a class='close' on:click={() => {hideToast(toast.id)}}>{@html CANCEL_ICON}</a>
-			</div>
-		{/each}
+	<div class={`toast ${$toast.type || 'error'}`} data-intercept="true">
+		<div class='body'>
+			{$toast.message}
+		</div>
+		<a class='close' on:click={() => {hideToast()}}>{@html CANCEL_ICON}</a>
 	</div>
 </div>
+{/if}

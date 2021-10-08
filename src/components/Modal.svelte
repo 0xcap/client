@@ -1,12 +1,10 @@
 <script>
 
-	import { CANCEL_ICON } from '../lib/icons'
-
 	import { hideModal } from '../stores/modals'
 
-	export let title;
-	export let doneButton = false;
+	export let title = '';
 	export let isActive;
+	export let noHeader = false;
 
 	if (isActive == undefined) isActive = true;
 
@@ -36,9 +34,9 @@
 
 	.modal {
 		width: 460px;
-		border: 1px solid rgb(30,30,30);
+		border: 1px solid var(--jet-dim);
 		border-radius: var(--base-radius);
-		background-color: rgb(25,25,25);
+		background-color: var(--eerie-black);
 		overflow: hidden;
 	}
 
@@ -47,40 +45,26 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 var(--base-padding);
-		height: 62px;
-		background-color: rgb(30,30,30);
+		height: 60px;
+		background-color: var(--jet);
 	}
 
 	.modal-title {
-		font-weight: 600;
-	}
-
-	.modal-close {
-		cursor: pointer;
+		font-weight: 700;
 	}
 
 	.done-button {
-		background-color: var(--blue);
-		padding: 6px 10px;
-		border-radius: 14px;
-		font-weight: 650;
+		font-weight: 700;
 		cursor: pointer;
-		color: var(--gray-darkest);
+		color: var(--green);
 	}
 	.done-button:hover {
-		background-color: var(--blue-dark);
-	}
-
-	:global(.modal-close svg) {
-		height: 14px;
-		width: 14px;
-		margin-top: 4px;
-		fill: #fff;
+		color: var(--green-dim);
 	}
 
 	.modal-body {
 		overflow-y: scroll;
-		max-height: 80vh;
+		max-height: 85vh;
 	}
 
 </style>
@@ -89,14 +73,12 @@
 
 	<div class='modal' data-intercept="true">
 
+		{#if !noHeader}
 		<div class='modal-header'>
 			<div class='modal-title'>{title}</div>
-			{#if doneButton}
 			<span class='done-button' on:click={hideModal}>Done</span>
-			{:else}
-			<span class='modal-close' on:click={hideModal}>{@html CANCEL_ICON}</span>
-			{/if}
 		</div>
+		{/if}
 
 		<div class='modal-body no-scrollbar'>
 			<slot></slot>

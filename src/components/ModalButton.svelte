@@ -8,25 +8,26 @@
 <style>
 
 	.button-wrap {
-		border-top: 1px solid rgb(30,30,30);
+		border-top: 1px solid var(--jet-dim);
 		padding: var(--base-padding);
 	}
 
 	button {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-		padding: var(--base-padding);
-		border-radius: 14px;
-		font-weight: 650;
+		background-color: var(--green);
+		color: var(--green-dark);
+		padding: 0 var(--base-padding);
+		height: 64px;
+		border-radius: var(--base-radius);
+		font-weight: 700;
 		font-size: 115%;
 	}
 	button:hover {
-		background-color: var(--blue-dark);
+		background-color: var(--green-dim);
 	}
-
+	
 	button.disabled {
-		background-color: var(--gray-dark);
-		color: var(--gray-light);
+		background-color: var(--jet-dim);
+		color: var(--dim-gray);
 		pointer-events: none;
 		cursor: default;
 	}

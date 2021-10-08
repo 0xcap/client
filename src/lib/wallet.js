@@ -41,7 +41,7 @@ export async function initWallet() {
 	let listener = window.ethereum;
 
 	if (!listener) {
-		showToast('Install Metamask to use Cap.');
+		showToast('Please install Metamask to use Cap.');
 		handleChainSwitch(DEFAULT_CHAIN_ID, null);
 	} else {
 

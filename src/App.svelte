@@ -6,34 +6,31 @@
 	import Header from './components/Header.svelte'
 	import Footer from './components/Footer.svelte'
 
+	import NewOrder from './components/NewOrder.svelte'
+	import Positions from './components/Positions.svelte'
+	import History from './components/History.svelte'
+
 	// Modals
-	import Account from './components/Account.svelte'
 	import Products from './components/Products.svelte'
+	import Leverage from './components/Leverage.svelte'
 	import PositionDetails from './components/PositionDetails.svelte'
 	import AddMargin from './components/AddMargin.svelte'
 	import ClosePosition from './components/ClosePosition.svelte'
 	import EventDetails from './components/EventDetails.svelte'
 
+	import { initWebsocket } from './lib/stream'
 	import { initEventListeners } from './lib/events'
-	import { catchLinks, hidePopoversOnClick } from './lib/utils'
+	import { hidePopoversOnClick } from './lib/utils'
 
 	import { contractReady } from './stores/contracts'
 	import { activeModal } from './stores/modals'
-	import { refreshUserPositions } from './stores/positions'
-	import { component, loadRoute, navigateTo } from './stores/router'
-	import { selectedAddress, chainId, isUnderMaintenance } from './stores/wallet'
+	import { isUnsupported, selectedAddress, chainId } from './stores/wallet'
 
 	onMount(async () => {
-		loadRoute(location.hash);
-		catchLinks((path) => navigateTo(path));
 		hidePopoversOnClick();
-		
-		// Refresh user positions periodically
-		setInterval(() => {
-			refreshUserPositions.update(n => n + 1);
-		}, 5000);
 	});
 
+	$: initWebsocket($selectedAddress);
 	$: initEventListeners($selectedAddress, $chainId);
 
 </script>
@@ -50,25 +47,31 @@
 	}
 
 	:global(:root) {
-		--black-almost: rgba(23,23,23,0.55);
-		--gray-darkest: rgb(30,30,30);
-		--gray-between: rgb(40,40,40);
-		--gray-dark: rgb(55,55,55);
-		--gray: rgb(80,80,80);
-		--gray-light: rgb(125,125,125);
-		--blue: rgb(88,201,242);
-		--blue-dark: rgb(65,194,241);
-		--red: rgb(255,80,0);
-		--red-dark: rgb(235,80,0);
-		--green: rgb(0,200,5);
-		--green-dark: rgb(0,180,5);
-		--pink: rgb(225,80,221);
+
+		--red: #FF5000;
+		--red-dim: #E04700;
+		--red-dark: #421500;
+		--green: #00C805;
+		--green-dim: #00B803;
+		--green-dark: #004201;
+
+		--rich-black: #080808;
+		--rich-black-fogra: #0F0F0F;
+		--eerie-black: #1A1A1A;
+		--jet-dim: #212121;
+		--jet: #292929;
+		--onyx: #3D3D3D;
+		--dim-gray: #616161;
+		--sonic-silver: #707070;
 		--orange: rgb(253,167,20);
+		
 		--base-padding: 20px;
 		--semi-padding: 16px;
-		--base-radius: 18px;
+		--base-radius: 8px;
 		--container-width: 580px;
+
 	}
+
 	@supports (font-variation-settings: normal) {
 	  :global(:root) {
 	  	font-family: 'Inter var', sans-serif;
@@ -76,7 +79,7 @@
 	}
 
 	:global(html) {
-		background-color: var(--gray-darkest);
+		background-color: var(--rich-black);
 		color: #fff;
 		font-family: 'Inter var';
 		font-feature-settings: 'ss01','ss02','ss03','cv01','tnum';
@@ -91,12 +94,9 @@
 		padding: 0;
 		margin: 0;
 	}
-	:global(.overflow-hidden) {
-		overflow: hidden;
-	}
 
 	:global(a) {
-		color: var(--blue);
+		color: var(--green);
 		text-decoration: none;
 		cursor: pointer;
 	}
@@ -118,6 +118,17 @@
 		border: none;
 		background-color: transparent;
 		width: 100%;
+	}
+
+	:global(input::placeholder) {
+		color: var(--dim-gray);
+		opacity: 1;
+	}
+	:global(input::-ms-input-placeholder) {
+		color: var(--dim-gray);
+	}
+	:global(input:-ms-input-placeholder) {
+		color: var(--dim-gray);
 	}
 
 	:global(button) {
@@ -144,46 +155,31 @@
 		-ms-overflow-style: none;  /* IE 10+ */
 	}
 
-	.grid {
-		display: grid;
-		grid-auto-flow: row;
-		grid-gap: 50px;
-	}
-
-	.radial-gradient {
-		position: fixed;
-	    top: 0;
-	    left: 0;
-	    right: 0;
-	    width: 200vw;
-	    height: 200vh;
-		background: radial-gradient(50% 50% at 50% 50%,rgba(0,180,5,0.02) 0,rgba(255,255,255,0) 100%);
-		pointer-events: none;
-		transform: translate(-50vw,-100vh);
-		z-index: -1;
-	}
-
 	main {
 		width: 100%;
 		max-width: var(--container-width);
 		padding: 0 var(--base-padding);
 		margin: 0 auto;
 		box-sizing: border-box;
+		display: grid;
+		grid-auto-flow: row;
+		grid-gap: 60px;
 	}
 
-	.maintenance {
-		padding: 20px;
-		text-align: center;
-		line-height: 1.55;
+	:global(.pos) {
+		color: var(--green) !important;
+	}
+	:global(.neg) {
+		color: var(--red) !important;
 	}
 
 </style>
 
-{#if $activeModal && $activeModal.name == 'Account'}
-	<Account />
-{/if}
 {#if $activeModal && $activeModal.name == 'Products'}
 	<Products />
+{/if}
+{#if $activeModal && $activeModal.name == 'Leverage'}
+	<Leverage />
 {/if}
 {#if $activeModal && $activeModal.name == 'PositionDetails'}
 	<PositionDetails data={$activeModal.data} />
@@ -196,19 +192,16 @@
 {/if}
 
 <EventDetails isActive={$activeModal && $activeModal.name == 'EventDetails'} data={$activeModal.data} />
-<Toasts />
-<div class='grid'>
-	<div class='radial-gradient'></div>
-	<Header />
-	{#if $isUnderMaintenance}
-		<div class='maintenance'>Cap is under maintenance on this Ethereum network. Try Rinkeby.</div>
-	{:else}
-		{#if $contractReady}
-		<main>
-			<svelte:component this={$component}/>
-		</main>
-		{/if}
-	{/if}
-	<Footer />
-</div>
 
+<Toasts />
+<main>
+	<Header />
+	{#if $contractReady}
+		<NewOrder />
+		{#if !$isUnsupported}
+			<Positions />
+			<History />
+		{/if}
+		<Footer />
+	{/if}
+</main>

@@ -2,6 +2,7 @@ import { writable, derived } from 'svelte/store'
 import { selectedAddress } from './wallet'
 
 import { getTrades } from '../lib/api'
+import { fetchHistoryEvents } from '../lib/events'
 
 export const sessionTrades = writable([]);
 
@@ -11,4 +12,5 @@ export const history = derived([selectedAddress], async ([$selectedAddress], set
 		return;
 	}
 	set(await getTrades($selectedAddress));
+	//set(await fetchHistoryEvents($selectedAddress)); // tmp when graph doesn't work - comment out in prod
 },[]);

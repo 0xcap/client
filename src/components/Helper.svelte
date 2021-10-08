@@ -1,121 +1,115 @@
 <script>
+
+	export let label;
+	export let title;
 	export let text;
-	export let direction;
-	export let type = 'default';
+	export let small = false;
+	export let marginRight = false;
+	export let marginLeft = false;
+
 </script>
 
 <style>
 
-	.container {
-		display: inline-block;
-		margin-left: 6px;
-	}
-
-	.tooltip {
-		position: relative;
+	.empty {
+		color: var(--dim-gray);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 18px;
-		height: 18px;
-		background-color: var(--gray-dark);
-		border-radius: 50px;
+	}
+
+	.helper {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
 		cursor: default;
-		font-size: 12.5px;
-		color: rgb(220,220,220);
-		font-weight: 400;
 	}
 
-	.tooltip.settling {
-		width: 7px;
-		height: 7px;
-		background-color: var(--orange);
+	.helper.mr {
+		margin-right: 6px;
+	}
+	.helper.ml {
+		margin-left: 6px;
 	}
 
-	.tooltip:after {
-		opacity: 0;
-		pointer-events: none;
-		transition: all 0.18s ease-out 0.18s;
-		text-indent: 0;
-	    font-size: 1rem;
-	    background-color: var(--gray-dark);
-	    border-radius: 8px;
-	    color: rgb(220,220,220);
-	    content: attr(data-text);
+	.label {
+		border-bottom: 1px dashed var(--onyx);
+		transition: all 0.15s ease-out 0.15s;
+	}
+
+	.helper:hover .label {
+		border-color: var(--dim-gray);
+	}
+
+	.tooltip {
+		text-align: left !important;
+		min-width: 234px;
+	    top: -14px;
+	    left: 50%;
+	    transform: translate(-50%, -100%);
 	    padding: 14px;
+	    border: 1px solid var(--onyx);
+	    border-radius: var(--base-radius);
+	    background-color: var(--eerie-black);
 	    position: absolute;
-	    z-index: 999; 
-	    margin-bottom: 10px; 
-	    word-break: break-word;
-	    white-space: pre-line;
-	    line-height: 1.3;
-	    text-align: left !important;
-	}
-
-	.tooltip:before {
-	    width: 0;
-	    height: 0;
+	    z-index: 99999999;
+	    box-sizing: border-box;
+	    visibility: hidden; 
 	    opacity: 0;
-	    pointer-events: none;
 	    transition: all 0.15s ease-out 0.15s;
-	    content: "";
+	}
+	.tooltip.sm {
+		min-width: 170px;
+	}
+
+	.helper:hover .tooltip {
+		visibility: visible;
+		opacity:1;
+	}
+
+	.tooltip i {
+		position: absolute;
+	    top: 100%;
+	    left: 50%;
+	    margin-left: -12px;
+	    width: 24px;
+	    height: 12px;
+	    overflow: hidden;
+	}
+
+	.tooltip i::after {
+	    content: '';
 	    position: absolute;
-	    z-index: 999; 
+	    width: 12px;
+	    height: 12px;
+	    left: 50%;
+	    transform: translate(-50%,-50%) rotate(45deg);
+	    background-color: var(--onyx);
 	}
 
-	.top:after, .top:before {
-		left: 50%;
-		bottom: 100%;
-	    transform-origin: top;
-	    transform: translate(-50%, 4px);
+	.title {
+		font-weight: 700;
+		padding-bottom: 10px;
+		margin-bottom: 10px;
+		border-bottom: 1px solid var(--jet);
 	}
 
-	.top:after {
-		width: 225px;
+	.body {
+		line-height: 1.35;
 	}
-
-	.top:before {
-		border: 5px solid transparent;
-		border-top-color: var(--gray-dark);
-	}
-
-	.top:hover:before, .top:hover:after {
-		opacity: 1;
-    	pointer-events: none;
-    	transform: translate(-50%, 0);
-	}
-
-	.right:after {
-		right: 0;
-		margin-left: 10px;
-		width: 175px;
-	}
-	.right:before {
-		right: 5px;
-		border: 5px solid transparent;
-		border-right-color: var(--gray-dark);
-	}
-	.right:after, .right:before {
-		left: 100%;
-		top: 50%;
-		transform: translate(calc(4px * -1), -50%);
-	}
-	.right.settling:after {
-		top: -10px;
-	}
-
-	.right:hover:before, .right:hover:after {
-		opacity: 1;
-		pointer-events: none;
-		transform: translate(0, -50%);
-	}
-
-	
 
 </style>
 
-<div class='container'>
-	<div class:settling={type =='settling'} class={`tooltip ${direction}`} data-text={text}>
-		{#if type !='settling'}?{/if}
+{#if label}
+<div class:mr={marginRight} class:ml={marginLeft} class={`helper`}>
+	<span class='label'>{label}</span>
+	<div class={`tooltip ${small ? 'sm' : ''}`}>
+		<div class='title'>{title}</div>
+		<div class='body'>{text}</div>
+		<i></i>
 	</div>
 </div>
+{:else}
+<div class='empty'>--</div>
+{/if}

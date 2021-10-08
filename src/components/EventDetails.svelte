@@ -3,7 +3,6 @@
 	import Modal from './Modal.svelte'
 	import DataList from './DataList.svelte'
 
-	import { BASE_SYMBOL } from '../lib/constants'
 	import { EXTERNAL_ICON } from '../lib/icons'
 	import { txLink, formatToDisplay, formatPnl } from '../lib/utils'
 
@@ -18,41 +17,40 @@
 				value: data.positionId
 			},
 			{
-				label: 'Closed',
-				value: data.timestamp ? new Date(data.timestamp * 1000).toLocaleString() : 'Recently'
+				label: 'Date',
+				value: data.timestamp ? new Date(data.timestamp * 1000).toLocaleString() : null
+			},
+			{
+				label: 'Product',
+				value: data.product
 			},
 			{
 				label: 'Direction',
-				value: data.isLong ? 'Short' : 'Long'
+				value: data.isLong ? 'Close Long' : 'Close Short'
 			},
 			{
 				label: 'Entry Price',
 				value: formatToDisplay(data.entryPrice),
-				helper: 'Price includes fees.'
 			},
 			{
 				label: 'Close Price',
 				value: formatToDisplay(data.price),
-				helper: 'Price includes fees.'
 			},
 			{
-				label: 'Profit or Loss',
-				value: `${formatPnl(data.pnl, data.pnlIsNegative)} ${BASE_SYMBOL}`,
-				helper: 'P/L includes interest charged.'
-			},
-			{
-				label: 'Amount',
-				value: `${formatToDisplay(data.amount)} ${BASE_SYMBOL}`,
-				helper: 'Amount equals margin × leverage.'
+				label: 'Trade Size',
+				value: `${formatToDisplay(data.amount, 0, true)}`,
 			},
 			{
 				label: 'Margin',
-				value: `${formatToDisplay(data.margin)} ${BASE_SYMBOL}`,
-				helper: 'Real balance used from your wallet.'
+				value: `${formatToDisplay(data.margin, 0, true)}`,
 			},
 			{
 				label: 'Leverage',
 				value: `${formatToDisplay(data.leverage)}×`
+			},
+			{
+				label: 'Profit or Loss',
+				value: `${formatPnl(data.pnl, data.pnlIsNegative)} (${formatPnl(100*data.pnl/data.margin, data.pnlIsNegative, true)}%)`
 			},
 			{
 				label: 'Was Liquidated',
@@ -74,6 +72,6 @@
 <style>
 </style>
 
-<Modal isActive={isActive} title={`${data && data.product} Trade`}>
+<Modal isActive={isActive} noHeader={true}>
 	<DataList data={rows} />
 </Modal>

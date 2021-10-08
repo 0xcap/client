@@ -1,16 +1,13 @@
 <script>
 
-	import Helper from './Helper.svelte'
-
 	import { showModal } from '../stores/modals'
-	import { positions } from '../stores/positions'
+	import { positions, refreshUserPositions } from '../stores/positions'
 	import { prices } from '../stores/prices'
 
-	import { BASE_SYMBOL } from '../lib/constants'
 	import { LOGOS } from '../lib/logos'
-	import { PLUS_ICON } from '../lib/icons'
-	import { getProduct } from '../lib/methods'
-	import { formatToDisplay, intify, formatPnl } from '../lib/utils'
+	import { getUPL } from '../lib/helpers'
+	import { CANCEL_ICON } from '../lib/icons'
+	import { formatToDisplay, formatPnl, shortSymbol } from '../lib/utils'
 
 	let upls = {};
 	let upls_percent = {};
@@ -21,41 +18,32 @@
 	async function calculateUPLs(_prices) {
 		totalUPL = 0;
 		for (const position of $positions) {
-			const upl = await getUPL(position);
-			upls[position.positionId] = upl * 1;
+			const upl = await getUPL(position, _prices[position.productId]);
+			upls[position.positionId] = upl;
+			if (!upl) continue;
 			upls_percent[position.positionId] = (100 * upl * 1 / position.margin);
 			totalUPL += upl * 1;
 		}
 		totalUPL = totalUPL.toFixed(4);
 	}
 
-	async function getUPL(position) {
-		let latestPrice = $prices[position.productId];
-		let upl = 0;
-		if (latestPrice) {
-			const productInfo = await getProduct(position.productId);
-			if (position.isLong) {
-				latestPrice = latestPrice * (1 - productInfo.fee/100);
-				upl = position.margin * position.leverage * (latestPrice * 1 - position.price * 1) / position.price;
-			} else {
-				latestPrice = latestPrice * (1 + productInfo.fee/100);
-				upl = position.margin * position.leverage * (position.price * 1 - latestPrice * 1) / position.price;
-			}
-			// Add interest
-			let interest;
-			let now = parseInt(Date.now() / 1000);
-			if (position.isSettling || now < position.timestamp * 1 + 1800) {
-				interest = 0;
-			} else {
-				interest = position.margin * position.leverage * ((productInfo.interest * 1 || 0) / 100) * (now - position.timestamp * 1) / (360 * 24 * 3600);
-			}
-			if (interest < 0) interest = 0;
-			upl -= interest;
-		}
-		return upl;
+	$: calculateUPLs($prices);
+
+	let r;
+	function monitorPositions(_count) {
+		clearInterval(r);
+		if (!_count) return;
+		r = setInterval(() => {
+			refreshUserPositions.update(n => n + 1);
+		}, 5000);
 	}
 
-	$: calculateUPLs($prices);
+	$: monitorPositions(count);
+
+	let timeoutDone = false;
+	setTimeout(() => {
+		timeoutDone = true;
+	}, 5000);
 
 </script>
 
@@ -64,18 +52,15 @@
 	.positions {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
-	}
-
-	.empty {
-		color: var(--gray-light);
-		text-align: center;
+		grid-gap: 0;
 	}
 
 	.header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		padding-bottom: var(--base-padding);
+		font-size: 115%;
 	}
 
 	.header .title {
@@ -83,44 +68,45 @@
 	}
 
 	.positions-list {
-		border-radius: var(--base-radius);
-		overflow: hidden;
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 5px;
+		grid-gap: 12px;
 	}
 
 	.position {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background-color: rgba(23,23,23,0.4);
-		height: 86px;
+		height: 64px;
 		font-size: 115%;
+		border-radius: var(--base-radius);
+		background-color: var(--rich-black-fogra);
+		cursor: pointer;
 	}
 	.position:hover {
-		background-color: rgba(23,23,23,0.55);
+		background-color: var(--eerie-black);
 	}
 
 	.details {
 		display: flex;
 		align-items: center;
-		cursor: pointer;
 		flex: 1 1 auto;
+		height: 100%;
 	}
 
 	.direction {
-		width: 10px;
-		height: 86px;
-		margin-right: var(--base-padding);
+		margin-left: var(--base-padding);
+		margin-right: 10px;
+		font-weight: 800;
+		font-size: 115%;
 	}
 
 	.direction.long {
-		background-color: var(--green);
+		color: var(--green);
 	}
 
 	.direction.short {
-		background-color: var(--red);
+		color: var(--red);
 	}
 
 	.product {
@@ -130,46 +116,26 @@
 	}
 
 	.product img {
-		width: 24px;
-		height: 24px;
-		border-radius: 24px;
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
 		margin-right: 8px;
 	}
 
-	.product .leverage {
-		margin-left: 4px;
-		font-weight: 400;
+	.info {
+		color: var(--sonic-silver);
+		font-weight: 400 !important;
+		margin-left: 10px;
 	}
-
 	@media (max-width: 600px) {
-		.product .leverage {
+		.info {
 			display: none;
 		}
 	}
 
-	.entry {
-		color: var(--gray-light);
-		margin-top: 8px;
-		font-size: 80%;
-		display: flex;
-		align-items: center;
-	}
-
-	.entry-text-mobile {
-		display: none;
-	}
-
-	.upl-entry {
-		display: none;
-	}
-
-	@media (max-width: 600px) {
-		.entry-text {
-			display: none;
-		}
-		.entry-text-mobile, .upl-entry {
-			display: inline;
-		}
+	.price {
+		margin-left: 10px;
+		opacity: 0.35;
 	}
 
 	.tools {
@@ -178,44 +144,19 @@
 	}
 
 	.upl-wrap {
-		margin-right: 20px;
 		text-align: right;
 	}
 
-	@media (max-width: 600px) {
-		.upl-wrap {
-			display: none;
-			margin-right: 0;
-		}
+	.status {
+		color: var(--dim-gray);
+		padding-right: var(--base-padding);
+		margin-left: 10px;
 	}
 
-	.upl-percent {
-		margin-top: 10px;
-		font-size: 80%;
-		display: none;
-	}
-
-	.pos {
-		color: var(--green) !important;
-	}
-	.neg {
-		color: var(--red) !important;
-	}
-
-	.add-margin, .close {
+	.close {
 		padding: 16px;
-		margin-right: 8px;
-		fill: var(--gray);
-	}
-
-	@media (max-width: 600px) {
-		.add-margin, .close {
-			margin-right: 0;
-		}
-	}
-
-	.add-margin:hover {
-		fill: #fff;
+		margin-left: 8px;
+		fill: var(--dim-gray);
 	}
 
 	.close:hover {
@@ -223,83 +164,92 @@
 	}
 
 	:global(.positions svg) {
-		height: 16px;
+		height: 18px;
 		fill: inherit;
-		margin-bottom: -2px;
+		margin-bottom: -3px;
 	}
 
-	:global(.positions .close svg) {
-		transform: rotate(45deg);
+	.v1 {
+		text-align: center;
 	}
 
 </style>
 
+{#if count > 0}
 <div class='positions'>
 
-	{#if count == 0}
-		<div class='empty'>Your positions will appear here.</div>
-	{:else}
+	<div class='header'>
+		<div class='title'>Positions</div>
+		{#if count > 1}
+			<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{formatPnl(totalUPL*1 || undefined)}</div>
+		{/if}
+	</div>
 
-		<div class='header'>
-			<div class='title'>Positions</div>
-			{#if count > 1}
-				<div class={`total-upl ${totalUPL * 1 > 0 ? 'pos' : 'neg'}`}>{formatPnl(totalUPL)}</div>
-			{/if}
-		</div>
+	<div class='positions-list'>
 
-		<div class='positions-list'>
+		{#each $positions as position}
+			
+			{#if position.margin * 1 > 0}
 
-			{#each $positions as position}
-				
-				<div class='position'>
+			<div class='position' on:click={() => {showModal('PositionDetails', position)}} data-intercept="true">
 
-					<div class='details' on:click={() => {showModal('PositionDetails', position)}} data-intercept="true">
-						<div class={`direction ${position.isLong ? 'long' : 'short'}`}></div>
-						<div>
-							<div class='product'>
-								<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
-								<span>{position.product}</span>
-								<span class='leverage'>{formatToDisplay(position.leverage)}×</span>
-							</div>
-							<div class='entry'>
-								<span class='entry-text'>
-									{formatToDisplay(position.amount)} {BASE_SYMBOL} at {formatToDisplay(position.price)}
-								</span><span class='entry-text-mobile'>
-									{formatToDisplay(position.amount)}@{formatToDisplay(position.price)}
-								</span>{#if position.isSettling}<Helper direction='right' text='Settles at the next oracle price change.' type='settling' />{/if}
-								<span class={`upl-entry ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
-									{formatPnl(upls[position.positionId])}
-								</span>
-							</div>
+				<div class='details'>
+					<div class={`direction ${position.isLong ? 'long' : 'short'}`}>
+						{position.isLong ? '↑' : '↓'}
+					</div>
+					<div class='product'>
+						<img src={LOGOS[position.productId]} alt={`${position.product} logo`}>
+						<span>{shortSymbol(position.product)}</span>
+						{#if position.price > 0}
+						<div class='info'>
+							<span class='amount'>{formatToDisplay(position.amount, 0, true)}</span><span class='price'>{formatToDisplay(position.price)}</span>
+						</div>
+						{/if}
+					</div>
+				</div>
+
+				<div class='tools'>
+
+					<div class={`upl-wrap ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
+						<div class='upl'>
+							{formatPnl(upls[position.positionId])}
 						</div>
 					</div>
 
-					<div class='tools'>
-						<div class={`upl-wrap ${upls[position.positionId] * 1 > 0 ? 'pos' : 'neg'}`}>
-							<div class='upl'>
-								{formatPnl(upls[position.positionId])}
+					{#if position.price * 1 == 0 || position.closeOrderId > 0}
+						{#if position.price * 1 == 0}
+							<div class='status'>
+								Settling
 							</div>
-							<!--
-							<div class='upl-percent'>
-								{formatPnl(upls_percent[position.positionId], undefined, true)}%
+						{/if}
+
+						{#if position.closeOrderId > 0}
+							<div class='status'>
+								Closing
 							</div>
-							-->
-						</div>
-						<a class='add-margin' on:click={() => {showModal('AddMargin', position)}} data-intercept="true">
-							{@html PLUS_ICON}
+						{/if}
+
+					{:else}
+
+						<a class='close' on:click|stopPropagation={() => {showModal('ClosePosition', position)}} data-intercept="true">
+							{@html CANCEL_ICON}
 						</a>
-						<a class='close' on:click={() => {showModal('ClosePosition', position)}} data-intercept="true">
-							{@html PLUS_ICON}
-						</a>
-					</div>
+					
+					{/if}
 
 				</div>
 
-			{/each}
+			</div>
 
-		</div>
+			{/if}
 
-	{/if}
+		{/each}
 
-	
+	</div>
+
 </div>
+{:else if timeoutDone}
+<div class='v1'>
+	<a href='https://v1.cap.finance' target='_blank'>Looking for v1 positions?</a>
+</div>
+{/if}

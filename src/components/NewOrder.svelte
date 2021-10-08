@@ -3,21 +3,20 @@
 	import { onMount } from 'svelte'
 
 	import Helper from './Helper.svelte'
-	import Volume from './Volume.svelte'
-
 
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
+	import { CARET_DOWN } from '../lib/icons'
 	import { LOGOS } from '../lib/logos'
-	import { openPosition } from '../lib/methods'
-	import { formatToDisplay } from '../lib/utils'
+	import { submitNewPosition } from '../lib/methods'
+	import { formatToDisplay, shortSymbol } from '../lib/utils'
 
 	import { showModal } from '../stores/modals'
 	import { margin, leverage, amount, buyingPower } from '../stores/order'
-	import { selectedProductId, selectedProduct } from '../stores/products'
 	import { prices } from '../stores/prices'
+	import { selectedProductId, selectedProduct, products } from '../stores/products'
 	import { showToast } from '../stores/toasts'
-	import { selectedAddress, isTestnet, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
+	import { selectedAddress, isUnsupported, userBaseBalance } from '../stores/wallet'
 
 	let submitIsPending = false;
 	async function _submitOrder(isLong) {
@@ -26,7 +25,7 @@
 			return;
 		}
 		submitIsPending = true;
-		const error = await openPosition(
+		const error = await submitNewPosition(
 			$selectedProductId,
 			isLong,
 			$leverage * 1,
@@ -55,7 +54,11 @@
 			first_call = false;
 			return;
 		}
-		if (isUnsupported || address && balance == 0 || !address && !balance) {
+		if (!address || isUnsupported) {
+			showArbitrumLink = false;
+			return;
+		}
+		if (!isUnsupported && address && balance === 0) {
 			showArbitrumLink = true;
 		} else {
 			showArbitrumLink = false;
@@ -69,7 +72,7 @@
 
 		setTimeout(() => {
 			checkArbitrumLink($selectedAddress, $userBaseBalance, $isUnsupported);
-		}, 750);
+		}, 1000);
 	});
 
 	$: checkArbitrumLink($selectedAddress, $userBaseBalance, $isUnsupported);
@@ -78,13 +81,38 @@
 
 <style>
 
+	.arbitrum-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1.4;
+		background-color: var(--eerie-black);
+		padding: var(--base-padding);
+		border-radius: var(--base-radius);
+		margin-bottom: 60px;
+		font-weight: 600;
+	}
+
+	:global(.arbitrum-link img) {
+		height: 32px;
+		width: 32px;
+		margin-right: 10px;
+	}
+
 	.new-order {
 		display:  grid;
 		grid-auto-flow: row;
-		grid-gap: 12px;
-		padding: 12px;
-		background-color: var(--black-almost);
+		grid-gap: var(--base-padding);
+		padding: var(--base-padding);
+		background-color: var(--eerie-black);
 		border-radius: var(--base-radius);
+	}
+
+	@media (max-width: 600px) {
+		.new-order {
+			grid-gap: 12px;
+			padding: 12px;
+		}
 	}
 
 	.new-order.disabled {
@@ -95,228 +123,243 @@
 		opacity: 0.6;
 	}
 
-	.product-row {
-		cursor: pointer !important;
-	}
-
-	.input-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		border: 1px solid rgb(45,45,45);
-		border-radius: 14px;
-		padding: 0 var(--base-padding);
-		background-color: var(--gray-darkest);
-		cursor: text;
-		height: 83px;
-	}
-
-	.input-row:hover, .input-row.focused {
-		border-color: rgb(55,55,55);
-	}
-
-	.amount-row {
-		align-items: initial;
-		height: 98px !important;
-	}
-
-	.amount-row > div {
-		flex: 1 1 auto;
-	}
-
 	.top {
-		margin-top: 18px;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		height: 48px;
+		font-weight: 700;
+		font-size: 125%;
 	}
 
 	.bottom {
-		height: 36px;
+		margin-top: var(--base-padding);
+		padding-top: var(--base-padding);
 		display: flex;
-		justify-content: space-between;
+		align-items: center;
+		border-top: 1px solid var(--jet-dim);
+		font-size: 90%;
 	}
 
-	.label {
-		font-weight: 600;
+	@media (max-width: 600px) {
+		.bottom {
+			margin-top: 12px;
+			padding-top: 12px;
+		}
 	}
 
-	.sub-label {
-		color: var(--gray-light);
-		font-size: 80%;
-		margin-top: 5px;
+	.left {
+		display: flex;
+		align-items: center;
+	}
+
+	.left .helper {
+		margin-right: 6px;
+	}
+
+	.bottom .price {
+		margin-right: 6px;
+	}
+	.bottom .price.empty {
+		color: var(--dim-gray);
+	}
+
+	.bottom .margin-used {
+		margin-right: 12px;
+		border-bottom: 1px dashed var(--dim-gray);
+	}
+
+	.bottom .trade-size {
+		border-bottom: 1px dashed var(--dim-gray);
+	}
+
+	.sep {
+		color: var(--jet);
+		margin: 0 12px;
+	}
+
+	.right {
+		flex: 1 1 auto;
+		text-align: right;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	.right .helper {
+		margin-left: 6px;
+	}
+
+	.selector {
+		display: flex;
+		align-items: center;
+		background-color: var(--jet);
+		border-radius: var(--base-radius);
+		white-space: nowrap;
+		cursor: pointer;
+		padding: 10px 12px;
+	}
+
+	.selector:hover {
+		background-color: var(--onyx);
+	}
+
+	:global(.selector svg) {
+		margin-left: 12px;
+		height: 8px;
+		fill: inherit;
+		stroke: inherit;
 	}
 
 	.product-wrap {
-		display: flex;
-		align-items: center;
-		font-size: 115%;
-		font-weight: 800;
-		white-space: nowrap;
+		margin-right: 12px;
 	}
 
 	.product-wrap img {
-		width: 32px;
-		height: 32px;
-		border-radius: 32px;
-		margin-right: 10px;
+		width: 28px;
+		height: 28px;
+		border-radius: 28px;
+		margin-right: 12px;
 	}
 
-	.product-wrap .leverage {
-		margin-left: 3px;
-		font-weight: 400;
+	@media (max-width: 600px) {
+		.selector {
+			padding: 10px 8px;
+		}
+		.product-wrap {
+			margin-right: 6px;
+		}
 	}
 
-	.input-wrap {
-		position: relative;
-		flex: 1 1 auto;
+	.select-leverage {
+		font-weight: 500;
 	}
 
 	input {
-		font-size: 135%;
-		font-weight: 600;
+		flex: 1 1 auto;
+		font-weight: 500;
 		text-align: right;
-	}
-
-	.input-label {
-		color: var(--gray-light);
-		font-size: 80%;
-		text-align: right;
-		margin-top: 5px;
-	}
-
-	.input-label.regular {
-		color: #fff;
+		font-size: 125%;
 	}
 
 	.buttons {
 		display: grid;
 		grid-auto-flow: column;
-		grid-gap: 12px;
+		grid-gap: var(--semi-padding);
+	}
+
+	@media (max-width: 600px) {
+		.buttons {
+			grid-gap: 12px;
+		}
 	}
 
 	button {
-		padding: var(--base-padding);
-		border-radius: 14px;
-		color: var(--gray-darkest);
-		font-weight: 650;
-		font-size: 115%;
+		padding: 0 var(--base-padding);
+		height: 64px;
+		border-radius: var(--base-radius);
+		font-weight: 700;
+		font-size: 120%;
+	}
+
+	@media (max-width: 600px) {
+		button {
+			height: 58px;
+			font-size: 110%;
+		}
 	}
 
 	button.disabled {
-		background-color: var(--gray-darkest);
-		color: var(--gray-light);
+		background-color: var(--jet-dim);
+		color: var(--dim-gray);
 		pointer-events: none;
 		cursor: default;
 	}
 
-	.button-default {
-		background-color: var(--blue);
-		color: var(--gray-darkest);
-	}
-	.button-default:not(.disabled):hover {
-		background-color: var(--blue-dark);
-	}
-
 	.button-short {
+		color: var(--red-dark);
 		background-color: var(--red);
 	}
 	.button-short:not(.disabled):hover {
-		background-color: var(--red-dark);
+		background-color: var(--red-dim);
 	}
 	.button-long {
+		color: var(--green-dark);
 		background-color: var(--green);
 	}
 	.button-long:not(.disabled):hover {
-		background-color: var(--green-dark);
-	}
+		background-color: var(--green-dim);
 
-	.arbitrum-link {
-		display: flex;
-		font-size: 90%;
-		line-height: 1.45;
-		padding: 6px 0;
-	}
-
-	:global(.arbitrum-link img) {
-		height: 54px;
-		width: 54px;
-		margin-right: 8px;
 	}
 
 </style>
 
-<div class='new-order' class:disabled={submitIsPending}>
+<div>
 
 	{#if showArbitrumLink}
 		<div class='arbitrum-link'>
-			<div><img src='/img/arbitrum-logo.svg' alt='Arbitrum logo' /></div>
-			<div>Arbitrum is a Layer 2 network that works just like Ethereum except it's faster and cheaper. You must first <strong><a href='https://bridge.arbitrum.io' target='_blank'>bridge↗</a></strong> ETH into Arbitrum to start trading on Cap.</div>
+			<img src='/img/arbitrum-logo.svg' alt='Arbitrum logo' />
+			<div><strong><a href='https://bridge.arbitrum.io' target='_blank'>Bridge↗</a></strong> ETH into Arbitrum to start trading.</div>
 		</div>
 	{/if}
 
-	<div class='input-row product-row' on:click={() => {showModal('Products')}} data-intercept="true">
-		<div class='label-wrap'>
-			<div class='label'>Product</div>
-			{#if $selectedAddress}
-			<div class='sub-label'title='Price provided by Chainlink'>
-				Price: {formatToDisplay($prices[$selectedProductId]) || '...'}
-			</div>
-			{/if}
-		</div>
-		<div class='product-wrap'>
-			{#if $selectedProduct.symbol}
-				<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}><span>{$selectedProduct.symbol}</span> <span class='leverage'>{$leverage}×</span>
-			{:else}
-				<img src={LOGOS[1]} alt={`ETH-USD logo`}><span>ETH-USD</span> <span class='leverage'>20×</span>
-			{/if}
-		</div>
-	</div>
+	<div class='new-order' class:disabled={submitIsPending}>
 
-	<label class='input-row amount-row' class:focused={amountIsFocused} for='amount'>
-
-		<div>
+		<div class='input-row' class:focused={amountIsFocused}>
 
 			<div class='top'>
-				<div class='label-wrap'>
-					<div class='label'>Amount<Helper direction='top' text='Enter an amount including leverage.' /></div>
-					
+
+				<div class='selector product-wrap' on:click={() => {showModal('Products')}} data-intercept="true">
+					<img src={LOGOS[$selectedProductId]} alt={`${$selectedProduct.symbol} logo`}>
+					<span>{shortSymbol($selectedProduct.symbol || $products[$selectedProductId])}</span>
+					{@html CARET_DOWN}
 				</div>
-				<div class='input-wrap'>
-					<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" spellcheck="false" placeholder={`0 ${BASE_SYMBOL}`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
-					
+
+				<div class='selector select-leverage' on:click={() => {showModal('Leverage')}} data-intercept="true">
+					<span>{$leverage}×</span>{@html CARET_DOWN}
 				</div>
+
+				<input id='amount' type='number' on:focus={() => {amountIsFocused = true}}  on:blur={() => {amountIsFocused = false}} bind:value={$amount} min="0" max="1000000" maxlength="10" spellcheck="false" placeholder={`0.0`} autocomplete="off" autocorrect="off" inputmode="decimal" disabled={submitIsPending}>
+
 			</div>
 
+			{#if $selectedAddress}
 			<div class='bottom'>
 
-				<div class='sub-label'>
-					Available: <a on:click={() => {amount.set(Math.floor($buyingPower*10**4)/10**4)}}>{formatToDisplay($buyingPower)} {BASE_SYMBOL}</a>
+				<div class='left'>
+					<Helper title='Reference Price' text="Execution price differs based on market conditions." label={formatToDisplay($prices[$selectedProductId], 0, true) || null} />
 				</div>
 
-				<div>
-					<div class:regular={$margin > 0} class='input-label'>${formatToDisplay($prices[1] * $amount, 2)}</div>
+				<div class='right'>
+					
 					{#if $margin > 0}
-					<div class='input-label'><Helper direction='top' text='Actual balance used from your wallet.' /> Margin: {formatToDisplay($margin, 4)} {BASE_SYMBOL}</div>
+						
+						<Helper title='Margin' text='Balance used for this trade.' label={`${formatToDisplay($margin, 4)} ${BASE_SYMBOL}`} />
+						<div class='sep'>|</div>
+						<Helper title='Trade Size (USD)' text='Margin × leverage.' small={true} label={`$${formatToDisplay($prices[1] * $amount, 2)}`} />
+
+					{:else}
+
+						<Helper title='Buying Power' text='Wallet balance × leverage.' label={`${formatToDisplay($buyingPower)} ${BASE_SYMBOL}`}/>
+	
 					{/if}
+				
 				</div>
 
 			</div>
+			{/if}
 
 		</div>
 
-	</label>
+		<div class='buttons'>
+			{#if $isUnsupported}
+				<button class='disabled'>Switch to Arbitrum to trade</button>
+			{:else if !$selectedAddress}
+				<button class='disabled'>Connect to Arbitrum to trade</button>
+			{:else}
+				<button class:disabled={submitIsPending || !$selectedAddress} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending || !$selectedAddress} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
+			{/if}
+		</div>
 
-	<div class='buttons'>
-		{#if !$selectedAddress}
-			<button class='disabled'>Connect a wallet</button>
-		{:else if $isUnsupported}
-			<button class='disabled'>Switch to Arbitrum to trade</button>
-		{:else}
-			<button class:disabled={submitIsPending} class='button-short' on:click={() => {_submitOrder(false)}}>Short</button><button  class:disabled={submitIsPending} class='button-long' on:click={() => {_submitOrder(true)}}>Long</button>
-		{/if}
 	</div>
-
-	<Volume/>
 
 </div>

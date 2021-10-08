@@ -1,7 +1,6 @@
 <script>
 
-	import { BASE_SYMBOL } from '../lib/constants'
-	import { formatToDisplay, formatPnl } from '../lib/utils'
+	import { formatToDisplay, formatPnl, shortSymbol } from '../lib/utils'
 
 	import { history, sessionTrades } from '../stores/history'
 	import { showModal } from '../stores/modals'
@@ -27,7 +26,7 @@
 	function updateShownEvents(_all_events) {
 		if (!_all_events) _all_events = all_events;
 		if (!_all_events || !_all_events.length) return;
-		shown_events = _all_events.slice(0, current_index * 7);
+		shown_events = _all_events.slice(0, current_index * 5);
 		current_index++;
 	}
 
@@ -40,72 +39,95 @@
 	.history {
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: var(--base-padding);
+		grid-gap: 0;
 	}
 
 	.header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		padding-bottom: var(--base-padding);
 	}
 
 	.header .title {
 		font-weight: 700;
+		font-size: 115%;
+	}
+
+	.header a {
+		color: var(--dim-gray);
 	}
 
 	.history-list {
-		border-radius: var(--base-radius);
-		overflow: hidden;
 		display: grid;
 		grid-auto-flow: row;
-		grid-gap: 5px;
+		grid-gap: 6px;
 	}
 
 	.item {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background-color: rgba(40,40,40,0.55);
 		overflow: hidden;
-		height: 75px;
 		font-size: 115%;
+		border-radius: var(--base-radius);
+		height: 54px;
 		cursor: pointer;
 		padding: 0 var(--base-padding);
+		background-color: var(--rich-black-fogra);
 	}
 	.item:hover {
-		background-color: rgba(40,40,40,0.85);
+		background-color: var(--eerie-black);
 	}
 
 	.item-more {
-		background-color: rgba(40,40,40,0.55);
-		text-align: center;
-		padding: var(--base-padding);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 var(--base-padding);
 		cursor: pointer;
-		color: var(--gray-light);
+		color: var(--dim-gray);
+		border-radius: var(--base-radius);
+		height: 50px;
 	}
 	.item-more:hover {
 		color: #fff;
-		background-color: rgba(40,40,40,0.85);
 	}
 
-	.info {
-	}
-
-	.product {
+	.details {
 		display: flex;
 		align-items: center;
 		font-weight: 700;
 	}
 
-	.product .leverage {
-		margin-left: 3px;
-		font-weight: 400;
+	.direction {
+		margin-right: 10px;
+		font-weight: 800;
+		font-size: 115%;
 	}
 
-	.close {
-		color: var(--gray-light);
-		margin-top: 6px;
-		font-size: 80%;
+	.direction.long {
+		color: var(--green);
+	}
+
+	.direction.short {
+		color: var(--red);
+	}
+
+	.info {
+		color: var(--sonic-silver);
+		font-weight: 400 !important;
+		margin-left: 10px;
+	}
+	@media (max-width: 600px) {
+		.info {
+			display: none;
+		}
+	}
+
+	.price {
+		margin-left: 10px;
+		opacity: 0.35;
 	}
 
 	.pnl {
@@ -113,16 +135,9 @@
 		align-items: center;
 	}
 
-	.pos {
-		color: var(--green);
-	}
-	.neg {
-		color: var(--red);
-	}
-
 </style>
 
-{#if $history.length}
+{#if shown_events.length}
 <div class='history'>
 
 	<div class='header'>
@@ -136,15 +151,13 @@
 	
 		{#each shown_events as event}
 	
-			<div class='item' on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
+			<div class={`item ${event.pnlIsNegative ? 'loss' : 'profit'}`} on:click={() => {showModal('EventDetails', event)}} data-intercept="true">
 	
-				<div class='info'>
-					<div class='product'>
-						<span>{event.product}</span>
-						<span class='leverage'>{formatToDisplay(event.leverage)}×</span>
-					</div>
-					<div class='close'>
-						Closed {formatToDisplay(event.amount)} {BASE_SYMBOL} at {formatToDisplay(event.price)}
+				<div class='details'>
+					<div class={`direction ${event.isLong ? 'long' : 'short'}`}>{event.isLong ? '↑' : '↓'}</div>
+					<span>{shortSymbol(event.product)}</span>
+					<div class='info'>
+						<span class='amount'>{formatToDisplay(event.amount, 0, true)}</span><span class='price'>{formatToDisplay(event.price)}</span>
 					</div>
 				</div>
 
@@ -157,7 +170,7 @@
 		{/each}
 
 		{#if shown_events.length < $history.length}
-		<div class='item-more' on:click={() => {updateShownEvents()}}>+More</div>
+		<div class='item-more' on:click={() => {updateShownEvents()}}>More</div>
 		{/if}
 	
 	</div>

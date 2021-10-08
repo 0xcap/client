@@ -8,16 +8,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: var(--base-padding);
+		padding-top: var(--base-padding);
 	}
 
 	.left {
 		display: flex;
 		align-items: center;
-	}
-	
-	.logo {
-		margin-right: 16px;
 	}
 
 	img {
@@ -28,7 +24,7 @@
 
 <header>
 	<div class='left'>
-		<a class='logo' href='/'><img src='/img/logo.svg' alt='Cap logo' /></a>
+		<img src='/img/logo.svg' title='Cap logo' alt='Cap logo' />
 	</div>
 	<Wallet/>
 </header>
