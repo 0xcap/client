@@ -201,8 +201,8 @@
 	:global(.selector svg) {
 		margin-left: 12px;
 		height: 8px;
-		fill: inherit;
-		stroke: inherit;
+		fill: transparent;
+		stroke: #fff;
 	}
 
 	.product-wrap {
