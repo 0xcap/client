@@ -17,7 +17,9 @@ export async function initContracts(chainId, _provider) {
 
 	// Set contracts
 	const _contract = CHAIN_DATA[chainId].contract;
-	contract.set(new ethers.Contract(_contract.address, _contract.abi, _provider));
+	if (_provider) {
+		contract.set(new ethers.Contract(_contract.address, _contract.abi, _provider));
+	}
 	contractReady.set(true);
 
 }

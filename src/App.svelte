@@ -11,6 +11,7 @@
 	import History from './components/History.svelte'
 
 	// Modals
+	import Connect from './components/Connect.svelte'
 	import Products from './components/Products.svelte'
 	import Leverage from './components/Leverage.svelte'
 	import PositionDetails from './components/PositionDetails.svelte'
@@ -176,6 +177,9 @@
 
 </style>
 
+{#if $activeModal && $activeModal.name == 'Connect'}
+	<Connect />
+{/if}
 {#if $activeModal && $activeModal.name == 'Products'}
 	<Products />
 {/if}

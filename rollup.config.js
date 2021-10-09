@@ -69,7 +69,7 @@ export default {
 			dedupe: ['svelte']
 		}),
 		commonjs(),
-
+		
 		copy({
             targets: [
                 {

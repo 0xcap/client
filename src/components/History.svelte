@@ -25,7 +25,7 @@
 
 	function updateShownEvents(_all_events, clicked) {
 		if (!_all_events) _all_events = all_events;
-		if (!_all_events || !_all_events.length) return;
+		if (!_all_events || !_all_events.length) return shown_events = [];
 		if (clicked) current_index++;
 		shown_events = _all_events.slice(0, current_index * 5);
 	}
