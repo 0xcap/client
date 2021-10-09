@@ -18,9 +18,9 @@ export async function getBalance(address) {
 
 export async function getProduct(productId) {
 	if (productCache[productId]) return productCache[productId];
-	const contract = await getContract();
+	const contract = getContract();
 	if (!contract) return null;
-	const product = formatProduct(contract.getProduct(productId), productId);
+	const product = formatProduct(await contract.getProduct(productId), productId);
 	productCache[productId] = product;
 	return product;
 }
