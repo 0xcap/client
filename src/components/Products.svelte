@@ -23,8 +23,8 @@
 		font-weight: 700;
 		cursor: pointer;
 	}
-	.row:not(.selected):not(.search-row):hover {
-		background-color: var(--jet);
+	.row:not(.selected):hover {
+		background-color: var(--jet-dim);
 	}
 	.row.selected {
 		background-color: var(--jet);

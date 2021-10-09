@@ -23,11 +23,11 @@
 	let all_events = [];
 	$: all_events = $sessionTrades.concat($history);
 
-	function updateShownEvents(_all_events) {
+	function updateShownEvents(_all_events, clicked) {
 		if (!_all_events) _all_events = all_events;
 		if (!_all_events || !_all_events.length) return;
+		if (clicked) current_index++;
 		shown_events = _all_events.slice(0, current_index * 5);
-		current_index++;
 	}
 
 	$: updateShownEvents(all_events);
@@ -74,10 +74,10 @@
 		height: 54px;
 		cursor: pointer;
 		padding: 0 var(--base-padding);
-		background-color: var(--rich-black-fogra);
+		background-color: var(--eerie-black);
 	}
 	.item:hover {
-		background-color: var(--eerie-black);
+		background-color: var(--jet-dim);
 	}
 
 	.item-more {
@@ -170,7 +170,7 @@
 		{/each}
 
 		{#if shown_events.length < $history.length}
-		<div class='item-more' on:click={() => {updateShownEvents()}}>More</div>
+		<div class='item-more' on:click={() => {updateShownEvents(null, true)}}>More</div>
 		{/if}
 	
 	</div>
