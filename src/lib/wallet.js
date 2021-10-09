@@ -4,72 +4,135 @@ import { get } from 'svelte/store'
 import { CHAIN_DATA, DEFAULT_CHAIN_ID } from './constants'
 import { initContracts } from './contracts'
 
+import { hideModal } from '../stores/modals'
 import { showToast } from '../stores/toasts'
 import { clearTransactions } from '../stores/transactions'
 import { provider, signer, selectedAddress, chainId } from '../stores/wallet'
 
 let walletProvider;
+let walletconnect;
 
-function handleChainSwitch(_chainId, _provider) {
+function handleChainSwitch(_chainId) {
 
 	if (!CHAIN_DATA[_chainId]) {
-		if (get(signer)) showToast('Network not supported.');
+		return showToast('Network not supported. Switch to Arbitrum to trade.');
 	}
 
 	if (get(chainId) != _chainId) {
 		localStorage.setItem('chainId', _chainId);
-		clearTransactions();
-		window.location.reload();
-	} else {
-		chainId.set(_chainId);
-		initContracts(_chainId, _provider);
 	}
+
+	chainId.set(_chainId);
+	initContracts(_chainId, walletProvider);
 
 }
 
-function handleAccountsChanged(accounts) {
-	if (!accounts.length) return signer.set(null);
-	if (get(selectedAddress) && get(selectedAddress) != accounts[0]) {
-		clearTransactions();
-	}
+function handleAccountsChanged() {
 	signer.set(walletProvider.getSigner());
 }
 
-export async function initWallet() {
+export async function initMetamaskSession() {
 
-	// Window.ethereum is Metamask
-	let listener = window.ethereum;
+	let metamask = window.ethereum;
 
-	if (!listener) {
-		showToast('Please install Metamask to use Cap.');
-		handleChainSwitch(DEFAULT_CHAIN_ID, null);
-	} else {
+	if (metamask) {
 
-		walletProvider = new ethers.providers.Web3Provider(listener);
+		walletProvider = new ethers.providers.Web3Provider(metamask);
 
 		// Chain id (number)
 		const network = await walletProvider.getNetwork();
 		handleChainSwitch(network.chainId, walletProvider);
-		listener.on('chainChanged', (_chainId) => handleChainSwitch(parseInt(_chainId, 16), walletProvider));
+		metamask.on('chainChanged', (_chainId) => handleChainSwitch(parseInt(_chainId, 16)));
 
 		// Account
 		handleAccountsChanged(await walletProvider.send('eth_accounts'));
-		listener.on('accountsChanged', handleAccountsChanged);
+		metamask.on('accountsChanged', handleAccountsChanged);
 
+		provider.set(walletProvider);
+
+	} else {
+		initContracts();
 	}
-
-	provider.set(walletProvider);
 	
 }
 
-export async function connectWallet() {
-	if (!window.ethereum) return showToast('Please install Metamask to connect.');
-	try {
+export async function connectWallet(type) {
+	
+	if (type == 'metamask') {
+
+		let metamask = window.ethereum;
+		if (!metamask) return showToast('Metamask is not installed.');
+		
+		walletProvider = new ethers.providers.Web3Provider(metamask);
+		provider.set(walletProvider);
+
 		await walletProvider.send("eth_requestAccounts", []);
-		signer.set(walletProvider.getSigner());
+
+		hideModal();
+		
 		const network = await walletProvider.getNetwork();
-		if (!CHAIN_DATA[network.chainId]) showToast('Network not supported.');
-	} catch(e) {
-		console.error(e);
+		handleChainSwitch(network.chainId);
+		metamask.on('chainChanged', (_chainId) => handleChainSwitch(parseInt(_chainId, 16)));
+
+		handleAccountsChanged();
+		metamask.on('accountsChanged', handleAccountsChanged);
+
 	}
+
+	if (type == 'walletconnect') {
+
+		let myScript = document.createElement("script");
+		myScript.setAttribute("src", "https://unpkg.com/@walletconnect/web3-provider@1.6.6/dist/umd/index.min.js");
+		document.body.appendChild(myScript);
+
+		myScript.addEventListener("load", scriptLoaded, false);
+
+		async function scriptLoaded() {
+
+			walletconnect = new WalletConnectProvider.default({
+				rpc: {
+					42161: 'https://arb1.arbitrum.io/rpc'
+				}
+			});
+
+			await walletconnect.enable();
+
+			hideModal();
+
+			walletProvider = new ethers.providers.Web3Provider(walletconnect);
+
+			provider.set(walletProvider);
+
+			const network = await walletProvider.getNetwork();
+			handleChainSwitch(network.chainId);
+
+			handleAccountsChanged();
+
+			// Subscribe to accounts change
+			walletconnect.on("accountsChanged", (accounts) => {
+			  console.log(accounts);
+			  handleAccountsChanged();
+			});
+
+			// Subscribe to chainId change
+			walletconnect.on("chainChanged", (chainId) => {
+			  console.log(chainId);
+			  handleChainSwitch(chainId);
+			});
+
+			// Subscribe to session disconnection
+			walletconnect.on("disconnect", (code, reason) => {
+			  console.log('disconnect', code, reason);
+			  window.location.reload();
+			});
+
+		}
+
+	}
+
+}
+
+export async function disconnectWallet(force) {
+	if (force && walletconnect) await walletconnect.disconnect();
+	signer.set(null);
 }

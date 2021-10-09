@@ -3,8 +3,8 @@
 	import { onMount } from 'svelte'
 
 	import { BASE_SYMBOL } from '../lib/constants'
-	import { SPINNER_ICON } from '../lib/icons'
-	import { initWallet, connectWallet } from '../lib/wallet'
+	import { SPINNER_ICON, CANCEL_ICON } from '../lib/icons'
+	import { initMetamaskSession, disconnectWallet } from '../lib/wallet'
 	import { formatToDisplay, shortAddr, addrLink } from '../lib/utils'
 
 	import { showModal } from '../stores/modals'
@@ -12,7 +12,7 @@
 	import { selectedAddress, chainId, isUnsupported, networkLabel, userBaseBalance } from '../stores/wallet'
 
 	onMount(async () => {
-		await initWallet();
+		await initMetamaskSession();
 		await checkPendingTransactions();
 	});
 
@@ -27,6 +27,7 @@
 
 	.network {
 		color: var(--orange);
+		display: flex;
 	}
 
 	@media (max-width: 600px) {
@@ -66,8 +67,12 @@
 		border: 1px solid transparent;
 		color: inherit;
 	}
-	.clickable-item:hover {
-		background-color: var(--jet);
+
+	.clickable-item a {
+		color: inherit;
+	}
+	.clickable-item a:hover {
+		color: var(--green);
 	}
 
 	.has-pending {
@@ -78,6 +83,21 @@
 	:global(.wallet .has-pending svg) {
 		height: 24px;
 		margin-bottom: -3px;
+	}
+
+	.disconnect {
+		margin-left: 8px;
+		fill: var(--dim-gray);
+		cursor: pointer;
+	}
+	.disconnect:hover {
+		fill: var(--red);
+	}
+
+	:global(.wallet .disconnect svg) {
+		height: 16px;
+		margin-bottom: -2px;
+		fill: inherit;
 	}
 
 	button {
@@ -98,19 +118,23 @@
 <div class='wallet'>
 
 	{#if $isUnsupported}
-		<div class='network'>Wrong Network</div>
+		<div class='network'>
+			<div>Wrong Network</div>
+			<div class='disconnect' on:click={() => {disconnectWallet(true)}}>{@html CANCEL_ICON}</div>
+		</div>
 	{:else}
 
 		{#if $selectedAddress}
 				<div class='balance'>
 					{formatToDisplay($userBaseBalance)} {BASE_SYMBOL}
 				</div>
-				<a class='clickable-item address-wrap' href={addrLink($selectedAddress)} target="_blank">
+				<div class='clickable-item address-wrap'>
 					{#if $hasPending}<div class='has-pending'>{@html SPINNER_ICON}</div>{/if}
-					<div class='address'>{shortAddr($selectedAddress)}</div>
-				</a>
+					<a class='address' href={addrLink($selectedAddress)} target="_blank">{shortAddr($selectedAddress)}</a>
+					<div class='disconnect' on:click|stopPropagation={() => {disconnectWallet()}}>{@html CANCEL_ICON}</div>
+				</div>
 		{:else}
-			<button on:click={connectWallet}>Connect Wallet</button>
+			<button on:click={() => {showModal('Connect')}} data-intercept="true">Connect Wallet</button>
 		{/if}
 
 	{/if}
