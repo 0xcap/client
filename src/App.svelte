@@ -60,6 +60,7 @@
 		--eerie-black: #1A1A1A;
 		--jet-dim: #212121;
 		--jet: #292929;
+		--onyx-dim: #353535;
 		--onyx: #3D3D3D;
 		--dim-gray: #616161;
 		--sonic-silver: #707070;
@@ -79,7 +80,7 @@
 	}
 
 	:global(html) {
-		background-color: var(--rich-black);
+		background-color: var(--rich-black-fogra);
 		color: #fff;
 		font-family: 'Inter var';
 		font-feature-settings: 'ss01','ss02','ss03','cv01','tnum';

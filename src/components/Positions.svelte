@@ -81,11 +81,11 @@
 		height: 64px;
 		font-size: 115%;
 		border-radius: var(--base-radius);
-		background-color: var(--rich-black-fogra);
+		background-color: var(--eerie-black);
 		cursor: pointer;
 	}
 	.position:hover {
-		background-color: var(--eerie-black);
+		background-color: var(--jet-dim);
 	}
 
 	.details {

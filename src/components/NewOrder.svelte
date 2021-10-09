@@ -86,7 +86,7 @@
 		align-items: center;
 		justify-content: center;
 		line-height: 1.4;
-		background-color: var(--eerie-black);
+		background-color: var(--jet-dim);
 		padding: var(--base-padding);
 		border-radius: var(--base-radius);
 		margin-bottom: 60px;
@@ -104,7 +104,7 @@
 		grid-auto-flow: row;
 		grid-gap: var(--base-padding);
 		padding: var(--base-padding);
-		background-color: var(--eerie-black);
+		background-color: var(--jet-dim);
 		border-radius: var(--base-radius);
 	}
 
@@ -136,7 +136,7 @@
 		padding-top: var(--base-padding);
 		display: flex;
 		align-items: center;
-		border-top: 1px solid var(--jet-dim);
+		border-top: 1px solid var(--jet);
 		font-size: 90%;
 	}
 
@@ -154,22 +154,6 @@
 
 	.left .helper {
 		margin-right: 6px;
-	}
-
-	.bottom .price {
-		margin-right: 6px;
-	}
-	.bottom .price.empty {
-		color: var(--dim-gray);
-	}
-
-	.bottom .margin-used {
-		margin-right: 12px;
-		border-bottom: 1px dashed var(--dim-gray);
-	}
-
-	.bottom .trade-size {
-		border-bottom: 1px dashed var(--dim-gray);
 	}
 
 	.sep {
@@ -192,7 +176,7 @@
 	.selector {
 		display: flex;
 		align-items: center;
-		background-color: var(--jet);
+		background-color: var(--onyx-dim);
 		border-radius: var(--base-radius);
 		white-space: nowrap;
 		cursor: pointer;
@@ -269,7 +253,7 @@
 	}
 
 	button.disabled {
-		background-color: var(--jet-dim);
+		background-color: var(--jet);
 		color: var(--dim-gray);
 		pointer-events: none;
 		cursor: default;

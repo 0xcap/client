@@ -46,7 +46,7 @@
 		padding-bottom: 6px;
 	}
 	.volume .value {
-		font-weight: 500;
+		font-weight: 600;
 	}
 
 	.details {

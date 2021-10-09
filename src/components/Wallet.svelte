@@ -60,7 +60,7 @@
 		display: flex;
 		align-items: center;
 		border-radius: var(--base-radius);
-		background-color: var(--eerie-black);
+		background-color: var(--jet-dim);
 		padding: 0 12px;
 		height: 36px;
 		border: 1px solid transparent;

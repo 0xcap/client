@@ -34,12 +34,12 @@
 	}
 
 	.label {
-		border-bottom: 1px dashed var(--onyx);
+		border-bottom: 1px dashed var(--dim-gray);
 		transition: all 0.15s ease-out 0.15s;
 	}
 
 	.helper:hover .label {
-		border-color: var(--dim-gray);
+		border-color: var(--sonic-silver);
 	}
 
 	.tooltip {
@@ -49,9 +49,9 @@
 	    left: 50%;
 	    transform: translate(-50%, -100%);
 	    padding: 14px;
-	    border: 1px solid var(--onyx);
+	    border: 1px solid var(--dim-gray);
 	    border-radius: var(--base-radius);
-	    background-color: var(--eerie-black);
+	    background-color: var(--jet-dim);
 	    position: absolute;
 	    z-index: 99999999;
 	    box-sizing: border-box;

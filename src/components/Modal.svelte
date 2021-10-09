@@ -20,7 +20,7 @@
 		overflow-y: auto;
 		right: 0;
 		bottom: 0;
-		background-color: rgb(0,0,0,0.524);
+		background-color: rgb(0,0,0,0.624);
 		z-index: 100;
 		padding: 0 var(--base-padding);
 		outline: 0;
