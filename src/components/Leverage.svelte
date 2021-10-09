@@ -14,7 +14,7 @@
 	import { selectedAddress } from '../stores/wallet'
 
 	let maxLeverage;
-	$: maxLeverage = $selectedProduct.maxLeverage * 1 || 100
+	$: maxLeverage = $selectedProduct.maxLeverage * 1 || 50
 
 	$: handleChange($leverage);
 
