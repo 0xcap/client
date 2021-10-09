@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte'
 
 	import Helper from './Helper.svelte'
+	import Chart from './Chart.svelte'
 
 	import { BASE_SYMBOL } from '../lib/constants'
 	import { selectProduct } from '../lib/helpers'
@@ -17,6 +18,18 @@
 	import { selectedProductId, selectedProduct, products } from '../stores/products'
 	import { showToast } from '../stores/toasts'
 	import { selectedAddress, isUnsupported, userBaseBalance } from '../stores/wallet'
+
+	let show_chart = false;
+	if (localStorage.getItem('show_chart')) show_chart = true;
+
+	function toggleChart() {
+		show_chart = !show_chart;
+		if (show_chart) {
+			localStorage.setItem('show_chart', true);
+		} else {
+			localStorage.removeItem('show_chart');
+		}
+	}
 
 	let submitIsPending = false;
 	async function _submitOrder(isLong) {
@@ -152,13 +165,11 @@
 		align-items: center;
 	}
 
-	.left .helper {
-		margin-right: 6px;
-	}
-
-	.sep {
-		color: var(--jet);
-		margin: 0 12px;
+	.chart-toggle {
+		margin-left: 12px;
+		color: var(--sonic-silver);
+		cursor: pointer;
+		border-bottom: 1px solid transparent;
 	}
 
 	.right {
@@ -169,8 +180,8 @@
 		justify-content: flex-end;
 	}
 
-	.right .helper {
-		margin-left: 6px;
+	.right > :global(div) {
+		margin-left: 12px;
 	}
 
 	.selector {
@@ -310,7 +321,8 @@
 			<div class='bottom'>
 
 				<div class='left'>
-					<Helper title='Reference Price' text="Execution price differs based on market conditions." label={formatToDisplay($prices[$selectedProductId], 0, true) || null} />
+					<Helper title='Reference Price' text="Execution price differs based on market conditions." label={$prices[$selectedProductId] ? ($prices[$selectedProductId]).toFixed(2) : null} />
+					<span class='chart-toggle' on:click={() => {toggleChart()}}>{show_chart ? 'Hide Chart' : 'Show Chart' }</span>
 				</div>
 
 				<div class='right'>
@@ -318,7 +330,6 @@
 					{#if $margin > 0}
 						
 						<Helper title='Margin' text='Balance used for this trade.' label={`${formatToDisplay($margin, 4)} ${BASE_SYMBOL}`} />
-						<div class='sep'>|</div>
 						<Helper title='Trade Size (USD)' text='Margin × leverage.' small={true} label={`$${formatToDisplay($prices[1] * $amount, 2)}`} />
 
 					{:else}
@@ -333,6 +344,10 @@
 			{/if}
 
 		</div>
+
+		{#if show_chart}
+		<Chart/>
+		{/if}
 
 		<div class='buttons'>
 			{#if $isUnsupported}

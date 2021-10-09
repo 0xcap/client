@@ -69,14 +69,14 @@ export function initWebsocket(_address) {
 
 			if (!lastTimestamp[product_id]) lastTimestamp[product_id] = 0;
 
-			if (lastTimestamp[product_id] > Date.now() - 1000) return; // throttle to 1 per sec
+			//if (lastTimestamp[product_id] > Date.now() - 1000) return; // throttle to 1 per sec
 
 			lastTimestamp[product_id] = Date.now();
 
 			const pid = PRODUCT_TO_ID[product_id];
 
 			prices.update((x) => {
-				x[pid] = price;
+				x[pid] = price * 1;
 				return x;
 			});
 
