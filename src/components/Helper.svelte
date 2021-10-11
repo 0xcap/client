@@ -6,6 +6,8 @@
 	export let small = false;
 	export let marginRight = false;
 	export let marginLeft = false;
+	export let moveLeft = false;
+	export let moveRight = false;
 
 </script>
 
@@ -46,8 +48,6 @@
 		text-align: left !important;
 		min-width: 234px;
 	    top: -14px;
-	    left: 50%;
-	    transform: translate(-50%, -100%);
 	    padding: 14px;
 	    border: 1px solid var(--dim-gray);
 	    border-radius: var(--base-radius);
@@ -63,6 +63,22 @@
 		min-width: 170px;
 	}
 
+	.tooltip.mr {
+		left: 0;
+		transform: translate(0%, -100%);
+	}
+	.tooltip.mr i {
+		left: 12%;
+	}
+
+	.tooltip.ml {
+		right: 0;
+		transform: translate(0%, -100%);
+	}
+	.tooltip.ml i {
+		right: 12%;
+	}
+
 	.helper:hover .tooltip {
 		visibility: visible;
 		opacity:1;
@@ -71,7 +87,6 @@
 	.tooltip i {
 		position: absolute;
 	    top: 100%;
-	    left: 50%;
 	    margin-left: -12px;
 	    width: 24px;
 	    height: 12px;
@@ -104,7 +119,7 @@
 {#if label}
 <div class:mr={marginRight} class:ml={marginLeft} class={`helper`}>
 	<span class='label'>{label}</span>
-	<div class={`tooltip ${small ? 'sm' : ''}`}>
+	<div class={`tooltip ${small ? 'sm' : ''} ${moveLeft ? 'ml' : ''} ${moveRight ? 'mr' : ''}`}>
 		<div class='title'>{title}</div>
 		<div class='body'>{text}</div>
 		<i></i>

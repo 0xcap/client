@@ -171,6 +171,9 @@
 		cursor: pointer;
 		border-bottom: 1px solid transparent;
 	}
+	.chart-toggle.active {
+		color: #fff;
+	}
 
 	.right {
 		flex: 1 1 auto;
@@ -321,20 +324,20 @@
 			<div class='bottom'>
 
 				<div class='left'>
-					<Helper title='Reference Price' text="Execution price differs based on market conditions." label={$prices[$selectedProductId] ? ($prices[$selectedProductId]).toFixed(2) : null} />
-					<span class='chart-toggle' on:click={() => {toggleChart()}}>{show_chart ? 'Hide Chart' : 'Show Chart' }</span>
+					<Helper title='Reference Price' text="Execution price differs based on market conditions." moveRight={true} label={$prices[$selectedProductId] ? ($prices[$selectedProductId]).toFixed(2) : null} />
+					<span class='chart-toggle' class:active={show_chart} on:click={() => {toggleChart()}}>Chart</span>
 				</div>
 
 				<div class='right'>
 					
 					{#if $margin > 0}
 						
-						<Helper title='Margin' text='Balance used for this trade.' label={`${formatToDisplay($margin, 4)} ${BASE_SYMBOL}`} />
-						<Helper title='Trade Size (USD)' text='Margin × leverage.' small={true} label={`$${formatToDisplay($prices[1] * $amount, 2)}`} />
+						<Helper title='Margin' moveLeft={true} text='Balance used for this trade.' label={`${formatToDisplay($margin, 4)} ${BASE_SYMBOL}`} />
+						<Helper title='Trade Size (USD)' moveLeft={true} text='Margin × leverage.' small={true} label={`$${formatToDisplay($prices[1] * $amount, 2)}`} />
 
 					{:else}
 
-						<Helper title='Buying Power' text='Wallet balance × leverage.' label={`${formatToDisplay($buyingPower)} ${BASE_SYMBOL}`}/>
+						<Helper title='Buying Power' moveLeft={true} text='Wallet balance × leverage.' label={`${formatToDisplay($buyingPower)} ${BASE_SYMBOL}`}/>
 	
 					{/if}
 				
