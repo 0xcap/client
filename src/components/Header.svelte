@@ -1,5 +1,7 @@
 <script>
 	import Wallet from './Wallet.svelte'
+	import { showHero } from '../stores/modals'
+	
 </script>
 
 <style>
@@ -18,13 +20,14 @@
 
 	img {
 		height: 20px;
+		cursor: pointer;
 	}
 
 </style>
 
 <header>
 	<div class='left'>
-		<img src='/img/logo.svg' title='Cap logo' alt='Cap logo' />
+		<img src='/img/logo.svg' title='Cap logo' alt='Cap logo' on:click={() => {location.hash = '';showHero.set(true);}} />
 	</div>
 	<Wallet/>
 </header>

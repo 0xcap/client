@@ -25,7 +25,7 @@ function heartbeat() {
 
 export function initWebsocket(_address) {
 
-	if (!_address && !get(selectedAddress)) return;
+	//if (!_address && !get(selectedAddress)) return;
 
 	//console.log('initWebsocket');
 
