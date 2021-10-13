@@ -14,7 +14,6 @@
 		top: 0;
 		left: 0;
 		overflow-x: hidden;
-		overflow-y: auto;
 		right: 0;
 		bottom: 0;
 		background-color: var(--rich-black-fogra);
@@ -22,7 +21,7 @@
 	}
 
 	.bg {
-		position: absolute;
+		position: fixed;
 		z-index: 1;
 		top: 0;
 		left: 0;
@@ -139,7 +138,7 @@
 		<h1>The fastest & cheapest way to leverage trade <br/>on Arbitrum.</h1>
 
 		<div class='buttons'>
-			<button on:click={() => {location.hash = 'trade';showHero.set(false);}}>
+			<button on:click={() => {location.hash = 'trade';showHero.set(false);window.scrollTo(0,0)}}>
 				<div>Trade</div>
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />

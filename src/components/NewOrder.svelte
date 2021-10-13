@@ -320,7 +320,6 @@
 
 			</div>
 
-			{#if $selectedAddress}
 			<div class='bottom'>
 
 				<div class='left'>
@@ -344,7 +343,6 @@
 				</div>
 
 			</div>
-			{/if}
 
 		</div>
 
