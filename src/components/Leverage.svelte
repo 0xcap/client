@@ -92,6 +92,17 @@
 		overflow: hidden;
 		transition: box-shadow 0.6s ease-in-out;
 	}
+	.range::-moz-range-track {
+		appearance: none;
+		background: var(--jet);
+		outline: none;
+		border: none;
+		height: 18px;
+		border-radius: var(--base-radius);
+		width: 100%;
+		overflow: hidden;
+		transition: box-shadow 0.6s ease-in-out;
+	}
 
 	.range::-webkit-slider-thumb {
 		-webkit-appearance: none;
@@ -104,7 +115,17 @@
 		border: 3px solid var(--jet-dim);
 		box-shadow: -407px 0 0 400px var(--green);
 	}
-	/*, .range::-moz-range-thumb, .range::-ms-thumb*/
+
+	.range::-moz-range-thumb {
+		appearance: none;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		cursor: ew-resize;
+		background: var(--sonic-silver);
+		border: 3px solid var(--jet-dim);
+		box-shadow: -407px 0 0 400px var(--green);
+	}
 
 </style>
 
