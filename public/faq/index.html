@@ -8,7 +8,7 @@
 			padding: 30px;
 			font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 			background-color: #1A1A1A;
-			color: #e8e8e8;
+			color: #fff;
 		}
 
 		.container {
@@ -31,6 +31,11 @@
 
 		p {
 			line-height: 1.55;
+			padding-bottom: 9px;
+		}
+
+		ul {
+			padding-bottom: 9px;
 		}
 
 		ul li {
@@ -38,11 +43,27 @@
 		}
 		h2 {
 			padding-top: 26px;
+			border-top: 1px solid #333;
 		}
+
+		.bg {
+			position: fixed;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-image: url(../img/bg.jpg);
+			pointer-events: none;
+			opacity: 0.1;
+		}
+
 		</style>
 	</head>
 
 	<body>
+
+		<div class='bg'></div>
 
 		<div class='container'>
 
@@ -64,7 +85,7 @@
 
 				<ul>
 					<li><a href='https://bridge.arbitrum.io'>Bridge</a> some ETH into Arbitrum.</li>
-					<li><a href='https://cap.finance'>Trade</a> directly from your wallet.</li>
+					<li><a href='https://cap.finance'>Start trading</a>!</li>
 				</ul>
 
 			<h2>Why Cap?</h2>
@@ -72,18 +93,22 @@
 				<ul>
 					<li><strong>Fast</strong>. Orders are executed and settled within a few seconds.</li>
 					<li><strong>Cheap</strong>. Contracts are ultra gas optimized and there are no trading fees beyond the quoted spread.</li>
-					<li><strong>Easy</strong>. Start trading in seconds directly from your Metamask wallet.</li>
+					<li><strong>Easy</strong>. Start trading in seconds directly from your wallet.</li>
 				</ul>
 
 			<h2>How does it work?</h2>
 
-				<p>Your newly submitted order is stored in the trading contract. The oracle contract then prices and executes your order. When you close your position in profit, the treasury contract vault pays you. When you close at a loss, you pay the vault.</p>
+				<p>Your newly submitted order is stored in the trading contract. The oracle contract then prices and executes your order. When you close your position in profit, the treasury vault pays you your profit. When you close at a loss, your loss is sent to the vault.</p>
 
 				<p>Protocol revenue is equal to trader losses minus profits.</p>
 
 			<h2>How are prices determined?</h2>
 
 				<p>You can think of Cap as a decentralized OTC trading desk. You submit an order and that order is filled based on a quote provided by the oracle contract, which takes into account market conditions like volatility. This quote is bound by a max deviation based on Chainlink prices to maintain trustlessness.</p>
+
+			<h2>What's leverage?</h2>
+
+				<p>Leverage multiplies your buying power, hence your profits and losses. You can select your leverage on every trade and you can use zero leverage by selecting 1x.</p>
 
 			<h2>How is profit calculated?</h2>
 
@@ -95,7 +120,7 @@
 
 			<h2>What's the minimum margin?</h2>
 
-				<p>0.001 ETH. Multiply by your selected leverage to get the minimum order size.</p>
+				<p>0.001 ETH. Multiply by the selected leverage to get your minimum order size.</p>
 
 			<h2>How can I use Cap?</h2>
 
@@ -139,13 +164,13 @@
 
 			<h2>My submitted order was cancelled or disappeared?</h2>
 
-				<p>This occurs if your order was not able to be filled within the max settlement time (10 minutes).</p>
+				<p>This occurs if your order was not able to be filled within the max settlement time, usually around 10 minutes, or if any other contract error has occurred.</p>
 
 			<h2>Who's behind Cap?</h2>
 
 				<p>Cap is built and maintained by an anonymous group of developers.</p>
 
-			<h2>How can I stay in the loop?</h2>
+			<h2>I have more questions or feedback?</h2>
 
 				<p>Cap is fully community-driven! Find community members on <a href='https://t.me/capfin'>Telegram</a> and <a href='https://twitter.com/CapDotFinance'>Twitter</a>.</p>
 

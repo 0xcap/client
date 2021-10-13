@@ -2,6 +2,8 @@
 
 	import { onMount } from 'svelte'
 	
+	import Hero from './components/Hero.svelte'
+
 	import Toasts from './components/Toasts.svelte'
 	import Header from './components/Header.svelte'
 	import Footer from './components/Footer.svelte'
@@ -24,14 +26,18 @@
 	import { hidePopoversOnClick } from './lib/utils'
 
 	import { contractReady } from './stores/contracts'
-	import { activeModal } from './stores/modals'
+	import { activeModal, showHero } from './stores/modals'
 	import { isUnsupported, selectedAddress, chainId } from './stores/wallet'
+
+	if (location.hash == '#trade') {
+		$showHero = false;
+	}
 
 	onMount(async () => {
 		hidePopoversOnClick();
 	});
 
-	$: initWebsocket($selectedAddress);
+	initWebsocket();
 	$: initEventListeners($selectedAddress, $chainId);
 
 </script>
@@ -176,6 +182,10 @@
 	}
 
 </style>
+
+{#if $showHero}
+<Hero />
+{/if}
 
 {#if $activeModal && $activeModal.name == 'Connect'}
 	<Connect />
