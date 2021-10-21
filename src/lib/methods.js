@@ -65,7 +65,7 @@ export async function submitNewPosition(productId, isLong, leverage, margin) {
 	const product = await getProduct(productId);
 	const amount = margin * leverage;
 	try {
-		const tx = await getContract(true).submitNewPosition(productId, isLong, parseUnits(leverage), {value: parseUnits(margin, 18)});
+		const tx = await getContract(true).submitNewPosition(productId, isLong, parseUnits(leverage), {value: parseUnits(margin, 18), gasLimit: 3*10**6});
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `New position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
@@ -80,7 +80,7 @@ export async function submitNewPosition(productId, isLong, leverage, margin) {
 
 export async function cancelPosition(positionId) {
 	try {
-		const tx = await getContract(true).cancelPosition(positionId);
+		const tx = await getContract(true).cancelPosition(positionId, {gasLimit: 3*10**6});
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Cancel open order`
@@ -96,7 +96,7 @@ export async function cancelPosition(positionId) {
 export async function addMargin(positionId, margin, productId) {
 	const product = await getProduct(productId);
 	try {
-		const tx = await getContract(true).addMargin(positionId, {value: parseUnits(margin, 18)});
+		const tx = await getContract(true).addMargin(positionId, {value: parseUnits(margin, 18), gasLimit: 3*10**6});
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Add margin ${formatToDisplay(margin)} ${BASE_SYMBOL} on ${product.symbol}`
@@ -112,7 +112,7 @@ export async function addMargin(positionId, margin, productId) {
 export async function closePosition(positionId, margin, amount, productId, isFullClose) {
 	const product = await getProduct(productId);
 	try {
-		const tx = await getContract(true).submitCloseOrder(positionId, parseUnits(margin));
+		const tx = await getContract(true).submitCloseOrder(positionId, parseUnits(margin), {gasLimit: 3*10**6});
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Close position ${formatToDisplay(amount)} ${BASE_SYMBOL} on ${product.symbol}`
@@ -127,7 +127,7 @@ export async function closePosition(positionId, margin, amount, productId, isFul
 
 export async function cancelOrder(orderId) {
 	try {
-		const tx = await getContract(true).cancelOrder(orderId);
+		const tx = await getContract(true).cancelOrder(orderId, {gasLimit: 3*10**6});
 		addPendingTransaction({
 			hash: tx.hash,
 			description: `Cancel close order`
