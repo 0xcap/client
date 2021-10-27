@@ -101,7 +101,6 @@ export function initEventListeners(address, chainId) {
 
 	tradingContract.on(tradingContract.filters.NewPosition(null, address), handleEvent);
 	tradingContract.on(tradingContract.filters.ClosePosition(null, address), handleEvent);
-
 }
 
 // Below are for when graph data is delayed, to get recent orders/TXs
