@@ -63,6 +63,11 @@ export async function getPositions(positionIds) {
 export async function submitNewPosition(productId, isLong, leverage, margin) {
 	if (get(isUnsupported)) return;
 	const product = await getProduct(productId);
+	if (isLong && product.openInterestLong * 1 - product.openInterestShort * 1 >= product.maxExposure) {
+		return showToast({message: '!exposure-long'});
+	} else if (!isLong && product.openInterestShort * 1 - product.openInterestLong * 1 >= product.maxExposure) {
+		return showToast({message: '!exposure-short'});
+	}
 	const amount = margin * leverage;
 	try {
 		const tx = await getContract(true).submitNewPosition(productId, isLong, parseUnits(leverage), {value: parseUnits(margin, 18), gasLimit: 3*10**6});
