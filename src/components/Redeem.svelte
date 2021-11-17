@@ -21,7 +21,16 @@
 		submitIsPending = false;
 	}
 
-	let next_redemption_time = new Date((data.timestamp * 1 + $selectedVault.stakingPeriod * 1)*1000).toLocaleString();
+	const now = Date.now();  // ms
+	const stakingStart = data.timestamp * 1000;  // ms
+	const stakingPeriod = $selectedVault.stakingPeriod * 1000;  // ms
+	const redemptionPeriod = $selectedVault.redemptionPeriod * 1000;  // ms
+	let nextRedemptionStart = stakingStart + stakingPeriod;  // ms
+	// schlemielgorithm, its fine
+	while (nextRedemptionStart + redemptionPeriod < now) {
+		nextRedemptionStart += stakingPeriod;
+	}
+	let next_redemption_time = new Date(nextRedemptionStart).toLocaleString();
 	let redemption_in_hours = parseInt($selectedVault.redemptionPeriod / 3600);
 
 	let rows;
